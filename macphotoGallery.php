@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.7
+ * @version	      : 2.8
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -543,7 +543,7 @@ if ($_REQUEST['action'] == 'viewPhotos')
 			?>
 
 		<div style="float: right; width: 80%">
-			<form name="macPhotos" id="macPhotos" method="POST" onsubmit="return deleteImages();">
+			<form name="macPhotos" id="macPhotos" method="POST" onSubmit="return deleteImages();">
 			<div id="showGalleryNames" style="float: left" >
 		
 			Select Album <select  onchange="displaySelectedAlbum(this.value,'<?php echo $pageURL[0] ; ?>')" > 

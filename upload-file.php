@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.7
+ * @version	      : 2.8
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -83,9 +83,19 @@ class SimpleImage {
    }
 }
 
+
+  
+
+// let's load WordPress
+
+
+
 require_once( dirname(__FILE__) . '/macDirectory.php');
 global $wpdb;
-echo $albumId = $_REQUEST['albumId'];
+
+if ( ! current_user_can( 'manage_options' ) )
+	wp_die( __( 'Direct access not permitted.' ) );
+ $albumId = $_REQUEST['albumId'];
 $uploadDir = wp_upload_dir();
 $path = $uploadDir['basedir'].'/mac-dock-gallery';
 if($albumId !='')
@@ -107,7 +117,6 @@ if($size>10485760)
 	unlink($_FILES['uploadfile']['tmp_name']);
 	exit;
 }
-
   $image = new SimpleImage();
    $image->load($_FILES['uploadfile']['tmp_name']);
 
@@ -154,5 +163,6 @@ else
 {
         echo "error ".$_FILES['uploadfile']['error']." --- ".$_FILES['uploadfile']['tmp_name']." %%% ".$file."($size)";
 }
+
 }
 ?>
