@@ -3,7 +3,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.5
+ * @version	      : 2.6
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -11,7 +11,9 @@
  * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
  * @abstract      : The core file of calling Mac Photo Gallery.
  * @Creation Date : June 20 2011
- * @Modified Date : September 30 2011
+ * Edited by 	  : kranthi kumar
+ * Email          : kranthikumar@contus.in
+ * @Modified Date : Jan 05 2012
  * */
 
 /*

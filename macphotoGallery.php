@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.5
+ * @version	      : 2.6
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -10,7 +10,9 @@
  * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
  * @abstract      : The core file of calling Mac Photo Gallery.
  * @Creation Date : June 20 2011
- * @Modified Date : September 30 2011
+ * Edited by 	  : kranthi kumar
+ * Email          : kranthikumar@contus.in
+ * @Modified Date : Jan 05 2012
  * */
 
 /*
@@ -34,6 +36,17 @@ function maccontroller() {
 	global $wpdb, $site_url, $folder;
 	$site_url = get_bloginfo('url');
 	$folder = dirname(plugin_basename(__FILE__));
+	$pageURL = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
+				if ($_SERVER["SERVER_PORT"] != "80")
+				{
+				    $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+				} 
+				else 
+				{
+				    $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+				}
+			$copyofurl = $pageURL;	
+			$pageURL =	explode('albid',$pageURL);
 
 	?>
 <link rel='stylesheet'
@@ -96,6 +109,7 @@ function maccontroller() {
        }
     </script>
 <script type="text/javascript">
+QueueCountApptha = 0;
     dragdr(document).ready(function(){
     if(document.getElementById('mac-test-list'))
                 {
@@ -148,9 +162,12 @@ function maccontroller() {
             })
             .bind('fileDialogComplete', function(event, numFilesSelected, numFilesQueued){
                dragdr('#queuestatus').text('Files Selected: '+numFilesSelected+' / Queued Files: '+numFilesQueued);
-                numfiles = numFilesQueued;
-                i=1;
-                j=numfiles;
+
+               numfiles = numFilesQueued;
+               totalQueues = numFilesSelected;
+               i=1;
+               j=numfiles;
+               
             })
             .bind('uploadStart', function(event, file){
 
@@ -166,10 +183,13 @@ function maccontroller() {
                dragdr('#log li#'+file.id).find('span.progressvalue').text(percentage+'%');
             })
             .bind('uploadSuccess', function(event, file, serverData){
+            	
                 var item=dragdr('#log li#'+file.id);
+                QueueCountApptha++;
                 item.find('div.progress').css('width', '100%');
                 item.find('span.progressvalue').text('100%');
                 item.addClass('success').find('p.status').html('Done!!!');
+                jQuery('#queuestatus').text('Files Selected: '+totalQueues+' / Queued Files: '+QueueCountApptha);
 
             })
             .bind('uploadComplete', function(event, file){
@@ -179,7 +199,7 @@ function maccontroller() {
                     {
                  macPhotos(numfiles,'<?php echo $_REQUEST['albid'] ?>');
                     }
-                    i++
+                    i++;
             })
 
         });
@@ -246,13 +266,13 @@ dragdr(document).ready(function(){
 #swfupload-control p {
 	margin: 10px 5px;
 	font-size: 11px;
-	width: 100%;
+	width: 75%;
 }
 
 #log {
 	margin: 0;
 	padding: 0;
-	width: 100%;
+	width: 75%;
 }
 
 #log li {
@@ -265,6 +285,7 @@ dragdr(document).ready(function(){
 	color: #333;
 	background: #fff;
 	position: relative;
+	word-wrap:break-word;
 }
 
 #log li .progressbar {
@@ -329,9 +350,19 @@ if ($_REQUEST['action'] == 'viewPhotos')
 				//$path = '../wp-content/plugins/'.$folder.'/uploads/';
 				$uploadDir = wp_upload_dir();
 				$path = $uploadDir['basedir'].'/mac-dock-gallery';
-				unlink($path .'/'.$photoImg);
+				$tumpImg = $path .'/'.$photoImg;
+				if(file_exists($tumpImg))
+				{
+					unlink($tumpImg);
+				}	
 				$extense = explode('.', $photoImg);
-				unlink($path .'/'. $macPhoto_id . '.' . $extense[1]);
+				     $bigImageIs = $macPhoto_id.'.'.$extense[1];
+				
+				$oriImgDel = $path .'/'.$bigImageIs;
+				if(file_exists($oriImgDel))
+				{
+					unlink($oriImgDel);
+				}	
 			}
 			$msg = 'Photos Deleted Successfully';
 		}
@@ -442,8 +473,7 @@ if ($_REQUEST['action'] == 'viewPhotos')
 	}
 	?>
 	<link rel='stylesheet' href='<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder ?>/css/style.css' type='text/css' />
-	<link rel='stylesheet' href='<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder ?>/css/styles.css' type='text/css' />
-	<div class="wrap nosubsub"
+		<div class="wrap nosubsub"
 		style="width: 98%; float: left; margin-right: 15px; align: center">
 		<div id="icon-upload" class="icon32">
 			<br />
@@ -452,8 +482,10 @@ if ($_REQUEST['action'] == 'viewPhotos')
 		<h2 class="nav-tab-wrapper">
 			<a href="?page=macAlbum" class="nav-tab">Albums</a> <a
 				href="?page=macPhotos&action=macPhotos"
-				class="nav-tab  nav-tab-active">View Images</a> <a
-				href="?page=macSettings" class="nav-tab">Settings</a>
+				class="nav-tab  nav-tab-active">View Images</a> 
+				<a href="?page=macSettings" class="nav-tab">Settings</a>
+				 <a href="?page=ImportAlbums" class="nav-tab">Import Albums</a>
+				 
 		</h2>
 		
 		<div
@@ -507,10 +539,37 @@ if ($_REQUEST['action'] == 'viewPhotos')
 		<img
 			src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/images/default_star.gif"
 			width="50px" height="50px" />
-			<?php } ?>
+			<?php } 
+			?>
 
 		<div style="float: right; width: 80%">
 			<form name="macPhotos" id="macPhotos" method="POST" onsubmit="return deleteImages();">
+			<div id="showGalleryNames" style="float: left" >
+		
+			Select Album <select  onchange="displaySelectedAlbum(this.value,'<?php echo $pageURL[0] ; ?>')" > 
+					<?php
+					$picaAlbumList = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "macalbum" );
+					$numOfTimes =  count($picaAlbumList);
+						
+						foreach($picaAlbumList as $key => $value ){
+							 if( $value->macAlbum_id == $albid)
+							 {
+							 	 $isselect =  "selected='selected'";
+							 	 $albName = $value->macAlbum_name;
+							 } 
+							else {$isselect = ''; }
+				echo "<option  $isselect value=".$value->macAlbum_id."  >".$value->macAlbum_name."</option>" ;			
+						}
+					
+						
+				
+						
+					?>		 
+			</select>
+		</div>
+			
+			
+			
 
 				<select name="action_photos"  id="action_photos" style="float: left">
 					<option name="bulk" value="bulk" selected="selected">
@@ -591,7 +650,7 @@ if ($_REQUEST['action'] == 'viewPhotos')
 					/* Find the number of pages based on $count and $limit */
 					$pages = findPages($count, $limit);
 					/* Now we use the LIMIT clause to grab a range of rows */
-					$result = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albid' ORDER BY macPhoto_sorting ASC $w");
+					$result = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albid' ORDER BY macPhoto_sorting DESC $w");
 					$album = '';
 
 					if(count($result) == '0')
@@ -697,6 +756,7 @@ if ($_REQUEST['action'] == 'viewPhotos')
 				href="?page=macPhotos&action=macPhotos"
 				class="nav-tab  nav-tab-active">Upload Images</a> <a
 				href="?page=macSettings" class="nav-tab">Settings</a>
+				  <a href="?page=ImportAlbums" class="nav-tab">Import Albums</a>
 		</h2>
 		<div
 			style="background-color: #ECECEC; padding: 10px; margin: 10px 0px 30px 0px; border: #ccc 1px solid">

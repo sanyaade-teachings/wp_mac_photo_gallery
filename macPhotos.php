@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.5
+ * @version	      : 2.6
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -10,7 +10,9 @@
  * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
  * @abstract      : The core file of calling Mac Photo Gallery.
  * @Creation Date : June 20 2011
- * @Modified Date : September 30 2011
+ * Edited by 	  : kranthi kumar
+ * Email          : kranthikumar@contus.in
+ * @Modified Date : Jan 05 2012
  * */
 
 /*
@@ -36,12 +38,13 @@ $p = 1;
                                         $p++;
                                     }
 
-       $album .= "<div class='left_align' style='color: #21759B'>Following are the list of uploaded images</div>";
+       $album .= "<div class='left_align' style='color: #21759B;'>Following are the list of uploaded images</div>";
        $album .='<ul class="actions"><li><a href="javascript:void(0)" onclick=" upd_disphoto(\''.$queue.'\',\''.$albid.'\');" class="gallery_btn" style="cursor:pointer">Update</a></li></ul>';
+       $album .='<div style="clear:both;"></div>'; 
        for($i=1;$i<=$queue;$i++)
        {
        $delete_phtid = $phtsrc[$i]['macPhoto_id'];
-       $album .= "<div class='left_align' id='photo_delete_$delete_phtid'>";
+       $album .= "<div  class='left_align' id='photo_delete_$delete_phtid'>";
        $album .='<div style="float:left;margin:0 10px 0 0;display:block;">
                  <img src="'.$path.'/'.$phtsrc[$i]['macPhoto_image'].'" style="height:108px;"/></div><span onclick="macdeletePhoto('.$phtsrc[$i]['macPhoto_id'].')"><a style="cursor:pointer;text-decoration:underline;padding-left:6px;" >Delete</a></span>';
        $album .='<div class="mac_gallery_photos" style="float:left" id="macEdit_'.$i.'">';
@@ -50,7 +53,7 @@ $p = 1;
        $album .= '<table cellpadding="0" cellspacing="0" width="100%"><tr><td style="margin:0 10px;">Name</td><td style="margin:0 10px;">';
        $album .= '<input type="text" name="macedit_name" id="macedit_name_'.$i.'" value="'.$phtsrc[$i]['macPhoto_name'].'" style="width:100%"></td></tr>';
        $album .= '<tr><td style="margin:0 10px;vertical-align:top">Description</td><td style="margin:0 10px;">';
-       $album .= '<textarea  name="macedit_desc_'.$i.'" id="macedit_desc_'.$i.'" row="10" column="10">'. $phtsrc[$i]['macPhoto_desc'].'</textarea></td></tr></table>';
+       $album .= '<textarea  name="macedit_desc_'.$i.'" id="macedit_desc_'.$i.'" row="10" column="10" style="width:100%;">'. $phtsrc[$i]['macPhoto_desc'].'</textarea></td></tr></table>';
        $album .= '<tr ><td colspan="2" align="right" style="padding-top:10px;">';
        $album .= '<input type="hidden" name="macedit_id_'.$i.'" id="macedit_id_'.$i.'" value="'.$phtsrc[$i]['macPhoto_id'].'">' ;
        $album .='</form></div>';
@@ -59,5 +62,5 @@ $p = 1;
        $album .='<div><h3 style="margin:0px;padding:3px 0" class="photoName">'.$phtsrc[$i]['macPhoto_name'].'</h3>';
        $album .='</div></div>';
        }
-echo $album;
+ echo $album;
 ?>

@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.5
+ * @version	      : 2.6
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -10,9 +10,10 @@
  * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
  * @abstract      : The core file of calling Mac Photo Gallery.
  * @Creation Date : June 20 2011
- * @Modified Date : September 30 2011
+ * Edited by 	  : kranthi kumar
+ * Email          : kranthikumar@contus.in
+ * @Modified Date : Jan 05 2012
  * */
-
 /*
  ***********************************************************/
 
@@ -104,7 +105,11 @@ if($size>10485760)
 if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file) && $albumId !='0')
 {
      $macimage = $_FILES['uploadfile']['name'];
-     $macname = explode('.',$macimage);
+     $revers = strrev($macimage);  //for get image extension 
+     $macname123 = explode('.',$revers);
+      $imgExteType = strrev($macname123[0]);
+      $macname = explode('.',$macimage);
+      
      $random_digit=rand(0000,9999);
      $storing_macname = addslashes($macname[0]);
      $uploadDb =  $wpdb->query("INSERT INTO ". $wpdb->prefix."macphotos (`macAlbum_id`,`macPhoto_name`, `macPhoto_desc`, `macPhoto_image`, `macPhoto_status`, `macPhoto_sorting`,`macPhoto_date`)
@@ -114,8 +119,8 @@ if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file) && $albumId !='
        $filenameext = explode('.',$album_image);
        $filenameextcount = count($filenameext);
        $_thumb_random_digit=rand(0000,9999);
-                $thumbfile = $lastid . "_thumb_" .$_thumb_random_digit.'.'. $filenameext[(int) $filenameextcount - 1];
-                $bigfile = $lastid .'_'.$_thumb_random_digit.'.'. $filenameext[(int) $filenameextcount - 1];
+                $thumbfile = $lastid . "_thumb_" .$_thumb_random_digit.'.'.$imgExteType;
+                $bigfile = $lastid.'.'.$imgExteType;
                 $path = $uploaddir.$album_image;
                 define(contus, "$uploaddir/");
                 $macSetting = $wpdb->get_row("SELECT * FROM ". $wpdb->prefix."macsettings");

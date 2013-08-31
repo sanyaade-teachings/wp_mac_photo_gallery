@@ -34,7 +34,7 @@
 li.clearfix {
     display: list-item;
 }
-.mac-no-border {border: none !important; padding: 0px !important;margin:0px !important}
+.mac-no-border {   border: none !important; padding: 0px !important;margin:0px !important}
 
 .macLeft{ float:left;}
 .bind_macPhotos {width:60%;height:auto;float:left;}
@@ -48,6 +48,9 @@ li.clearfix {
 .mac_gallery {display:table;clear:both;width:100%;border-color: #DFDFDF;
               border-bottom-left-radius: 4px 4px;border-bottom-right-radius: 4px 4px;border-style: solid;
               border-width: 1px;border-top-left-radius: 4px 4px;border-top-right-radius: 4px 4px;margin-top:10px;}
+.importalubmssettings{
+	     background: #DFDFDF url(../images/gray-grad.png) repeat-x scroll 0% 0%;
+}              
 .mac_gallery th
 {
      background: #DFDFDF url(../images/gray-grad.png) repeat-x scroll 0% 0%;
@@ -55,7 +58,7 @@ li.clearfix {
      padding: 7px 0px 7px 7px;text-align: left; font-size: 11px;}
 .mac_gallery td
 { 
-    text-align: justify;vertical-align: top;
+    vertical-align: top;
     padding: 5px 0px 10px 7px; font-size: 11px;
     color:#666;border-bottom:1px solid #DFDFDF;
 }
@@ -149,7 +152,7 @@ tr:hover .delView a
    
     float: left;
     height: 50px;
-    width: 120px;
+    width: 112px;
 }
 .fix_wid
 {
@@ -310,7 +313,4 @@ font-weight: bold;
 .jcarousel-item a img {	opacity:0.4;}
 .jcarousel-item a img:HOVER {	  opacity:1.0;	}
 	.carousel_lefttxt :HOVER {	  opacity:1.0;	}
-
-
-
 

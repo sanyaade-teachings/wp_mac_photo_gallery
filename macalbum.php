@@ -3,7 +3,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.5
+ * @version	      : 2.6
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -11,7 +11,9 @@
  * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
  * @abstract      : The core file of calling Mac Photo Gallery.
  * @Creation Date : June 20 2011
- * @Modified Date : September 30 2011
+ * Edited by 	  : kranthi kumar
+ * Email          : kranthikumar@contus.in
+ * @Modified Date : Jan 05 2012
  * */
 
 /*
@@ -146,13 +148,18 @@ function controller() {
         $get_key     = macgal_generate($customerurl);
     $macSet   = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings");
     $mac_album_count = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macalbum");
-    
+   // echo "<pre>";print_r($_REQUEST);echo "</pre>";
+
     if (isset($_REQUEST['doaction_album']))
      {
         if (isset($_REQUEST['action_album']) == 'delete')
          {
             for ($i = 0; $i < count($_POST['checkList']); $i++)
             {
+            	$albIdVal = is_numeric($_POST['checkList'][$i]);
+            	
+            	if($albIdVal)
+            	{
                 $macAlbum_id = $_POST['checkList'][$i];
                 $alumImg = $wpdb->get_var("SELECT macAlbum_image FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_id='$macAlbum_id' ");
                 $delete = $wpdb->query("DELETE FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_id='$macAlbum_id'");
@@ -160,21 +167,63 @@ function controller() {
 
                 //unlink(upload . $macAlbum_id . 'alb.' . $extense[1]);
 
-                $phtImg = $wpdb->get_results("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$macAlbum_id'");
+                $phtImg = $wpdb->get_results("SELECT macPhoto_id , macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$macAlbum_id'");
                 $uploadDir = wp_upload_dir();
                 $path = $uploadDir['basedir'].'/mac-dock-gallery';
             
                 foreach($phtImg as $phtImgs)
                 {
-                unlink($path.'/'.$phtImgs->macPhoto_image);
-                $extense  = explode('.', $phtImgs->macPhoto_image);
-                $phtalbid = explode('_',$extense[0]);
-                unlink($path.'/'.$phtalbid[0]. '.' . $extense[1]);
-
-                }
+                	$photois = $path.'/'.$phtImgs->macPhoto_image;
+                if(file_exists($photois))
+                {	
+                	unlink($photois);
+                }	
+                $imgName = $phtImgs->macPhoto_image;
+                $bigImgName = explode('.', $imgName);
+                $bigImg = $path.'/'.$phtImgs->macPhoto_id.'.'.$bigImgName[1];
+               
+	               if(file_exists($filename))
+	               {
+	               		 unlink($bigImg); 
+	               }
+                }//for loop end hear
 
                 $deletePht = $wpdb->query("DELETE FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$macAlbum_id'");
-
+            	}//if end hear
+            	else{
+            		 echo $albIdVal = (string)$_POST['checkList'][$i];
+            		 
+            		 $albTypeAndId = explode('-', $albIdVal);
+            		
+            		 $albType = $albTypeAndId[0];
+            		  $albId = $albTypeAndId[1];
+            		 switch($albType)
+            		 {
+            		 	case 333 : //facebook
+            		 				$macFacebookAlbums = get_option('macFacebookAlbums');
+            		 				unset($macFacebookAlbums[$albId]);
+            		 				update_option('macFacebookAlbums',$macFacebookAlbums);
+            		 				
+            		 				break;
+            		 				
+            		 	case 222 :  //picasa
+            		 				  $picaalbphotos = get_option('macalbumPhotosList');
+            		 				 unset($picaalbphotos[$albId]);
+            		 				  update_option('macalbumPhotosList',$picaalbphotos);
+            		 				 //echo "<pre>";print_r($picaalbphotos);echo "</pre>";exit;
+            		 				
+            		 				
+            		 				break;
+            		 	case 111 :   //flickr  
+            		 				$macflickrAlbDetailList = get_option('macflickrAlbDetailList');
+            		 				unset($macflickrAlbDetailList[$albId]);
+            		 				update_option('macflickrAlbDetailList',$macflickrAlbDetailList);
+            		 				break;
+            		 					
+            		 	
+            		 } 
+            		
+            	}
             }
             $msg = 'Album/s Deleted Successfully';
         }
@@ -266,7 +315,8 @@ function controller() {
         <h2 class="nav-tab-wrapper">
         <a href="?page=macAlbum" class="nav-tab nav-tab-active">Albums</a>
         <a href="?page=macPhotos&albid=0" class="nav-tab">Upload Images</a>
-        <a href="?page=macSettings" class="nav-tab">Settings</a></h2>
+        <a href="?page=macSettings" class="nav-tab">Settings</a>
+        <a href="?page=ImportAlbums" class="nav-tab">Import Albums</a></h2>
         <div style="background-color:#ECECEC;padding: 10px;margin-top:10px;border: #ccc 1px solid">
         <strong> Note : </strong>Mac Photo Gallery can be easily inserted to the Post / Page by adding the following code :<br><br>
                  (i)  [macGallery] - This will show the entire gallery [Only for Page]<br>
@@ -322,7 +372,7 @@ if(isset($_POST['submit_license']))
         {
         ?>
     <p><a href="#mydiv" rel="facebox"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/licence.png'?>" align="right"></a>
- <a href="http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery" target="_blank"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/buynow.png'?>" align="right" style="padding-right:5px;"></a>
+ <a href="http://www.apptha.com/shop/checkout/cart/add/product/23/" target="_new"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/buynow.png'?>" align="right" style="padding-right:5px;"></a>
 </p>
 
 <div id="mydiv" style="display:none;width:500px;background:#fff;">
@@ -392,37 +442,39 @@ if(isset($_POST['submit_license']))
     </div>
 <?php //} ?>
     <div name="right_content" class="right_column">
-                       <form name="all_action"  action="" method="POST" onSubmit="return deleteAlbums();" ><div class="alignleft actions">
-                           <?php if($get_title['title'] == $get_key) {?>
-                        <select name="action_album" id="action_album">
-                            <option value="" selected="selected"><?php _e('Bulk Actions'); ?></option>
-                            <option value="delete"><?php _e('Delete'); ?></option>
-                        </select>
-                        <input type="submit" value="<?php esc_attr_e('Apply'); ?>" name="doaction_album" id="doaction_album" class="button-secondary action" />
-                         <?php }?>  <?php wp_nonce_field('bulk-tags'); ?>
-            </div>
+                     
+            <form name="all_action"  action="" method="POST" onSubmit="return deleteAlbums();" >
+	            <div class="alignleft actions">
+	                           <?php // if($get_title['title'] == $get_key) {?>
+	                        <select name="action_album" id="action_album">
+	                            <option value="" selected="selected"><?php _e('Bulk Actions'); ?></option>
+	                            <option value="delete"><?php _e('Delete'); ?></option>
+	                        </select>
+	                        <input type="submit" value="<?php esc_attr_e('Apply'); ?>" name="doaction_album" id="doaction_album" class="button-secondary action" />
+	                        <?php //} wp_nonce_field('bulk-tags'); ?>
+	            </div>
 
-            <div id="bind_macAlbum" name="right_content" ></div>
-            <script type="text/javascript">
-				function deleteAlbums(){
-					if(document.getElementById('action_album').selectedIndex == 1)
-					{
-						var album_delete= confirm('Are you sure to delete album/s ?');
-						if (album_delete){
-							return true;
-						}
-						else{
+            	<div id="bind_macAlbum"></div>
+		            <script type="text/javascript">
+						function deleteAlbums(){
+							if(document.getElementById('action_album').selectedIndex == 1)
+							{
+								var album_delete= confirm('Are you sure to delete album/s ?');
+								if (album_delete){
+									return true;
+								}
+								else{
+									return false;
+								}
+							}
+							else if(document.getElementById('action_album').selectedIndex == 0)
+							{
 							return false;
+							}
+		
 						}
-					}
-					else if(document.getElementById('action_album').selectedIndex == 0)
-					{
-					return false;
-					}
-
-				}
-				</script>
-				</form>
+						</script>
+			</form>
     </div>
 
 </div>

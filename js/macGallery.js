@@ -1,8 +1,7 @@
-/*
- ***********************************************************/
+ /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.5
+ * @version	      : 2.6
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -10,13 +9,282 @@
  * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
  * @abstract      : The core file of calling Mac Photo Gallery.
  * @Creation Date : June 20 2011
- * @Modified Date : September 30 2011
+ * Edited by 	  : kranthi kumar
+ * Email          : kranthikumar@contus.in
+ * @Modified Date : Jan 05 2012
  * */
 
 /*
  ***********************************************************/
 
 //For Showing the list of Album in adjacent
+
+
+
+function facebookImportAlbumsConfirm(){
+	
+	
+	if(confirm("Do you want Import Albums and photos from facebook ? "))
+		{
+		     names1 = document.getElementById('macFacebookApi').value;
+		     names2 = document.getElementById('macFacebookSecKey').value;
+		     names1 = names1.trim();
+		     names2 = names2.trim();
+		     names = names1+','+names2;
+		importalbumschecking(names , 'facebook');
+		
+		}
+	//alert(facebookloginSite);
+}
+
+function valideatefacebookAlbums(){
+	
+	
+	var facebookapi = document.getElementById('macFacebookApi').value;
+	var facbooksecrkey = document.getElementById('macFacebookSecKey').value;
+	facbooksecrkey = facbooksecrkey.trim();
+	facebookapi = facebookapi.trim();
+	 var isvalideValues = 1;  
+		   if(facbooksecrkey == '')
+			{
+			document.getElementById('macFaceApiSecErrorMsg').style.display = 'block';
+			isvalideValues = 0;
+			}
+			else{
+				document.getElementById('macFaceApiSecErrorMsg').style.display = 'none';
+			}
+			if(facebookapi == '')
+			{
+			document.getElementById('macFaceApiErrorMsg').style.display = 'block';
+			isvalideValues = 0;
+			}
+			else{
+					
+				 var isnum =  isNumeric(facebookapi);
+				 if(isnum)
+					 {
+					 document.getElementById('macFaceApiErrorMsg').style.display = 'none';
+					 }
+				 else{
+					 document.getElementById('macFaceApiErrorMsg').style.display = 'block';
+					 isvalideValues = 0;
+				 }
+				 				 
+				
+			}
+			if(isvalideValues)
+				return true;
+			else
+				return false;
+}
+
+function displaySelectedAlbum(albid,pageurl){
+					//alert(albid+'---------'+pageurl);
+					window.location = pageurl+'albid='+albid;
+					
+					
+				}
+
+
+function valideatePicasaImportAlbums(){
+	
+	var userName = document.getElementById('macPicasaUserNames').value;
+	//var pluginName = document.getElementById('pluginName').value;
+	
+		userName = userName.trim();
+		 var Error = 0;
+		//var numberOfAlbu = parseInt(document.getElementById('macGetNumOfPicasaAlbums').value);	
+		 
+		if(userName == '')
+		{	
+			document.getElementById('macPicasaUserNameErrorMsg').style.display = 'block';
+			Error = 1;
+		}
+		else
+		{
+			document.getElementById('macPicasaUserNameErrorMsg').style.display = 'none';
+		}
+		
+		 if(Error)
+			 return false;
+		 else{
+			
+	 		var site = 'picasa';
+	 		var importflag = 0;
+	 		 		
+	 		 importflag = importalbumschecking(userName , site );
+	 	 		 	
+		 }
+		
+			return false;
+	
+
+}
+
+function valideateFlickrImportAlbums(){
+	
+	document.getElementById('macsiteErrorMsg').style.display = 'none';
+		var isEmp = document.getElementById('macFlickrApiId').value;
+		var isEmp2 = document.getElementById('macFlickrUserId').value;
+	
+		var Error = 0;
+		isEmp = isEmp.trim();
+		isEmp2 = isEmp2.trim();
+		if(isEmp == '' )
+			{
+			Error = 1;
+			document.getElementById('macFlickrApiErrorMsg').style.display = 'block';
+			}
+		else{
+			document.getElementById('macFlickrApiErrorMsg').style.display = 'none';
+		}
+		if(isEmp2 == '' )
+		{
+		Error = 1;
+		document.getElementById('macFlickrUIdErrorMsg').style.display = 'block';
+		}
+	else{
+		document.getElementById('macFlickrUIdErrorMsg').style.display = 'none';
+	}
+		 if(Error)
+			 return false;
+		 else{
+			 
+			 var site = 'flickr';
+			 userName = isEmp+','+isEmp2;	
+	 		 importalbumschecking(userName , site );
+	 		
+		 	}
+		 return false;
+}
+//bad implementation
+function sleep(milliSeconds){
+	
+	var startTime = new Date().getTime(); // get the current time
+	while (new Date().getTime() < startTime + milliSeconds); // hog cpu
+}
+
+
+function valideateImportAlbums(){
+	
+	 var value = document.getElementById('currentTimeZone').value;
+	 if(value == '' || value == null)
+		 {
+		 document.getElementById('timezoneErrorMsg').style.display = 'block';
+		 return false;
+		 }
+	 else{
+		 document.getElementById('timezoneErrorMsg').style.dispaly = 'none';
+		
+	 } 
+}
+
+function isNumeric(value) {
+	  if (value != null && !value.toString().match(/^[-]?\d*\.?\d*$/)) return false;
+	  return true;
+	}
+
+
+function  importalbumschecking(names , site )   //beform improt data from picasa we check he alredy used that accout or not?
+{
+	var pluginName = document.getElementById('pluginName').value;
+if (window.XMLHttpRequest)
+{// code for IE7+, Firefox, Chrome, Opera, Safari
+   xmlhttp=new XMLHttpRequest();
+}
+else
+{// code for IE6, IE5
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+  xmlhttp.onreadystatechange=function()
+  {
+    if (xmlhttp.readyState==4  && xmlhttp.status==200)
+    {
+    	var responce = xmlhttp.responseText;
+    			   
+			    	if(responce == '11')
+			    		{       
+			    				if(confirm('This Albums are alreday improted If you want import again ? '))
+			    					{
+				    					 if(site == 'picasa'){   //
+				    						 document.getElementById('formSubmitOk').value = 'ok';
+				    						 alert('Importing Albums from picasa take few seconds please wait');
+					    					 document.importAlbumsForm.submit();
+				    					 }
+				    					 else if(site == 'flickr'){
+				    						 document.getElementById('flickrformSubmitOk').value = 'ok';
+				    						 alert('Importing Albums from flickr take few seconds please wait');
+					    					 document.importAlbumsForm.submit();
+				    					 }
+				    					 else if(site == 'facebook')
+				    					 {
+				    						 alert('Importing Albums from Facebook take few seconds Click Ok to Login');
+				    						 //alert('Please Login to your facebook Account.');
+				    						 var facebookloginSite = document.getElementById('facebookImportUrl').value;
+				    							window.location = facebookloginSite;
+				    					 }	 
+			    					
+			    					}//if end hear
+			    				else {
+			    					document.getElementById('formSubmitOk').value = 'no';
+			    					document.getElementById('flickrformSubmitOk').value = 'no';
+			    				}
+			    		}
+			    	else{
+			    		 if(site == 'picasa'){
+	   						 document.getElementById('formSubmitOk').value = 'ok';
+	   						alert('Importing Albums from picasa take few seconds please wait');
+				    		 document.importAlbumsForm.submit();
+			    		 }
+			    		 else if(site == 'flickr')
+			    		 {
+	   						 document.getElementById('flickrformSubmitOk').value = 'ok';
+	   						 alert('Importing Albums from flickr take few seconds please wait');
+				    		 document.importAlbumsForm.submit();
+	   					 }
+			    		 else if(site == 'facebook')
+    					 {
+			    			 alert('Importing Albums from Facebook take few seconds Click Ok to Login .');
+    						 var facebookloginSite = document.getElementById('facebookImportUrl').value;
+    						 window.location = facebookloginSite;
+	    					 
+    					 }	 
+			    		
+			    	}
+		      
+    }//if end hear
+  }//onready state change end 
+ // alert(pluginName+'/macalbajax.php?importalubms='+names+'&site='+site);
+xmlhttp.open("GET",pluginName+'/macalbajax.php?importalubms='+names+'&site='+site,true);
+xmlhttp.send();
+ }
+
+function  importalbumsDeleting(allowimport)   //beform improt data from picasa we check he alredy used that accout or not?
+{
+
+if (window.XMLHttpRequest)
+{// code for IE7+, Firefox, Chrome, Opera, Safari
+   xmlhttp=new XMLHttpRequest();
+}
+else
+{// code for IE6, IE5
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+  xmlhttp.onreadystatechange=function()
+  {
+    if (xmlhttp.readyState==4)
+    {
+    	var responce = xmlhttp.responseText;
+     // document.getElementById('bind_macAlbum').innerHTML = xmlhttp.responseText
+      
+    }
+  }
+ // alert(pluginName+'/macalbajax.php?importalubms='+names+'&site='+site);
+xmlhttp.open("GET",pluginName+'/macalbajax.php?importalubmsdelete='+allowimport,true);
+xmlhttp.send();
+ }
+
+
 function macAlbum(pages)
 {
 
@@ -65,7 +333,7 @@ else
         document.getElementById('showAlbumedit_'+macAlbum_id).innerHTML = xmlhttp.responseText
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macAlbumname_id='+macAlbum_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macAlbumname_id='+macAlbum_id,true);
 xmlhttp.send();
 
 }
@@ -96,7 +364,7 @@ else
     }
   }
  
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macAlbum_id='+macAlbum_id+'&macAlbum_name='+macAlbum_name+'&macAlbum_desc='+macAlbum_desc,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macAlbum_id='+macAlbum_id+'&macAlbum_name='+macAlbum_name+'&macAlbum_desc='+macAlbum_desc,true);
 xmlhttp.send();
 }
 
@@ -152,7 +420,7 @@ xmlhttp.send();
 //For changing the Album Status
  function macAlbum_status(status,macAlbum_id)
  {
-   
+ // alert(status+'=========='+macAlbum_id); 
   if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
    xmlhttp=new XMLHttpRequest();
@@ -165,10 +433,11 @@ else
   {
     if (xmlhttp.readyState==4)
     {
-       document.getElementById('status_bind_'+macAlbum_id).innerHTML = xmlhttp.responseText
+    	//alert(xmlhttp.responseText);
+       document.getElementById('status_bind_'+macAlbum_id).innerHTML = xmlhttp.responseText;
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?status='+status+'&albid='+macAlbum_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?status='+status+'&albid='+macAlbum_id,true);
 xmlhttp.send();
  }
 
@@ -189,6 +458,7 @@ function albumtoggle(macAlbum_id) {
 function macAlbumdesc_updt(macAlbum_id)
 {
 var macAlbum_desc = document.getElementById('macAlbum_desc_'+macAlbum_id).value;
+alert('updat'+macAlbum_desc); 
     if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
    xmlhttp=new XMLHttpRequest();
@@ -391,7 +661,7 @@ else
         document.getElementById('showPhotosedit_'+macPhotos_id).innerHTML = xmlhttp.responseText
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macPhotoname_id='+macPhotos_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macPhotoname_id='+macPhotos_id,true);
 xmlhttp.send();
 }
  //Update the Photo name
@@ -417,7 +687,7 @@ else
       document.getElementById('showPhotosedit_'+macPhotos_id).style.display = 'none';
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macPhoto_name='+macPhoto_name+'&macPhotos_id='+macPhotos_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macPhoto_name='+macPhoto_name+'&macPhotos_id='+macPhotos_id,true);
 xmlhttp.send();
 }
 // View Photo description Update
@@ -454,7 +724,7 @@ else
       ele.style.display = "none";
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macPhoto_desc='+macPhoto_desc+'&macPhoto_id='+macPhoto_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macPhoto_desc='+macPhoto_desc+'&macPhoto_id='+macPhoto_id,true);
 
 xmlhttp.send();
 }
@@ -475,13 +745,14 @@ else
       window.location = self.location;
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?albumCover='+addCover+'&albumId='+albumId+'&macCovered_id='+macPhoto_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?albumCover='+addCover+'&albumId='+albumId+'&macCovered_id='+macPhoto_id,true);
 xmlhttp.send();
 }
 
 //Photos Status Changing
 function macPhoto_status(status,macPhoto_id)
 {
+	//alert(status+' ++++++++ '+macPhoto_id);
   if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
    xmlhttp=new XMLHttpRequest();
@@ -493,11 +764,11 @@ else
   xmlhttp.onreadystatechange=function()
   {
     if (xmlhttp.readyState==4)
-    {
-       document.getElementById('photoStatus_bind_'+macPhoto_id).innerHTML = xmlhttp.responseText
+    {   // alert(xmlhttp.responseText);
+       document.getElementById('photoStatus_bind_'+macPhoto_id).innerHTML = xmlhttp.responseText;
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?status='+status+'&macPhoto_id='+macPhoto_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?status='+status+'&macPhoto_id='+macPhoto_id,true);
 xmlhttp.send();
 }
 function fbcomments(pid,title,siteurl) {

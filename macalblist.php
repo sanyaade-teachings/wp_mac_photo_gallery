@@ -1,9 +1,8 @@
 <?php
-/*
- ***********************************************************/
+ /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.5
+ * @version	      : 2.6
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -11,7 +10,9 @@
  * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
  * @abstract      : The core file of calling Mac Photo Gallery.
  * @Creation Date : June 20 2011
- * @Modified Date : September 30 2011
+ * Edited by 	  : kranthi kumar
+ * Email          : kranthikumar@contus.in
+ * @Modified Date : Jan 05 2012
  * */
 
 /*
@@ -131,14 +132,14 @@ require_once( dirname(__FILE__) . '/macDirectory.php');
 
 <table cellspacing="0" cellpadding="0" border="1" class="mac_gallery">
 <tr>
-<th class="checkall"><input type="checkbox"  name="checkAll" id="checkAll" class="checkall" onclick="javascript:check_all('all_action', this)"></th>
+<th class="checkall" style="width: 5%;"><input type="checkbox"  name="checkAll" id="checkAll" class="checkall" onclick="javascript:check_all('all_action', this)"></th>
 <th class="image">Image</th>
 <th class="name">Album Name</th>
 <th class="desc">Description</th>
 <th class="on">Status</th>
-<th class="albumid">Album Id</th>
-<th class="gallery"></th>
-<th class="gallery"></th>
+<th class="albumid" style="width: 9%;">Album Id</th>
+<th class="gallery" style="width: 14%;">Imported from</th>
+<th class="gallery" style="width: 8%;">Actions</th>
 </tr>
 <?php
 $i=0;
@@ -167,27 +168,44 @@ $res = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "macalbum ORDER BY 
 $album ='';
  $uploadDir = wp_upload_dir();
             $path = $uploadDir['baseurl'].'/mac-dock-gallery';
+          $addPhotosImg = $site_url.'/wp-content/plugins/'.$folder.'/images/addimges.gif';
+$viewPhotosAlb = $imgFoulder = $site_url.'/wp-content/plugins/'.$folder.'/images/viewimges.png';
+$addImgSrc = "<img src = '$addPhotosImg' title='Add Images'  /> ";
+$vewmgSrc = "<img src = '$viewPhotosAlb' title='View Images'  /> ";  
+$albTab = $wpdb->prefix.'macphotos';  
 foreach($res as $results)
 {
+global $wpdb;
+	$improtTable = $wpdb->prefix.'macimportalbums';
+	$importFrom = $results->importid;
+	 $sql = "SELECT importsite from  $improtTable WHERE  importid = $importFrom";
+	 $importFrom = ucfirst($wpdb->get_var($sql));
+	 $sql = "SELECT COUNT(*) FROM $albTab  WHERE  macAlbum_id  = $results->macAlbum_id";
+	 $numOfImgs = $wpdb->get_var($sql);
+			
+	 
+	if(!strlen($importFrom) )
+	{
+		$importFrom = 'User Upload';
+	}
+	
 	$file_image =  $uploadDir['basedir'] . '/mac-dock-gallery/' .$results->macAlbum_image;
 	$site_url = get_bloginfo('url');
    $album .= "<tr>
   <td class='checkall'>";
-  if($results->macAlbum_id!=1 ){
+ 
   $album .= "<input type='checkbox' class='checkSing' name='checkList[]' class='others' value='$results->macAlbum_id' ></td>";
-  }
-
-
+ 
 	 if(file_exists($file_image) && $results->macAlbum_image != '')
          {
           $album .="<td><a href='javascript:void(0)' id='$path/$results->macAlbum_image' class='preview' >
                   <img src='$path/$results->macAlbum_image' width='40' height='20' /></a></td>";
          }
-         else if(!file_exists($file_image)){
+         else if(!file_exists($file_image) && $numOfImgs){
          	$album .="<td><a href='javascript:void(0)' id='$site_url/wp-content/plugins/$folder/uploads/star.jpg' class='preview'>
              <img src='$site_url/wp-content/plugins/$folder/uploads/star.jpg' width='40' height='20' /></a></td>";
          }
- else
+		 else
          {
            $album .="<td><a href='javascript:void(0)' id='$site_url/wp-content/plugins/$folder/images/default_star.gif' class='preview'>
              <img src='$site_url/wp-content/plugins/$folder/images/default_star.gif' width='40' height='20' /></a></td>";
@@ -208,14 +226,12 @@ foreach($res as $results)
         {
            $album .= "<td><div name='status_bind' id='status_bind_$results->macAlbum_id'  style='text-align:left'><img src='$site_url/wp-content/plugins/$folder/images/publish_x.png' width='16' height='16' onclick=macAlbum_status('ON',$results->macAlbum_id) style='cursor:pointer' /></div></td>";
         }
-           $album .="<td style='text-align:left'>$results->macAlbum_id</td> ";
-            $album .="<td><a href='$site_url/wp-admin/admin.php?page=macPhotos&action=viewPhotos&albid=$results->macAlbum_id'>View Images</a>
          
-                     
-                    </td>";
-           $album .="<td>
-           <a href='$site_url/wp-admin/admin.php?page=macPhotos&albid=$results->macAlbum_id'>Add Images</a>
-                     
+           $album .="<td style='text-align:left'>$results->macAlbum_id</td> ";
+           $album .="<td>$importFrom</td>";
+            $album .="<td>
+                    <a style='text-decoration: none;padding-left:3%;' href='$site_url/wp-admin/admin.php?page=macPhotos&action=viewPhotos&albid=$results->macAlbum_id'>$vewmgSrc</a>
+                    <a  style='float:right;padding-right:14%;' href='$site_url/wp-admin/admin.php?page=macPhotos&albid=$results->macAlbum_id'>$addImgSrc</a>
                     </td></tr>";
          
  $i++;

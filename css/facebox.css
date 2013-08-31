@@ -99,3 +99,16 @@ a.close{
   .mac-gallery-image{height:auto !important;}
   .mac-close-image { display: block !important;  }
 
+
+#flickr{
+
+float:left;
+text-align: center;
+}
+#flickr img {
+border: 1px solid #CCC;
+display: inline;
+margin: 3px;
+padding: 1px;
+}
+	

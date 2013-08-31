@@ -1,9 +1,9 @@
 === MAC PHOTO GALLERY ===
 Contributors: Apptha
-Tags: Mac photo gallery plugin, Photo gallery, Gallery, Apptha Mac photo gallery, mac dock effect, widgets,  Wordpress Mac photo gallery, wp Mac photo gallery , Mac Gallery plugin, Gallery Plugin
+Tags: Mac photo gallery plugin, import , IMPORT , Photo gallery, Gallery,picasa photos,flickr photos, picasa albums import, picasa albums, flickr albums import, flickr albums , Apptha Mac photo gallery, mac dock effect, picasa , facebook , flickr ,import , import albums , slide show , photo , widgets, albums , photos ,  Wordpress Mac photo gallery, wp Mac photo gallery , Mac Gallery plugin, Gallery Plugin
 Requires at least: 2.8
-Tested up to: 3.2.1
-Stable tag: 2.5
+Tested up to: 3.3
+Stable tag: 2.6
 Get the most exciting Photo Gallery in the internet, designed and modified to suit your Wordpress websites.  Installing this Mac Photo Gallery Plugin is real easy and if you have any difficulty in installation, contact our support team and quickly resolve your issue.  You can either download this Gallery Plugin directly from our website or through Wordpress plugins page itself.  This Mac Photo Gallery Version  has many advanced features that you cannot find elsewhere, you can photo gallery with Mac Dock effect.
 
 == Description ==
@@ -16,9 +16,11 @@ Mac Photo Gallery Demo - http://www.apptha.com/demo/wordpress/mac-gallery/
 
 Mac Photo Gallery Home Page - http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery
 
+= Features =
 * Easy to install Mac Photo Gallery Plugin comes through admin panel, with fantastic support.
 * You can upload images of size upto 10 MB.
 * Multiple upload of photos for an album.
+* Import Albums and Photos from picasa, flickr and facebook and show with Mac Dock effect.
 * The album photos are shown with Mac Dock effect.
 * Viewing each photo with wonderful photo preview effect which includes previous, next options.
 * The best part of this Photo preview is that Download, Share, and facebook comments is available for each photo
@@ -28,6 +30,7 @@ Mac Photo Gallery Home Page - http://www.apptha.com/category/extension/Wordpress
 * Flexible size for resizing photo and showing photos at admin side.
 * Proximity size option in admin side to make the Mack Doc Effect smoothness.
 * Having album listing scroll in the photos viewing page.
+
 
 == Installation ==
 

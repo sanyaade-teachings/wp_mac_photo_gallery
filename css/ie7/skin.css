@@ -32,7 +32,7 @@
    .jcarousel-skin-ie7 .jcarousel-clip-horizontal {
      min-height: 100px;
      margin-left:20px;
-     margin-right: 40px;
+     margin-right: 35px;
     }
 
  .jcarousel-skin-ie7 .jcarousel-container-horizontal {
@@ -67,7 +67,7 @@
 
 .jcarousel-skin-ie7 .jcarousel-item-horizontal {
     margin-left: 0;
-    margin-right: 2px;
+    margin-right: 3px;
 }
 
 .jcarousel-skin-ie7 .jcarousel-direction-rtl .jcarousel-item-horizontal {
@@ -87,8 +87,8 @@
  */
 .jcarousel-skin-ie7 .jcarousel-next-horizontal {
     position: absolute;
-    top: 40px;
-    right: 5px;
+    top: 63px;
+    right: 1px;
     width: 32px;
     height: 32px;
     cursor: pointer;
@@ -120,7 +120,7 @@
 
 .jcarousel-skin-ie7 .jcarousel-prev-horizontal {
     position: absolute;
-    top: 40px;
+    top: 63px;
     left: 5px;
     width: 32px;
     height: 32px;
@@ -152,19 +152,19 @@
 
 .carousel_lefttxt
 {
-padding-right:4px;
-padding-left:4px;
+padding: 0px 1px 0px 5px;
+
 float:left;
 display: block;
 position: relative;
 background: #000;
 filter:alpha(opacity=30);-moz-opacity:0.7;-khtml-opacity: 0.7;opacity: 0.7;
-width: 91px;text-align: left;
+width: 94%;text-align: left;
 }
 
 .jcarousel-skin-ie7 .jcarousel-item
 {
-   width:100px;
+   width:112px;
    background-color:black;
    min-height: 100px;
    text-decoration: none;

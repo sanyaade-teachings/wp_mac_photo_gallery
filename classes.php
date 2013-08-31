@@ -3,7 +3,7 @@
  * ********************************************************* */
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.5
+ * @version	      : 2.6
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -11,7 +11,9 @@
  * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
  * @abstract      : The core file of calling Mac Photo Gallery.
  * @Creation Date : June 20 2011
- * @Modified Date : September 30 2011
+ * Edited by 	  : kranthi kumar
+ * Email          : kranthikumar@contus.in
+ * @Modified Date : Jan 05 2012
  * */
 /*
  * ********************************************************* */
@@ -481,19 +483,19 @@ width: ' . $width_total . ';
 
                     if ((file_exists($file_image)) && ($get_album_row->macAlbum_image != '')) {
                         $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $get_album_row->macAlbum_id . '"><img class="mac-no-border" title="' . $get_album_row->albumname . '" src="' . $path . '/' . $get_album_row->macAlbum_image . '"
-                              alt="" style="height:100px;filter:alpha(opacity=30);  opacity:1.0;"/>
+                              alt="" style="height:112px;filter:alpha(opacity=30);  opacity:1.0;"/>
                               <span class="carousel_lefttxt">' . substr(trim($get_album_row->macAlbum_name,' '), 0, 15) . '</span></a></li>';
                     } else if ($get_album_row->macAlbum_image == '' && $photoCount != '0') {
                         $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $get_album_row->macAlbum_id . '"><img class="mac-no-border" title="' . $get_album_row->albumname . '" src="' . $path . '/' . $default_first . '"
-                              alt="" style="height:100px;filter:alpha(opacity=30);  opacity:1.0;"/>
+                              alt="" style="height:112px;filter:alpha(opacity=30);  opacity:1.0;"/>
                               <span class="carousel_lefttxt">' . substr(trim(trim($get_album_row->macAlbum_name,' '),''), 0, 15) . '</span></a></li>';
                     } else if (!file_exists($file_image)) {
                         $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $get_album_row->macAlbum_id . '"><img class="mac-no-border" title="' . $get_album_row->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"
-                              alt="" style="height:100px;filter:alpha(opacity=30);  opacity:1.0;"/>
+                              alt="" style="height:112px;filter:alpha(opacity=30);  opacity:1.0;"/>
                               <span class="carousel_lefttxt">' . substr(trim($get_album_row->macAlbum_name,' '), 0, 15) . '</span></a></li>';
                     } else {
                         $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $get_album_row->macAlbum_id . '"><img class="mac-no-border" title="' . $get_album_row->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"
-                              alt="" style="height:100px;filter:alpha(opacity=30);  opacity:1.0;"/>
+                              alt="" style="height:112px;filter:alpha(opacity=30);  opacity:1.0;"/>
                               <span class="carousel_lefttxt">' . substr(trim($get_album_row->macAlbum_name,' '), 0, 15) . '</span></a></li>';
                     }
 
@@ -510,21 +512,21 @@ width: ' . $width_total . ';
                         if ((file_exists($file_image)) && ($dis_results->macAlbum_image != '')) {
                             $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $dis_results->macAlbum_id . '">
                         <img class="mac-no-border" title="' . $dis_results->albumname . '" src="' . $path . '/' . $dis_results->macAlbum_image . '"
-                         alt=""  style="height:100px;filter:alpha(opacity=30);" />
+                         alt=""  style="height:112px;filter:alpha(opacity=30);" />
                          <span class="carousel_lefttxt">' . substr(trim($dis_results->macAlbum_name,' '), 0, 11) . '</span></a></li>';
                         } else if ($dis_results->macAlbum_image == '' && $photoCount != '0') {
                             $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $dis_results->macAlbum_id . '"><img class="mac-no-border" title="' . $dis_results->albumname . '" src="' . $path . '/' . $default_first . '"
-                              alt="" style="height:100px;filter:alpha(opacity=30);"/>
+                              alt="" style="height:112px;filter:alpha(opacity=30);"/>
                               <span class="carousel_lefttxt">' . substr(trim($dis_results->macAlbum_name,' '), 0, 11) . '</span></a></li>';
                         } else if (!file_exists($file_image)) {
                             $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $dis_results->macAlbum_id . '">
                         <img class="mac-no-border" title="' . $dis_results->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"
-                         alt=""  style="height:100px;filter:alpha(opacity=30);" />
+                         alt=""  style="height:112px;filter:alpha(opacity=30);" />
                          <span class="carousel_lefttxt">' . substr(trim($dis_results->macAlbum_name,' '), 0, 11) . '</span></a></li>';
                         } else {
                             $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $dis_results->macAlbum_id . '">
                         <img class="mac-no-border" title="' . $dis_results->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"
-                         alt=""  style="height:100px;filter:alpha(opacity=30);" />
+                         alt=""  style="height:112px;filter:alpha(opacity=30);" />
                          <span class="carousel_lefttxt">' . substr(trim($dis_results->macAlbum_name,' '), 0, 11) . '</span></a></li>';
                         }
                     }

@@ -50,6 +50,7 @@ jQuery.iFisheye = {
 					proximity: options.proximity,
 					valign: options.valign,
 					halign: options.halign,
+					itemHeight: options.itemHeight,
 					maxWidth : options.maxWidth
 				};
 				jQuery.iFisheye.positionContainer(el, 0);
@@ -106,8 +107,8 @@ jQuery.iFisheye = {
 								
 								extraWidth = el.fisheyeCfg.maxWidth * distance/el.fisheyeCfg.proximity;
 								
-								this.style.width = el.fisheyeCfg.itemWidth + extraWidth + 'px';
-								this.style.left = el.fisheyeCfg.itemWidth * nr + toAdd + 'px';
+								
+								
 								toAdd += extraWidth;
 							}
 						);
@@ -119,15 +120,7 @@ jQuery.iFisheye = {
 	},
 	
 	positionContainer : function(el, toAdd)
-	{
-		if (el.fisheyeCfg.halign)
-			if (el.fisheyeCfg.halign == 'center')
-				el.fisheyeCfg.container.get(0).style.left = (el.offsetWidth - el.fisheyeCfg.itemWidth * el.fisheyeCfg.items.size())/2 - toAdd/2 + 'px';
-			else if (el.fisheyeCfg.halign == 'left')
-				el.fisheyeCfg.container.get(0).style.left =  - toAdd/el.fisheyeCfg.items.size() + 'px';
-			else if (el.fisheyeCfg.halign == 'right')
-				el.fisheyeCfg.container.get(0).style.left =  (el.offsetWidth - el.fisheyeCfg.itemWidth * el.fisheyeCfg.items.size()) - toAdd/2 + 'px';
-		el.fisheyeCfg.container.get(0).style.width = el.fisheyeCfg.itemWidth * el.fisheyeCfg.items.size() + toAdd + 'px';
+	{		
 	},
 	
 	positionItems : function(el)
@@ -135,8 +128,7 @@ jQuery.iFisheye = {
 		el.fisheyeCfg.items.each(
 			function(nr)
 			{
-				this.style.width = el.fisheyeCfg.itemWidth + 'px';
-				this.style.left = el.fisheyeCfg.itemWidth * nr + 'px';
+				
 			}
 		);
 	}

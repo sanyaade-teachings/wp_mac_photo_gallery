@@ -3,7 +3,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.5
+ * @version	      : 2.6
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -11,7 +11,9 @@
  * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
  * @abstract      : The core file of calling Mac Photo Gallery.
  * @Creation Date : June 20 2011
- * @Modified Date : September 30 2011
+ * Edited by 	  : kranthi kumar
+ * Email          : kranthikumar@contus.in
+ * @Modified Date : Jan 05 2012
  * */
 
 /*
@@ -24,16 +26,20 @@ function macGallery_install()
     $table_settings		= $wpdb->prefix . 'macsettings';
     $table_macAlbum		= $wpdb->prefix . 'macalbum';
     $table_macPhotos		= $wpdb->prefix . 'macphotos';
+    $talbe_imploadfound  = $wpdb->prefix . 'macimportalbums';
 
     $sfound = false;
     $afound = false;
     $pfound = false;
+    $imploadfound = false;
     $found = true;
     foreach ($wpdb->get_results("SHOW TABLES;", ARRAY_N) as $row)
     {
         if ($row[0] == $table_settings) $sfound = true;
         if ($row[0] == $table_macAlbum) $afound = true;
         if ($row[0] == $table_macPhotos) $pfound = true;
+        if ($row[0] == $talbe_imploadfound) $imploadfound = true;
+        
     }
 
     // add charset & collate like wp core
@@ -62,7 +68,7 @@ function macGallery_install()
           `macProximity` double NOT NULL,
           `macDir` int(10) NOT NULL,
           `macImg_dis` varchar(10) NOT NULL,
-          `macAlbum_limit` int(11) NOT NULL,
+          `macAlbum_limit` int(11) NOT NULL DEFAULT 8,
           `mac_albumdisplay` varchar(5) NOT NULL,
           `mac_imgdispstyle` int(11) NOT NULL,
           `mac_facebook_api` varchar(50) NOT NULL,
@@ -84,28 +90,48 @@ function macGallery_install()
           `macAlbum_name` varchar(100) NOT NULL,
           `macAlbum_description` text NOT NULL,
           `macAlbum_image` varchar(50) NOT NULL,
-          `macAlbum_status` varchar(100) NOT NULL,
-          `macAlbum_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+          `macAlbum_status` varchar(100) NOT NULL DEFAULT 'ON',
+          `macAlbum_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+          `importid` tinyint(2) NOT NULL
           ) $charset_collate;";
          $res = $wpdb->get_results($sql);
-            }
-
-            if (!$pfound)
+            }	
+            else{		
+            			$wpdb->query("ALTER TABLE $table_macAlbum
+									ADD COLUMN `importid` tinyint(2) NOT NULL DEFAULT 0");
+            }	
+             if (!$pfound)
             {
-        $sql = "CREATE TABLE ".$table_macPhotos." (
+       	   $sql = "CREATE TABLE ".$table_macPhotos." (
           `macPhoto_id` int(5) NOT NULL AUTO_INCREMENT PRIMARY KEY,
           `macAlbum_id` int(5) NOT NULL,
           `macAlbum_cover` varchar(10) NOT NULL,
           `macPhoto_name` varchar(50) NOT NULL,
           `macPhoto_desc` text NOT NULL,
           `macPhoto_image` varchar(50) NOT NULL,
-          `macPhoto_status` varchar(10) NOT NULL,
+          `macPhoto_status` varchar(10) NOT NULL DEFAULT 'ON',
           `macPhoto_sorting` int(4) NOT NULL,
           `macPhoto_date` date NOT NULL
            ) $charset_collate;";
-         $res = $wpdb->get_results($sql);
+           $res = $wpdb->get_results($sql);
             }
-        $site_url = get_option('siteurl');  //Getting the site domain path
+        
+            
+if (!$imploadfound)
+            {
+        $sql = " 
+        
+		   CREATE TABLE IF NOT EXISTS $talbe_imploadfound (
+		  `importid` tinyint(2) NOT NULL AUTO_INCREMENT,
+		  `accountids` varchar(100) NOT NULL,
+		  `importsite` varchar(15) NOT NULL,
+		   PRIMARY KEY (`importid`)
+			) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+		        ";
+           $res = $wpdb->get_results($sql);
+            }
+            
+                $site_url = get_option('siteurl');  //Getting the site domain path
 
 
  $page_found  = $wpdb->get_results("SELECT * FROM ".$wpdb->prefix."posts where post_content='[macGallery]'");
@@ -120,7 +146,110 @@ $res_macpage_id    =  $wpdb->get_var("select ID from ".$wpdb->prefix."posts ORDE
 $upd_macPage       =  "UPDATE ".$wpdb->prefix."posts SET post_parent='$videoId',guid='$site_url/?page_id=$res_macpage_id' WHERE ID='$res_macpage_id'";
 $rst_updated       =  $wpdb->get_results($upd_macPage);
  }
+ 							   update_option('showmacPicasaAlbums',1); 
+	  						   update_option('showmacFlickrAlbums',1);
+							   update_option('showmacFacebookAlbums',1);
+							   update_option('macinstallSuccess',1);
+            
 }
+function macGallery_deinstall_tables()
+                        {
+                            global $wpdb, $wp_version;
+                           update_option('macinstallSuccess',0);                            
+                            $table_settings = $wpdb->prefix . 'macsettings';
+                            $table_macAlbum = $wpdb->prefix . 'macphotos';
+                            $table_macPhotos = $wpdb->prefix . 'macalbum';
+							 $talbe_imploadfound  = $wpdb->prefix . 'macimportalbums';
+							 
+                              $wpdb->query("DROP TABLE IF EXISTS `" . $table_settings . "`");
+                              $wpdb->query("DROP TABLE IF EXISTS `" . $table_macAlbum . "`");
+                              $wpdb->query("DROP TABLE IF EXISTS `" . $table_macPhotos . "`");
+                              $wpdb->query("DROP TABLE IF EXISTS `" .  $talbe_imploadfound . "`");
+                                
+                              $wpdb->query("DELETE FROM " . $wpdb->prefix . "posts WHERE post_content='[macGallery]'");
+                              delete_option('macalbumPhotosList');
+                              delete_option('macwidget_picasa_data');
+	  						  delete_option('macwidget_picasa_albums');
+	  						  delete_option('currentPicasaAlbum');
+	  						  delete_option('macFacebookPhotos');
+	  						  delete_option('macFacebookAlbums');
+	  						  delete_option('facebookUserLoginSuccess');  
+	  						  delete_option('macflickrAlbShowCount');
+	  						  delete_option('macFacebookPhotos'); 
+	  						   delete_option('facebookAccessToken');
+							   delete_option('facebookUserId');
+							  delete_option('macflickrAlbDetailList');
+							  delete_option('macPicasaUserNames');
+							  delete_option('picasaalubmstimedate');
+							  delete_option('flickralubmstimedate');
+							  delete_option('isGetPicasaAlbums');
+							  delete_option('macalbumPhotosList' );
+							  delete_option('macwidget_picasa_albums');
+							  delete_option('picasaAlbumProfilePhotos');
+							  delete_option('macwidget_picasa_data');
+							  delete_option('isGetPicasaAlbums');
+							  delete_option('picasaAlbumProfilePhotos');
+							  delete_option('isGetFlickrAlbums');
+							  delete_option('macflickrNumOfAlbs');
+							  delete_option('macflickrAlbDetailList');
+							  delete_option('filckrCurAlbPhoCount');
+							  delete_option('macFlickrCurrentAlbPhotos');
+							  delete_option('facebookalubmstimedate');
+							  delete_option('facebookAccessToken');
+							   delete_option('macFacebookPhotos');
+							  delete_option('macFacebookAlbums');
+							  delete_option('facebookUserLoginSuccess'); 
+							  delete_option('isGetFacebookAlbums'); 
+							  delete_option('macFacebookAlbums');
+							  delete_option('macFacebookAlbums');
+							  delete_option('facebookUserLoginSuccess');
+							  delete_option('macFacebookAlbums');
+							  delete_option('facebookalubmstimedate');
+							   delete_option('isGetFacebookAlbums');
+	  			  		   delete_option('showmacPicasaAlbums'); 
+	  						   delete_option('showmacFlickrAlbums');
+							   delete_option('showmacFacebookAlbums');
+							   delete_option('currentTimeZone'); 
+							   delete_option('macFlickrApiId');
+							   delete_option('picasaAlbumProfilePhotos');
+							   delete_option('macPicasaUserNames');
+							   delete_option('importedTalbleId');
+							   delete_option('facebookuserid');
+							   delete_option('macFacebookAlbums');
+							   delete_option('facebookUserLoginSuccess');
+							   delete_option('facebookalubmstimedate');
+							   delete_option('isGetFacebookAlbums');
+							   delete_option('isGetFlickrAlbums');
+							   delete_option('flickralubmstimedate');
+							   delete_option('picasaalubmstimedate');
+							   delete_option('isGetPicasaAlbums');
+							   delete_option('macPicasaUserNames'); 
+							   delete_option('filckrCurAlbPhoCount');
+							  	delete_option('macFlickrUserId');
+						    	delete_option('macPicasaUserNames');
+						    	delete_option('macFacebookApi');
+						    	delete_option('macFacebookSecKey'); 
+						    	
+                        $uploadDir = wp_upload_dir();
+	$path = $uploadDir['basedir'].'/mac-dock-gallery/';
+	if(is_dir($path)){
+		chmod($path , 0777);
+		$photos =  opendir($path);
+
+		while($content = readdir($photos)  )
+		{
+			if($content != '.' && $content != '..') {
+
+				$deleteis = $path.$content;
+				unlink($deleteis);
+			}
+		}
+
+	}
+						    	
+						    	
+ }//deactive is end
+                        
 function create_mac_folder()
 {
       $structure = dirname(dirname(dirname(__FILE__))).'/uploads/mac-dock-gallery';

@@ -2,15 +2,15 @@
 /*
 Plugin Name: Mac Photo Gallery
 Plugin URI: http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery
-Description: Mac Photo Gallery for Wordpress. It gives you a stylish gallery effect with mac effect. Mac Photo Gallery is a simple and easy gallery for wordpress.        ***Alert: If you are upgrading the latest version of mac photo gallery means, Kindly take backup of your previous version data & then do upgrade.
-Version:2.5
+Description: Mac Photo Gallery for Wordpress. It gives you a stylish gallery effect with mac effect. Mac Photo Gallery is a simple and easy gallery for wordpress. Alert: If you are upgrading the latest version of mac photo gallery means, Kindly take backup of your previous version data & then do upgrade.
+Version:2.6
 Author: Apptha
 Author URI: http://www.apptha.com
 License: GNU General Public License version 2 or later; see LICENSE.txt
 */
-
 /* The first loading page of the Mac Photo Gallery these contain admin setting too */
 require_once("classes.php"); // Front view of the Mac Photo Gallery
+require_once('sdk/facebook.php');//for facebook sdk 
 
     global $t;
     global $e;
@@ -19,6 +19,8 @@ require_once("classes.php"); // Front view of the Mac Photo Gallery
        $t=1;
        $e=1;
        $d=1;
+$folder   = dirname(plugin_basename(__FILE__));
+define('PLUGINNAME', $folder);
          
 function Sharemacgallery($content)
  {
@@ -29,6 +31,7 @@ function Sharemacgallery($content)
 function CONTUS_macRender($content,$wid='')
  {
     global $wpdb;
+   
     if($wid=='')
     $wid='pirobox_gall';
     $pageClass = new contusMacgallery();
@@ -65,9 +68,10 @@ function macPage()
  {
 add_menu_page('Mac Photos', 'Mac Photos', '2', 'macAlbum', 'show_macMenu',get_bloginfo('url').'/wp-content/plugins/'.dirname(plugin_basename(__FILE__)).'/images/icon.png');
 
-add_submenu_page('macAlbum', 'Albums', 'Albums',4, 'macAlbum','show_macMenu');
+add_submenu_page( 'macAlbum', 'Albums', 'Albums',4, 'macAlbum','show_macMenu');
 add_submenu_page( 'macAlbum', 'Image upload', 'Upload Images', 'manage_options', 'macPhotos', 'show_macMenu');
 add_submenu_page( 'macAlbum', 'Mac Settings', 'Settings', 'manage_options', 'macSettings', 'show_macMenu');
+add_submenu_page( 'macAlbum', 'Import Albums', 'Import Albums', 'manage_options', 'ImportAlbums', 'show_macMenu');
  }
 
 function show_macMenu()
@@ -82,11 +86,17 @@ function show_macMenu()
             include_once (dirname(__FILE__) . '/macphotoGallery.php'); // admin functions
             $macPhotos = new macPhotos();
             break;
-           case 'macSettings' :
+       case 'macSettings' :
 
             include_once (dirname(__FILE__) . '/macGallery.php'); // admin functions
                macSettings();
             break;
+       case 'ImportAlbums' :
+                
+            include_once (dirname(__FILE__) . '/macImportAlbums.php'); // admin functions
+               //macSettings();
+               $macImportAlb = new macImportAlbums();
+            break;  
     }
 }
 
@@ -145,7 +155,7 @@ var url = '<?php echo $site_url; ?>';
     })
 </script>
 <p><a href="#mydiv" rel="facebox"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/licence.png'?>" align="right"></a>
- <a href="http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery" target="_blank"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/buynow.png'?>" align="right" style="padding-right:5px;"></a>
+ <a href="http://www.apptha.com/shop/checkout/cart/add/product/23/" target="_new"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/buynow.png'?>" align="right" style="padding-right:5px;"></a>
 </p>
 <div id="mydiv" style="display:none">
 <form method="POST" action="" onSubmit="return validateKey()">
@@ -187,7 +197,7 @@ var url = '<?php echo $site_url; ?>';
                     else
                        {
                            alert('Valid License key is entered successfully');
-            	           return false;
+            	           return true;
                        }
 
            }
@@ -198,7 +208,9 @@ var url = '<?php echo $site_url; ?>';
         <h2 class="nav-tab-wrapper">
         <a href="?page=macAlbum" class="nav-tab">Albums</a>
         <a href="?page=macPhotos&albid=0" class="nav-tab">Upload Images</a>
-        <a href="?page=macSettings" class="nav-tab nav-tab-active">Settings</a></h2>
+        <a href="?page=macSettings" class="nav-tab nav-tab-active">Settings</a>
+        <a href="?page=ImportAlbums" class="nav-tab">Import Albums</a>
+        </h2>
           <div style="background-color: #ECECEC;padding: 10px;margin-top:10px;border: #ccc 1px solid">
         <strong> Note : </strong>Mac Photo Gallery can be easily inserted to the Post / Page by adding the following code :<br><br>
                  (i)  [macGallery] - This will show the entire gallery [Only for Page]<br>
@@ -207,6 +219,9 @@ var url = '<?php echo $site_url; ?>';
         <div id="error_msg" style="color:red"></div>
 <?php
     if (isset($_REQUEST['macSet_upt'])) {
+    	
+    	
+    
 
         $macrow         = $_REQUEST['macrow'];
         $macimg_page    = $_REQUEST['macimg_page'];
@@ -224,7 +239,7 @@ var url = '<?php echo $site_url; ?>';
         $resizeHei        = $_REQUEST['resizeHei'];
         $resizeWid        = $_REQUEST['resizeWid'];
         $macAlbum_limit   = $_REQUEST['macAlbum_limit'];
-        
+       
          $show_share  = $_REQUEST['show_share'];
         $show_download  = $_REQUEST['show_download'];
         
@@ -233,11 +248,11 @@ var url = '<?php echo $site_url; ?>';
            $mouseHei == '' || $mouseHei == '0' ||
            $mouseWid == '' || $mouseWid == '0' ||$macProximity == '' || $macProximity == '0' ||
           /* $mac_facebook_api == '' || $mac_facebook_api == '0' ||$mac_facebook_comment == '' || $mac_facebook_comment == '0' ||*/
-           $resizeHei == '' || $resizeHei == '0' ||$resizeWid == '' || $resizeWid == '0'
+           $resizeHei == '' || $resizeHei == '0' ||$resizeWid == '' || $resizeWid == '0' || $resizeWid == '' || $macAlbum_limit == '0'
                 )
         {
-         
-        }
+       
+        } 
         else
         {
          $updSet = $wpdb->query("UPDATE " . $wpdb->prefix . "macsettings SET  `macrow` = '$macrow',
@@ -247,6 +262,7 @@ var url = '<?php echo $site_url; ?>';
          `mac_imgdispstyle` = '$mac_imgdispstyle',
          `mac_facebook_api` = '$mac_facebook_api',show_download='$show_download' WHERE `macSet_id` = 1");
          echo '<div class="mac-error_msg"">Settings updated successfully</div>';
+       
         }
          }
        $viewSetting = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings");
@@ -257,7 +273,7 @@ var url = '<?php echo $site_url; ?>';
                 <div align="right"><input class='button-primary' name='macSet_upt' id='macSet_upt' type='submit' value='Update Options'></p></div>
                 <table style="margin-right: 10px;">
 
-                        <caption class="header">Display Settings</caption>
+                        <caption class="header" style="background-color: #ECECEC;">Display Settings</caption>
 
                     <tr>
                         <td><span>Columns</span></td>
@@ -286,24 +302,21 @@ var url = '<?php echo $site_url; ?>';
                         <tr>
                         <td><span>Number of Albums / Page</span></td>
                         <td>
-                            <select name="macAlbum_limit">
-                            <option  <?php if ($viewSetting->macAlbum_limit == '4')  { echo 'selected="selected"'; } ?>value="4">4</option>
-                            <option  <?php if ($viewSetting->macAlbum_limit == '8')  { echo 'selected="selected"'; } ?>value="8">8</option>
-                            <option  <?php if ($viewSetting->macAlbum_limit == '12') { echo 'selected="selected"'; } ?>value="12">12</option>
-                            <option  <?php if ($viewSetting->macAlbum_limit == '16') { echo 'selected="selected"'; } ?>value="16">16</option>
-                            <option  <?php if ($viewSetting->macAlbum_limit == '20') { echo 'selected="selected"'; } ?>value="20">20</option>
-                            </select>
+                        <input type="text" name="macAlbum_limit" id="macAlbum_limit" value="<?php echo $viewSetting->macAlbum_limit; ?>"> 
+                            
                        </td>
                    </tr>
                    
                    <tr>
-                        <td><span>Download settings:</span></td>
+                        <td><span>Download photos:</span></td>
                         <td>
                             <input type="radio" name="show_download" <?php if ($viewSetting->show_download == 'allow') { echo 'checked'; } ?> value="allow" >Allow
-                     <input type="radio" name="show_download" <?php if ($viewSetting->show_download == 'restrict') { echo 'checked'; } ?> value="restrict">Restrict
+                    		<input type="radio" name="show_download" <?php if ($viewSetting->show_download == 'restrict') { echo 'checked'; } ?> value="restrict">Restrict
+                    		
                         </td>
                    </tr>
-                     
+                   
+                                        
                   <!-- <tr>
                         <td><span>Facebook Comments:</span></td>
                         <td>
@@ -325,9 +338,9 @@ var url = '<?php echo $site_url; ?>';
                        </td>
                    </tr>-->
               </table>
-                <table>
+                <table >
               
-                        <caption>Image Settings</caption>
+                        <caption style="background-color: #ECECEC;" >Image Settings</caption>
                    <tr>
                         <td><span>  Mac Dock  Image Width/Height(Px)</span></td>
                         <td><input type="text" name="mouseWid" id="mouseWid" value="<?php echo $viewSetting->mouseWid; ?>"></td>
@@ -375,7 +388,11 @@ var url = '<?php echo $site_url; ?>';
                 </table>
                 <div id="error_msg" style="color:red"></div>
                 <div align="right"> <p class='submit'><input class='button-primary' name='macSet_upt' id='macSet_upt' type='submit' value='Update Options'></p></div>
-            </div>
+    <div style='clear: both;'></div>
+      
+                 
+                 
+           </div>
         </form>
     </div>
 <?php
@@ -464,14 +481,10 @@ $chars_array[]=$chars_str[$i];
                         function macGallery_deinstall()
                         {
                             global $wpdb, $wp_version;
-                            $table_settings = $wpdb->prefix . 'macsettings';
-                            $table_macAlbum = $wpdb->prefix . 'macphotos';
-                            $table_macPhotos = $wpdb->prefix . 'macalbum';
-
-                              $wpdb->query("DROP TABLE IF EXISTS `" . $table_settings . "`");
-                              $wpdb->query("DROP TABLE IF EXISTS `" . $table_macAlbum . "`");
-                              $wpdb->query("DROP TABLE IF EXISTS `" . $table_macPhotos . "`");
-                              $wpdb->query("DELETE FROM " . $wpdb->prefix . "posts WHERE post_content='[macGallery]'");
+                            require_once(dirname(__FILE__) . '/install.php');
+                            macGallery_deinstall_tables();
+                            
+                            
                         }
 
                         /* Function to activate player plugin */
@@ -480,7 +493,9 @@ $chars_array[]=$chars_str[$i];
                             loadsettings();
                              create_mac_folder();
                         }
-
+                      
+  add_action('plugins_loaded', 'macGallery_installFile' );
+  
                         register_activation_hook(plugin_basename(dirname(__FILE__)) . '/macGallery.php', 'macGallery_installFile');
                         register_activation_hook(__FILE__, 'macGallery_activate');
                         register_uninstall_hook(__FILE__, 'macGallery_deinstall');
@@ -540,6 +555,39 @@ $div    = '<div id="contusMac" class="sidebar-wrap clearfix">
            <div><h3 class="widget-title">'.$title.'</h3></div>';
 $show   = $options['show']; //Number of shows
 $sql    = "SELECT * FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_status = 'ON' ORDER BY RAND() LIMIT 0,$show";
+
+ $albumTable =  $wpdb->prefix . "macalbum";
+ $importTable = $wpdb->prefix.'macimportalbums';      
+$importCondition = '1';
+        $flag = 0;
+        
+            	if(!get_option('showmacPicasaAlbums'))
+				{
+					$importCondition = " importsite != 'picasa' ";
+					$flag = 1;
+				}	
+				if(!get_option('showmacFlickrAlbums'))
+				{
+					if($flag)
+					$importCondition .= "AND importsite != 'flickr' ";
+					else 
+					$importCondition = " importsite != 'flickr' ";
+					$flag= 1;
+				}	
+				if (!get_option('showmacFacebookAlbums'))
+				{
+					if($flag)
+					$importCondition .= "AND importsite != 'facebook' ";
+					else 
+					$importCondition = " importsite != 'facebook' ";
+				}//importsite != 'flickr'  AND importsite != 'picasa' AND importsite != 'facebook'
+ $sql  = "SELECT macAlbum_id , mia.importsite,	macAlbum_name, macAlbum_description ,	macAlbum_image , macAlbum_status ,
+ ma.`importid`, macAlbum_date FROM $albumTable ma LEFT JOIN $importTable mia 
+ ON ma.`importid` = mia.importid 
+ WHERE  macAlbum_status='ON'  AND ($importCondition) 
+ OR ma.importid = 0 GROUP BY ma.`macAlbum_id` ORDER BY RAND() LIMIT 0,$show ";	
+
+
 $albDis = $wpdb->get_results($sql);
 $div .='<ul class="ulwidget">';
 // were there any posts found?
@@ -784,4 +832,37 @@ add_action('wp_head', 'setplayerscripts');
             // Run code and init
             add_action('widgets_init', 'widget_Contusmacphotos_init');
 
+function callingFacebookConnectionFunction()
+{            
+	 //require 'sdk/facebook.php';
+	 $app_secret = 'fdb2654f9a64ed3ca4c8a69477314a0b';//1ceb54c2fa0d15100b7ec870aeab6425';
+$app_id     = '199313036828495';//254991121235149';	   	   
+$facebook = new Facebook(array(
+                    'appId' => $app_id,
+                    'secret' =>$app_secret,
+                    'cookie' => false,
+				));
+				
+		$user = $facebook->getUser();
+
+		if ($user) {
+		  try {
+		    // Proceed knowing you have a logged in user who's authenticated.
+		    $user_profile = $facebook->api('/me');
+		  } catch (FacebookApiException $e) {
+		    error_log($e);
+		    $user = null;
+		  }
+		  //$facebook->setAccessToken('AAAC1Ri7CX08BAMw3wPjLZB2dzARF7L0t7xDZAiw11ZA3jJd0WKlAEH26UX7aVfJFufBhThPrpbrZCkZAuMia8rN4eH6Armrg5oNQ4muFNQQZDZD');
+		   $accToken =  $facebook->getAccessToken();
+		   $photos = $facebook->api('/me/albums?access_token='.$accToken); // gets all user photos 
+			//echo '<pre>';print_r($photos);
+			$facAlbId = $photos['data'][0]['id'];
+		   $photos = $facebook->api($facAlbId.'/photos/');
+		  // echo '<pre>';print_r($photos);
+		}
+ 
+// Login or logout url will be needed depending on current user state.
+      return $facebook;
+}//functin end hear
 ?>
