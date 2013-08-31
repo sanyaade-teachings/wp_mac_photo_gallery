@@ -3,7 +3,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.4
+ * @version	      : 2.5
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -138,6 +138,7 @@ require_once( dirname(__FILE__) . '/macDirectory.php');
 <th class="on">Status</th>
 <th class="albumid">Album Id</th>
 <th class="gallery"></th>
+<th class="gallery"></th>
 </tr>
 <?php
 $i=0;
@@ -208,11 +209,15 @@ foreach($res as $results)
            $album .= "<td><div name='status_bind' id='status_bind_$results->macAlbum_id'  style='text-align:left'><img src='$site_url/wp-content/plugins/$folder/images/publish_x.png' width='16' height='16' onclick=macAlbum_status('ON',$results->macAlbum_id) style='cursor:pointer' /></div></td>";
         }
            $album .="<td style='text-align:left'>$results->macAlbum_id</td> ";
-
-           $album .="<td><a href='$site_url/wp-admin/admin.php?page=macPhotos&albid=$results->macAlbum_id'>Add</a>
-                     <a href='$site_url/wp-admin/admin.php?page=macPhotos&action=viewPhotos&albid=$results->macAlbum_id'>View</a>
-
+            $album .="<td><a href='$site_url/wp-admin/admin.php?page=macPhotos&action=viewPhotos&albid=$results->macAlbum_id'>View Images</a>
+         
+                     
+                    </td>";
+           $album .="<td>
+           <a href='$site_url/wp-admin/admin.php?page=macPhotos&albid=$results->macAlbum_id'>Add Images</a>
+                     
                     </td></tr>";
+         
  $i++;
 }
 $album .='</table>';

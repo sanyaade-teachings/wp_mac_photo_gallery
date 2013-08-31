@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.4
+ * @version	      : 2.5
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -29,7 +29,7 @@ $site_url = get_bloginfo('url');
     $photoImg    = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$macPhoto_id' ");
     $deletePhoto  = $wpdb->get_results("DELETE FROM " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$macPhoto_id'");
     $path = "$path/";
-                unlink($path . $photoImg);
+            unlink($path . $photoImg);
             $extense = explode('.', $photoImg);
             unlink($path . $macPhoto_id . '.' . $extense[1]);
 

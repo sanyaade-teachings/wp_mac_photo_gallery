@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.4
+ * @version	      : 2.5
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -105,6 +105,7 @@ if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file) && $albumId !='
 {
      $macimage = $_FILES['uploadfile']['name'];
      $macname = explode('.',$macimage);
+     $random_digit=rand(0000,9999);
      $storing_macname = addslashes($macname[0]);
      $uploadDb =  $wpdb->query("INSERT INTO ". $wpdb->prefix."macphotos (`macAlbum_id`,`macPhoto_name`, `macPhoto_desc`, `macPhoto_image`, `macPhoto_status`, `macPhoto_sorting`,`macPhoto_date`)
        VALUES ('$albumId','$storing_macname', '', '$macimage', 'ON', '',NOW())");
@@ -112,22 +113,21 @@ if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file) && $albumId !='
        $album_image = $wpdb->get_var("select macPhoto_image from " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$lastid'");
        $filenameext = explode('.',$album_image);
        $filenameextcount = count($filenameext);
-                $thumbfile = $lastid . "_thumb." . $filenameext[(int) $filenameextcount - 1];
-                $bigfile = $lastid . "." . $filenameext[(int) $filenameextcount - 1];
+       $_thumb_random_digit=rand(0000,9999);
+                $thumbfile = $lastid . "_thumb_" .$_thumb_random_digit.'.'. $filenameext[(int) $filenameextcount - 1];
+                $bigfile = $lastid .'_'.$_thumb_random_digit.'.'. $filenameext[(int) $filenameextcount - 1];
                 $path = $uploaddir.$album_image;
                 define(contus, "$uploaddir/");
                 $macSetting = $wpdb->get_row("SELECT * FROM ". $wpdb->prefix."macsettings");
-                $twidth = $macSetting->resizeWid;
-                $theight =$macSetting->resizeHei;
+//                $twidth = $macSetting->resizeWid;
+//                $theight =$macSetting->resizeHei;
+
+                 $twidth  = $macSetting->mouseWid+50;
+                 $theight = $macSetting->mouseWid+50;
                 /* create Big image and save */
                 $imgwidth = $image->getWidth();
                 $imgheight =$image->getHeight();
-                if($imgwidth >= '700' && $imgheight >= '500')
-                {
-                    $image->resizeToWidth(700);
-                    $image->resizeToHeight(500);
-                    $image->resize(700,500);
-                }
+               
                   $image->save($uploaddir . $bigfile);
                 /* create thumb image and save */
                   $image->resize($twidth,$theight);

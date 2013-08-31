@@ -2,7 +2,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.4
+ * @version	      : 2.5
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -34,7 +34,7 @@
 li.clearfix {
     display: list-item;
 }
-.mac-no-border {border: none !important; padding: 0px !important}
+.mac-no-border {border: none !important; padding: 0px !important;margin:0px !important}
 
 .macLeft{ float:left;}
 .bind_macPhotos {width:60%;height:auto;float:left;}
@@ -59,12 +59,16 @@ li.clearfix {
     padding: 5px 0px 10px 7px; font-size: 11px;
     color:#666;border-bottom:1px solid #DFDFDF;
 }
-.mac_album_des
+
+#second-carousel
 {
-    font-weight: bold;
-    padding:0 5px;
+    text-indent: 0px;
 }
-.mac_gallery .checkall {width:15%;text-align: left;}
+.inner_albim_image img{
+    width: 100%;
+    height: 100%;
+}
+.mac_gallery th.checkall {width:10%;text-align: left;}
 .mac_gallery .image {width:10%;}
 .mac_gallery .name {width:10%;}
 .mac_gallery .desc {width:15%;}
@@ -163,7 +167,15 @@ tr:hover .delView a
     font-family: Helvetica,Arial,sans-serif;
     font-weight: bold;
     color:white;
-    padding: 0px 5px;
+    padding: 2px 5px 0px 3px;
+}
+.mac_title a
+{
+    font-family: Helvetica,Arial,sans-serif;
+    font-weight: bold;
+    color:white;
+    padding: 2px 5px 0px 3px;
+    text-decoration: none;
 }
 .mac_sort_arrow
 {
@@ -267,7 +279,7 @@ line-height: 12px;
 .macSettings table{width: 48%;border: 1px solid #ccc; border-radius:0 0 5px 5px;margin: 10px 0px;float:left}
 .macSettings table caption{ background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f9f9f9), to(#ececec));
                            -webkit-box-shadow: white 0px 1px 0px;
-                            text-align: left; padding: 5px 0 0 5px;  border-radius:5px 5px 0 0; font-weight: bold; height: 25px; border: 1px solid #ccc;}
+                            text-align: left; padding: 5px 0 0 13px;  border-radius:5px 5px 0 0; font-weight: bold; height: 25px; border: 1px solid #ccc;}
 
 .macSettings table tr td span{width: 80%; float: left;padding: 0 0 0 5px;}
 .mac-error_msg
@@ -282,7 +294,7 @@ border-top-left-radius: 3px 3px;
 border-top-right-radius: 3px 3px;
 margin: 5px 0px;
 padding: 5px 0.6em;
-width:100%;
+width:1030px;
 float:left;
 font-weight: bold;
 }
@@ -290,8 +302,15 @@ font-weight: bold;
 {
     color: red;
 }
-                .page_list
-                {
+.page_list {
                 margin:0 auto;
                 text-align:center;
-                }
+}
+
+.jcarousel-item a img {	opacity:0.4;}
+.jcarousel-item a img:HOVER {	  opacity:1.0;	}
+	.carousel_lefttxt :HOVER {	  opacity:1.0;	}
+
+
+
+

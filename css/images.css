@@ -2,7 +2,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.4
+ * @version	      : 2.5
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -37,11 +37,11 @@ z-index: 99999;
                 {
                  width: 150px;
                  margin: 0px auto;
-                 padding-left: 10px;
+                
                 }
 #container #imgwrapper{
     margin:0 auto;
-    padding:10px;
+   
     height:auto;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -125,8 +125,8 @@ margin-left: 25px;
 
 .countimg{font-size: 12px;width:20px;height:10px}
 #content .countimg img{max-width: 20px;}
-#content .thumbnail img{width: 140px; height: 140px; padding: 10px 6px 10px 6px;}
-.albumimg{float:left;margin:10px 8px 0px 0;padding:5px;font-family:Helvetica,Arial,sans-serif;background: none repeat scroll 0 0 #000000;color:#fff;height: 200px}
+#content .thumbnail img{width: 140px; height: 140px; padding: 10px 6px 10px 6px;margin: 0px;border: none;}
+.albumimg{float:left;width: 151px;margin:10px 8px 0px 0;padding:5px;font-family:Helvetica,Arial,sans-serif;background: none repeat scroll 0 0 #000000;color:#fff;height: 190px}
 .inner_albim_image { width:151px;height:150px;overflow:hidden; }
 .widget-area .albumimg{float:left;margin:10px 8px 0px 0;font-family:Helvetica,Arial,sans-serif;background: none repeat scroll 0 0 #000000;color:#fff}
 .dock_img_space

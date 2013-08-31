@@ -1,6 +1,6 @@
 /*
  * Facebox (for jQuery)
- * version: 1.2 (05/05/2008)
+ * version: 1.1 (03/01/2008)
  * @requires jQuery v1.2 or later
  *
  * Examples at http://famspam.com/facebox/
@@ -11,9 +11,9 @@
  * Copyright 2007, 2008 Chris Wanstrath [ chris@ozmm.org ]
  *
  * Usage:
- *  
+ *
  *  jQuery(document).ready(function() {
- *    jQuery('a[rel*=facebox]').facebox() 
+ *    jQuery('a[rel*=facebox]').facebox()
  *  })
  *
  *  <a href="#terms" rel="facebox">Terms</a>
@@ -27,185 +27,174 @@
  *
  *
  *  You can also use it programmatically:
- * 
+ *
  *    jQuery.facebox('some html')
  *
- *  The above will open a facebox with "some html" as the content.
- *    
- *    jQuery.facebox(function($) { 
- *      $.get('blah.html', function(data) { $.facebox(data) })
- *    })
+ *  This will open a facebox with "some html" as the content.
  *
- *  The above will show a loading screen before the passed function is called,
- *  allowing for a better ajaxy experience.
+ *    jQuery.facebox(function() { ajaxes })
  *
- *  The facebox function can also display an ajax page or image:
- *  
- *    jQuery.facebox({ ajax: 'remote.html' })
- *    jQuery.facebox({ image: 'dude.jpg' })
- *
- *  Want to close the facebox?  Trigger the 'close.facebox' document event:
- *
- *    jQuery(document).trigger('close.facebox')
- *
- *  Facebox also has a bunch of other hooks:
- *
- *    loading.facebox
- *    beforeReveal.facebox
- *    reveal.facebox (aliased as 'afterReveal.facebox')
- *    init.facebox
- *
- *  Simply bind a function to any of these hooks:
- *
- *   $(document).bind('reveal.facebox', function() { ...stuff to do after the facebox and contents are revealed... })
+ *  This will show a loading screen before the passed function is called,
+ *  allowing for a better ajax experience.
  *
  */
-(function($) {
-  $.facebox = function(data, klass) {
-    $.facebox.loading()
 
-    if (data.ajax) fillFaceboxFromAjax(data.ajax)
-    else if (data.image) fillFaceboxFromImage(data.image)
-    else if (data.div) fillFaceboxFromHref(data.div)
-    else if ($.isFunction(data)) data.call($)
-    else $.facebox.reveal(data, klass)
+
+var apptha = jQuery.noConflict();
+
+(function(apptha) {
+  apptha.facebox = function(data, klass) {
+    apptha.facebox.init()
+    apptha.facebox.loading()
+    apptha.isFunction(data) ? data.call(apptha) : apptha.facebox.reveal(data, klass)
+
   }
 
-  /*
-   * Public, $.facebox methods
-   */
 
-  $.extend($.facebox, {
-    settings: {
-      dom_data: null,
-      dom: null, 
-      opacity      : 0,
-      overlay      : true,
-      loadingImage : url+'/wp-content/plugins/mac-dock-gallery/images/facebox/loading.gif',
-      closeImage   : url+'/wp-content/plugins/mac-dock-gallery/images/facebox/close.gif',
-      imageTypes   : [ 'png', 'jpg', 'jpeg', 'gif' ],
-      faceboxHtml  : '\
-    <div id="facebox" style="display:none;"> \
-      <div class="popup"> \
-        <table> \
-          <tbody> \
-            <tr> \
-              <td class="tl"/><td class="b"/><td class="tr"/> \
-            </tr> \
-            <tr> \
-              <td class="b"/> \
-              <td class="body"> \
-                <div class="content"> \
-                </div> \
-                <div class="footer"> \
-                  <a href="#" class="close"> \
-                    <img src="./close.gif" title="close" class="close_image" /> \
-                  </a> \
-                </div> \
-              </td> \
-              <td class="b"/> \
-            </tr> \
-            <tr> \
-              <td class="bl"/><td class="b"/><td class="br"/> \
-            </tr> \
-          </tbody> \
-        </table> \
+    apptha.facebox.settings = {
+    loading_image : 'loadinfo.gif',
+    close_image   : 'close.png',
+    image_types   : [ 'png', 'jpg', 'jpeg', 'gif' ],
+    facebox_html  : '\<div id="popup_overlay" style="display:none;background:black;opacity:0.8;filter: alpha(opacity=80);position:absolute;width:100%;z-index:45646"></div>\
+ <div id="facebox" style="z-index:999999;display:none;"> \
+<div class="popup"> \
+    	<table style="width:940px;"> \
+        <tbody> \
+           <tr> \
+            <td class="b"/> \
+    	    <td class="body"> \
+<div class="mac-close-image"> \
+        <a href="#" class="close" title="close"> \
+            </a> \
       </div> \
-    </div>'
-    },
+    	   <div class="appthaContent" id="appthaContent" style="width:920px;margin:0 auto;"> \
+              </div> \
+             </td> \
+            </tbody> \
+      </table> \
+    </div> \
+  </div>'
+  }
 
-    loading: function() {
-      init()
-      if ($('#facebox .loading').length == 1) return true
-      showOverlay()
+  apptha.facebox.loading = function() {
 
-      $('#facebox .content').empty()
-      $('#facebox .body').children().hide().end().
-        append('<div class="loading"><img src="'+$.facebox.settings.loadingImage+'"/></div>')
+    if (apptha('#facebox .loading').length == 1) return true
 
-      $('#facebox').css({
-        top:	0,
-        left:	385.5
-      }).show()
+    apptha('#facebox .appthaContent').empty()
+    apptha('#facebox .body').children().hide().end().
+      append('<div class="loading" style="margin:0 auto;"></div>')
 
-      $(document).bind('keydown.facebox', function(e) {
-        if (e.keyCode == 27) $.facebox.close()
-        return true
-      })
-      $(document).trigger('loading.facebox')
-    },
+    var pageScroll = apptha.facebox.getPageScroll()
+    apptha('#facebox').css({
+      top:	pageScroll[1] + ((apptha.facebox.getPageHeight() / 10))/2,
+      left:	pageScroll[0]
+    }).show()
+apptha('#popup_overlay').css({
+      top:	0,
+      left:	pageScroll[0],
+      height: apptha(document).height()
+    }).show()
 
-    reveal: function(data, klass) {
-      $(document).trigger('beforeReveal.facebox')
-      if (klass) $('#facebox .content').addClass(klass)
-      $('#facebox .content').append(data)
-      $('#facebox .loading').remove()
-      $('#facebox .body').children().fadeIn('normal')
-      $('#facebox').css('left', $(window).width() / 2 - ($('#facebox table').width() / 2))
-      $(document).trigger('reveal.facebox').trigger('afterReveal.facebox')
-    },
+    apptha(document).bind('keydown.facebox', function(e) {
+      if (e.keyCode == 27) apptha.facebox.close()
+    })
+  }
 
-    close: function() {
-      $(document).trigger('close.facebox')
-      return false
-    }
+  apptha.facebox.reveal = function(data, klass) {
+
+    if (klass) apptha('#facebox .appthaContent').addClass(klass)
+
+    apptha('#facebox .appthaContent').append(data)
+
+    apptha('#facebox .loading').remove()
+
+
+    apptha('#facebox .body').children().fadeIn('normal')
+  }
+
+  apptha.facebox.close = function() {
+    apptha("#popup_overlay").hide();
+     //apptha('#facebox .content').html('')
+    apptha(document).trigger('close.facebox')
+    return false
+  }
+
+  apptha(document).bind('close.facebox', function() {
+    apptha(document).unbind('keydown.facebox')
+    apptha('#facebox').fadeOut(function() {
+      apptha('#facebox .appthaContent').removeClass().addClass('appthaContent');
+
+
+    })
   })
 
-  /*
-   * Public, $.fn methods
-   */
+  apptha.fn.facebox = function(settings) {
+    apptha.facebox.init(settings)
 
-  $.fn.facebox = function(settings) {
-    init(settings)
+    var image_types = apptha.facebox.settings.image_types.join('|')
+    image_types = new RegExp('\.' + image_types + 'apptha', 'i')
 
-    function clickHandler() {
-      $.facebox.loading(true)
+    function click_handler() {
+      apptha("#popup_overlay").show();
+      apptha.facebox.loading(true)
 
-      // support for rel="facebox.inline_popup" syntax, to add a class
-      // also supports deprecated "facebox[.inline_popup]" syntax
-      var klass = this.rel.match(/facebox\[?\.(\w+)\]?/)
+      // support for rel="facebox[.inline_popup]" syntax, to add a class
+      var klass = this.rel.match(/facebox\[\.(\w+)\]/)
       if (klass) klass = klass[1]
 
-      fillFaceboxFromHref(this.href, klass)
+      // div
+      if (this.href.match(/#/)) {
+        var url    = window.location.href.split('#')[0]
+        var target = this.href.replace(url,'')
+
+        apptha.facebox.reveal(apptha(target).clone().show(), klass)
+
+      // image
+      } else if (this.href.match(image_types)) {
+        var image = new Image()
+        image.onload = function() {
+          apptha.facebox.reveal('<div class="image"><img src="' + image.src + '" /></div>', klass)
+        }
+        image.src = this.href
+
+      // ajax
+      } else {
+
+        apptha.get(this.href, function(data) {apptha.facebox.reveal(data, klass)})
+      }
+
       return false
     }
 
-    return this.click(clickHandler)
+    this.click(click_handler)
+    return this
   }
 
-  /*
-   * Private methods
-   */
+  apptha.facebox.init = function(settings) {
+    if (apptha.facebox.settings.inited) {
+      return true
+    } else {
+      apptha.facebox.settings.inited = true
+    }
 
-  // called one time to setup facebox on this page
-  function init(settings) {
-    if ($.facebox.settings.inited) return true
-    else $.facebox.settings.inited = true
-
-    $(document).trigger('init.facebox')
-    makeCompatible()
-
-    var imageTypes = $.facebox.settings.imageTypes.join('|')
-    $.facebox.settings.imageTypesRegexp = new RegExp('\.' + imageTypes + '$', 'i')
-
-    if (settings) $.extend($.facebox.settings, settings)
-    $('body').append($.facebox.settings.faceboxHtml)
+    if (settings) apptha.extend(apptha.facebox.settings, settings)
+    apptha('body').append(apptha.facebox.settings.facebox_html)
 
     var preload = [ new Image(), new Image() ]
-    preload[0].src = $.facebox.settings.closeImage
-    preload[1].src = $.facebox.settings.loadingImage
+    preload[0].src = apptha.facebox.settings.close_image
+    preload[1].src = apptha.facebox.settings.loading_image
 
-    $('#facebox').find('.b:first, .bl, .br, .tl, .tr').each(function() {
+    apptha('#facebox').find('.b:first, .bl, .br, .tl, .tr').each(function() {
       preload.push(new Image())
-      preload.slice(-1).src = $(this).css('background-image').replace(/url\((.+)\)/, '$1')
+      preload.slice(-1).src = apptha(this).css('background-image').replace(/url\((.+)\)/, 'apptha1')
     })
 
-    $('#facebox .close').click($.facebox.close)
-    $('#facebox .close_image').attr('src', $.facebox.settings.closeImage)
+    apptha('#facebox .close').click(apptha.facebox.close)
+    apptha('#facebox .close_image').attr('src', apptha.facebox.settings.close_image)
   }
-  
+
   // getPageScroll() by quirksmode.com
-  function getPageScroll() {
+  apptha.facebox.getPageScroll = function() {
     var xScroll, yScroll;
     if (self.pageYOffset) {
       yScroll = self.pageYOffset;
@@ -215,116 +204,21 @@
       xScroll = document.documentElement.scrollLeft;
     } else if (document.body) {// all other Explorers
       yScroll = document.body.scrollTop;
-      xScroll = document.body.scrollLeft;	
+      xScroll = document.body.scrollLeft;
     }
-    return new Array(xScroll,yScroll) 
+    return new Array(xScroll,yScroll)
   }
 
-  // Adapted from getPageSize() by quirksmode.com
-//  function getPageHeight() {
-//    var windowHeight
-//    if (self.innerHeight) {	// all except Explorer
-//      windowHeight = self.innerHeight;
-//    } else if (document.documentElement && document.documentElement.clientHeight) { // Explorer 6 Strict Mode
-//      windowHeight = document.documentElement.clientHeight;
-//    } else if (document.body) { // other Explorers
-//      windowHeight = document.body.clientHeight;
-//    }
-//    return windowHeight
-//  }
-
-  // Backwards compatibility
-  function makeCompatible() {
-    var $s = $.facebox.settings
-
-    $s.loadingImage = $s.loading_image || $s.loadingImage
-    $s.closeImage = $s.close_image || $s.closeImage
-    $s.imageTypes = $s.image_types || $s.imageTypes
-    $s.faceboxHtml = $s.facebox_html || $s.faceboxHtml
-  }
-
-  // Figures out what you want to display and displays it
-  // formats are:
-  //     div: #id
-  //   image: blah.extension
-  //    ajax: anything else
-  function fillFaceboxFromHref(href, klass) {
-    // div
-    if (href.match(/#/)) {
-      var url    = window.location.href.split('#')[0]
-      var target = href.replace(url,'')
-	  $.facebox.settings.dom = target;
-      $.facebox.settings.dom_data = $(target).children();
-      $.facebox.reveal($(target).children().show(), klass) 
-      $.facebox.reveal($(target).clone().show(), klass)
-
-    // image
-    } else if (href.match($.facebox.settings.imageTypesRegexp)) {
-      fillFaceboxFromImage(href, klass)
-    // ajax
-    } else {
-      fillFaceboxFromAjax(href, klass)
+  // adapter from getPageSize() by quirksmode.com
+  apptha.facebox.getPageHeight = function() {
+    var windowHeight
+    if (self.innerHeight) {	// all except Explorer
+      windowHeight = self.innerHeight;
+    } else if (document.documentElement && document.documentElement.clientHeight) { // Explorer 6 Strict Mode
+      windowHeight = document.documentElement.clientHeight;
+    } else if (document.body) { // other Explorers
+      windowHeight = document.body.clientHeight;
     }
+    return windowHeight
   }
-
-  function fillFaceboxFromImage(href, klass) {
-    var image = new Image()
-    image.onload = function() {
-      $.facebox.reveal('<div class="image"><img src="' + image.src + '" /></div>', klass)
-    }
-    image.src = href
-  }
-
-  function fillFaceboxFromAjax(href, klass) {
-    $.get(href, function(data) { $.facebox.reveal(data, klass) })
-  }
-
-  function skipOverlay() {
-    return $.facebox.settings.overlay == false || $.facebox.settings.opacity === null 
-  }
-
-  function showOverlay() {
-    if (skipOverlay()) return
-
-    if ($('facebox_overlay').length == 0) 
-      $("body").append('<div id="facebox_overlay" class="facebox_hide"></div>')
-
-    $('#facebox_overlay').hide().addClass("facebox_overlayBG")
-      .css('opacity', $.facebox.settings.opacity)
-      .click(function() { $(document).trigger('close.facebox') })
-      .fadeIn(200)
-    return false
-  }
-
-  function hideOverlay() {
-    if (skipOverlay()) return
-
-    $('#facebox_overlay').fadeOut(200, function(){
-      $("#facebox_overlay").removeClass("facebox_overlayBG")
-      $("#facebox_overlay").addClass("facebox_hide") 
-      $("#facebox_overlay").remove()
-    })
-    
-    return false
-  }
-
-  /*
-   * Bindings
-   */
- 
-  $(document).bind('close.facebox', function() {
-  if($.facebox.settings.dom){
-  $($.facebox.settings.dom).append($.facebox.settings.dom_data);
-
-  $.facebox.settings.dom = null;
-  $.facebox.settings.dom_data = null;
-  }
-    $(document).unbind('keydown.facebox')
-    $('#facebox').fadeOut(function() {
-      $('#facebox .content').removeClass().addClass('content')
-      hideOverlay()
-      $('#facebox .loading').remove()
-    })
-  })
-
 })(jQuery);

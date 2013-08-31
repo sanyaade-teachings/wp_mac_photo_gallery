@@ -1,4 +1,3 @@
-<?php
 /*
  ***********************************************************/
 /**
@@ -17,22 +16,38 @@
 /*
  ***********************************************************/
 
-/*The Common load file for the plugin */
-if ( !defined('WP_LOAD_PATH') )
-{
-    /** classic root path if wp-content and plugins is below wp-config.php */
-    $classic_root = dirname(dirname(dirname(dirname(__FILE__)))) . '/' ;
+/* style for Common Mac Photo Gallery pages  */
 
-    if (file_exists( $classic_root . 'wp-load.php') )
-    define( 'WP_LOAD_PATH', $classic_root);
-    else
-    if (file_exists( $path . 'wp-load.php') )
-    define( 'WP_LOAD_PATH', $path);
-    else
-    exit("Could not find wp-load.php");
+
+
+/* dock - top */
+#imgmain .dock {
+
+        width: auto;
+	
 }
-
-// let's load WordPress
-require_once( WP_LOAD_PATH . 'wp-load.php');
-global $wpdb;
-?>
+#imgmain .dock-container {
+	position: absolute;
+	
+	/*background: url(images/dock-bg2.gif);*/
+	padding-left: 20px;
+}
+#imgmain a.dock-item {
+	display: block;
+	width: 40px;
+	color: #000;
+	position: absolute;
+	text-align: center;
+	text-decoration: none;
+	font: bold 12px Arial, Helvetica, sans-serif;
+}
+#imgmain .dock-item img {
+	border: none;
+	margin: 5px 0px 0px;
+	width: 100%;
+}
+#imgmain .dock-item span {
+	display: none;
+	padding-left: 20px;
+}
+#imgwrapper{margin-bottom:30px;}

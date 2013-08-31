@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.4
+ * @version	      : 2.5
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -21,7 +21,9 @@ require_once( dirname(__FILE__) . '/macDirectory.php');
    but we're just going to format it and send it back
 */
 $macPhoto_id = $_REQUEST['macPhoto_id'];
+$pagestart = $_REQUEST['pagestart'];
 foreach ($_GET['listItem'] as $position => $item) :
-	$sql[] =$wpdb->query("UPDATE " . $wpdb->prefix . "macphotos SET `macPhoto_sorting` = '$position'  WHERE `macPhoto_id` = $item");
+	$sql[] =$wpdb->query("UPDATE " . $wpdb->prefix . "macphotos SET `macPhoto_sorting` = '$pagestart'  WHERE `macPhoto_id` = $item");
+$pagestart++;
 endforeach;
 ?>

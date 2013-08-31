@@ -2,7 +2,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.3
+ * @version	      : 2.5
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -414,6 +414,7 @@ else
     {
        
       document.getElementById('macPhotos_'+macPhotos_id).innerHTML = xmlhttp.responseText
+      document.getElementById('showPhotosedit_'+macPhotos_id).style.display = 'none';
     }
   }
 xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macPhoto_name='+macPhoto_name+'&macPhotos_id='+macPhotos_id,true);
@@ -524,3 +525,4 @@ function CancelAlbum(macAlbum_id)
 {
     document.getElementById('showAlbumedit_'+macAlbum_id).style.display="none";
 }
+

@@ -1,16 +1,13 @@
 <?php
-/**
- * Plugin Name:  Mac Photo Gallery
- * Description:  Mac Photo Gallery for Wordpress. It gives you a stylish gallery effect with mac effect. Mac Photo Gallery is a simple and easy gallery for wordpress.        ***Alert: If you are upgrading the latest version of mac photo gallery means, Kindly take backup of your previous version data & then do upgrade.
- * Version: 2.4
- * Author:  <div class="active second plugin-version-author-uri"><a href="http://www.apptha.com" title="Visit author homepage">Apptha</a> | <a href="http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery/" title="Visit plugin site">Visit plugin site</a></div>
- * @since       Wordpress 3.2.1
- * @package	  apptha
- * @subpackage	mac-dock-gallery
- * @copyright	Copyright (C) 2011 Powered by Apptha
- * @license	GNU General Public License version 2 or later; see LICENSE.txt
- * @abstract    The first loading page of the Mac Photo Gallery these contain admin setting too.
-**/
+/*
+Plugin Name: Mac Photo Gallery
+Plugin URI: http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery
+Description: Mac Photo Gallery for Wordpress. It gives you a stylish gallery effect with mac effect. Mac Photo Gallery is a simple and easy gallery for wordpress.        ***Alert: If you are upgrading the latest version of mac photo gallery means, Kindly take backup of your previous version data & then do upgrade.
+Version:2.5
+Author: Apptha
+Author URI: http://www.apptha.com
+License: GNU General Public License version 2 or later; see LICENSE.txt
+*/
 
 /* The first loading page of the Mac Photo Gallery these contain admin setting too */
 require_once("classes.php"); // Front view of the Mac Photo Gallery
@@ -22,6 +19,7 @@ require_once("classes.php"); // Front view of the Mac Photo Gallery
        $t=1;
        $e=1;
        $d=1;
+         
 function Sharemacgallery($content)
  {
     $content = preg_replace_callback('/\[macGallery ([^]]*)\y]/i', 'CONTUS_macRender', $content); //Mac Photo Gallery Page
@@ -67,8 +65,8 @@ function macPage()
  {
 add_menu_page('Mac Photos', 'Mac Photos', '2', 'macAlbum', 'show_macMenu',get_bloginfo('url').'/wp-content/plugins/'.dirname(plugin_basename(__FILE__)).'/images/icon.png');
 
-add_submenu_page("macAlbum", "Mac Albums", "Mac Albums",4, "macAlbum","show_macMenu");
-add_submenu_page( 'macAlbum', 'Image upload', 'Image Upload', 'manage_options', 'macPhotos', 'show_macMenu');
+add_submenu_page('macAlbum', 'Albums', 'Albums',4, 'macAlbum','show_macMenu');
+add_submenu_page( 'macAlbum', 'Image upload', 'Upload Images', 'manage_options', 'macPhotos', 'show_macMenu');
 add_submenu_page( 'macAlbum', 'Mac Settings', 'Settings', 'manage_options', 'macSettings', 'show_macMenu');
  }
 
@@ -137,13 +135,13 @@ function macSettings() {
 <script>
 var url = '<?php echo $site_url; ?>';
 </script>
-<script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/jquery-pack.js'; ?>" type="text/javascript"></script>
-<link href="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/css/facebox.css';?>" media="screen" rel="stylesheet" type="text/css" />
-<script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/facebox.js';?>" type="text/javascript"></script>
-<script type="text/javascript">
+<link href="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/css/facebox_admin.css';?>" media="screen" rel="stylesheet" type="text/css" />
+<script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/facebox_admin.js'; ?>" type="text/javascript"></script>
 
-    $(document).ready(function($) {
-      $('a[rel*=facebox]').facebox()
+<script type="text/javascript">
+ var apptha = jQuery.noConflict();
+    apptha(document).ready(function(apptha) {
+      apptha('a[rel*=facebox]').facebox()
     })
 </script>
 <p><a href="#mydiv" rel="facebox"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/licence.png'?>" align="right"></a>
@@ -183,9 +181,14 @@ var url = '<?php echo $site_url; ?>';
            {
         	   var Licencevalue = document.getElementById("get_license").value;
         	   if(Licencevalue == ""||Licencevalue !="<?php echo $get_key ?>"){
-            	   alert('please enter valid licence key');
+            	   alert('Please enter valid license key');
             	   return false;
         	   }
+                    else
+                       {
+                           alert('Valid License key is entered successfully');
+            	           return false;
+                       }
 
            }
     </script>
@@ -194,11 +197,11 @@ var url = '<?php echo $site_url; ?>';
         <div id="icon-upload" class="icon32"><br /></div>
         <h2 class="nav-tab-wrapper">
         <a href="?page=macAlbum" class="nav-tab">Albums</a>
-        <a href="?page=macPhotos&albid=0" class="nav-tab">Photos</a>
+        <a href="?page=macPhotos&albid=0" class="nav-tab">Upload Images</a>
         <a href="?page=macSettings" class="nav-tab nav-tab-active">Settings</a></h2>
           <div style="background-color: #ECECEC;padding: 10px;margin-top:10px;border: #ccc 1px solid">
         <strong> Note : </strong>Mac Photo Gallery can be easily inserted to the Post / Page by adding the following code :<br><br>
-                 (i)  [macGallery] - This will show the entire gallery<br>
+                 (i)  [macGallery] - This will show the entire gallery [Only for Page]<br>
                  (ii) [macGallery albid=1 row=3 cols=3] - This will show the particular album images with the album id 1
           </div>
         <div id="error_msg" style="color:red"></div>
@@ -229,7 +232,7 @@ var url = '<?php echo $site_url; ?>';
            $summary_macrow == '' || $summary_macrow == '0' ||$summary_page == '' || $summary_page == '0' ||
            $mouseHei == '' || $mouseHei == '0' ||
            $mouseWid == '' || $mouseWid == '0' ||$macProximity == '' || $macProximity == '0' ||
-          /* $mac_facebook_api == '' || $mac_facebook_api == '0' ||*/$mac_facebook_comment == '' || $mac_facebook_comment == '0' ||
+          /* $mac_facebook_api == '' || $mac_facebook_api == '0' ||$mac_facebook_comment == '' || $mac_facebook_comment == '0' ||*/
            $resizeHei == '' || $resizeHei == '0' ||$resizeWid == '' || $resizeWid == '0'
                 )
         {
@@ -240,9 +243,9 @@ var url = '<?php echo $site_url; ?>';
          $updSet = $wpdb->query("UPDATE " . $wpdb->prefix . "macsettings SET  `macrow` = '$macrow',
          `macimg_page` = '$macimg_page',`summary_macrow` = '$summary_macrow', `summary_page`='$summary_page',
          `mouseHei` = '$mouseHei' , `mouseWid` = '$mouseWid',`resizeHei`='$resizeHei',`resizeWid` = '$resizeWid',
-         `macProximity` = '$macProximity', `macDir` = '$macDir',`macImg_dis` = '$macImg_dis',`macAlbum_limit`= '$macAlbum_limit',
+         `macProximity` = '$macProximity', `macImg_dis` = '$macImg_dis',`macAlbum_limit`= '$macAlbum_limit',
          `mac_imgdispstyle` = '$mac_imgdispstyle',
-         `mac_facebook_api` = '$mac_facebook_api', `mac_facebook_comment` = '$mac_facebook_comment',show_share='$show_share',show_download='$show_download' WHERE `macSet_id` = 1");
+         `mac_facebook_api` = '$mac_facebook_api',show_download='$show_download' WHERE `macSet_id` = 1");
          echo '<div class="mac-error_msg"">Settings updated successfully</div>';
         }
          }
@@ -273,7 +276,7 @@ var url = '<?php echo $site_url; ?>';
                         <td><input type="text" name="summary_macrow" id="summary_macrow" value="<?php echo $viewSetting->summary_macrow; ?>"></td>
                     </tr>
                  
-                     <tr>
+                     <tr style="display:none">
                         <td><span>Image display:</span></td>
                         <td>
                             <input type="radio" name="macImg_dis" <?php if ($viewSetting->macImg_dis == 'random') { echo 'checked'; } ?> value="random" >Random
@@ -292,7 +295,57 @@ var url = '<?php echo $site_url; ?>';
                             </select>
                        </td>
                    </tr>
+                   
                    <tr>
+                        <td><span>Download settings:</span></td>
+                        <td>
+                            <input type="radio" name="show_download" <?php if ($viewSetting->show_download == 'allow') { echo 'checked'; } ?> value="allow" >Allow
+                     <input type="radio" name="show_download" <?php if ($viewSetting->show_download == 'restrict') { echo 'checked'; } ?> value="restrict">Restrict
+                        </td>
+                   </tr>
+                     
+                  <!-- <tr>
+                        <td><span>Facebook Comments:</span></td>
+                        <td>
+                            <input type="radio" name="show_share" <?php //if ($viewSetting->show_share == 'show') { echo 'checked'; } ?> value="show" >Show
+                     <input type="radio" name="show_share" <?php //if ($viewSetting->show_share == 'hide') { echo 'checked'; } ?> value="hide">Hide
+                        </td>
+                   </tr>  
+                    <tr>
+                        <td><span>Number of FB comments / Page</span></td>
+                        <td>
+                            <select name="mac_facebook_comment">
+                            <option  <?php //if ($viewSetting->mac_facebook_comment == '5')  { echo 'selected="selected"'; } ?>value="5">5</option>
+                            <option  <?php //if ($viewSetting->mac_facebook_comment == '10')  { echo 'selected="selected"'; } ?>value="10">10</option>
+                            <option  <?php //if ($viewSetting->mac_facebook_comment == '15') { echo 'selected="selected"'; } ?>value="15">15</option>
+                            <option  <?php //if ($viewSetting->mac_facebook_comment == '20') { echo 'selected="selected"'; } ?>value="20">20</option>
+                            <option  <?php //if ($viewSetting->mac_facebook_comment == '25') { echo 'selected="selected"'; } ?>value="25">25</option>
+                            <option  <?php //if ($viewSetting->mac_facebook_comment == '30') { echo 'selected="selected"'; } ?>value="30">30</option>
+                            </select>
+                       </td>
+                   </tr>-->
+              </table>
+                <table>
+              
+                        <caption>Image Settings</caption>
+                   <tr>
+                        <td><span>  Mac Dock  Image Width/Height(Px)</span></td>
+                        <td><input type="text" name="mouseWid" id="mouseWid" value="<?php echo $viewSetting->mouseWid; ?>"></td>
+                    </tr>
+                     <tr>
+                        <td><span>Mouseover Width/ Height / Row (Px)</span></td>
+                        <td><input type="text" name="mouseHei" id="mouseHei" value="<?php echo $viewSetting->mouseHei; ?>"></td>
+                    </tr>
+                        <tr style="display:none">
+                        <td><span> Resizing Height(Px)</span></td>
+                        <td><input type="text" name="resizeHei" id="resizeHei" value="<?php echo $viewSetting->resizeHei; ?>"></td>
+                    </tr>
+                    <tr style="display:none">
+                        <td><span>  Resizing Width(Px)</span></td>
+                        <td><input type="text" name="resizeWid" id="resizeWid" value="<?php echo $viewSetting->resizeWid; ?>"></td>
+                    </tr>
+                
+                     <tr>
                         <td><span>Image Display Style <br> [Works only for Chrome]:</span></td>
                         <td>
                            <input type="radio" name="mac_imgdispstyle" <?php if ($viewSetting->mac_imgdispstyle == '0') { echo 'checked';}?> value="0" >Normal
@@ -301,78 +354,25 @@ var url = '<?php echo $site_url; ?>';
                            <input type="radio" name="mac_imgdispstyle" <?php if ($viewSetting->mac_imgdispstyle == '3') { echo 'checked';}?> value="3">Rounded  image
                         </td>
                     </tr>
-                     <tr>
-                        <td><span>Number of Fb comments / Page</span></td>
-                        <td>
-                            <select name="mac_facebook_comment">
-                            <option  <?php if ($viewSetting->mac_facebook_comment == '5')  { echo 'selected="selected"'; } ?>value="5">5</option>
-                            <option  <?php if ($viewSetting->mac_facebook_comment == '10')  { echo 'selected="selected"'; } ?>value="10">10</option>
-                            <option  <?php if ($viewSetting->mac_facebook_comment == '15') { echo 'selected="selected"'; } ?>value="15">15</option>
-                            <option  <?php if ($viewSetting->mac_facebook_comment == '20') { echo 'selected="selected"'; } ?>value="20">20</option>
-                            <option  <?php if ($viewSetting->mac_facebook_comment == '25') { echo 'selected="selected"'; } ?>value="25">25</option>
-                            <option  <?php if ($viewSetting->mac_facebook_comment == '30') { echo 'selected="selected"'; } ?>value="30">30</option>
-                            </select>
-                       </td>
-                   </tr>
-                      <tr>
-                        <td><span>Download settings:</span></td>
-                        <td>
-                            <input type="radio" name="show_download" <?php if ($viewSetting->show_download == 'allow') { echo 'checked'; } ?> value="allow" >Allow
-                     <input type="radio" name="show_download" <?php if ($viewSetting->show_download == 'restrict') { echo 'checked'; } ?> value="restrict">Restrict
-                        </td>
-                   </tr>
-                   <tr>
-                        <td><span>Facebook Share:</span></td>
-                        <td>
-                            <input type="radio" name="show_share" <?php if ($viewSetting->show_share == 'show') { echo 'checked'; } ?> value="show" >Show
-                     <input type="radio" name="show_share" <?php if ($viewSetting->show_share == 'hide') { echo 'checked'; } ?> value="hide">Hide
-                        </td>
-                   </tr>
-                </table>
-
-                <table>
-                    <thead>
-                        <caption>Image Settings</caption>
-                    <thead>
-                    <tr>
-                        <td><span>  Mac Dock  Image Width(Px)</span></td>
-                        <td><input type="text" name="mouseWid" id="mouseWid" value="<?php echo $viewSetting->mouseWid; ?>"></td>
-                    </tr>
-                     <tr>
-                        <td><span>Mouseover Width/ Height / Row (Px)</span></td>
-                        <td><input type="text" name="mouseHei" id="mouseHei" value="<?php echo $viewSetting->mouseHei; ?>"></td>
-                    </tr>
-
-
-                    <tr>
-                        <td><span> Resizing Height(Px)</span></td>
-                        <td><input type="text" name="resizeHei" id="resizeHei" value="<?php echo $viewSetting->resizeHei; ?>"></td>
-                    </tr>
-
-
-                    <tr>
-                        <td><span>  Resizing Width(Px)</span></td>
-                        <td><input type="text" name="resizeWid" id="resizeWid" value="<?php echo $viewSetting->resizeWid; ?>"></td>
-                    </tr>
-
                     <tr>
                         <td><span>Proximity</span></td>
                         <td><input type="text"  name="macProximity" id="macProximity" value="<?php echo $viewSetting->macProximity; ?>"></td>
                     </tr>
                     <tr>
-                        <td><span>Mac_Effect Direction</span></td>
-                        <td><select name="macDir">
-                                <option <?php  if ($viewSetting->macDir == '1') { echo 'selected="selected"'; } ?> value="1" >Top</option>
-                                <option <?php if ($viewSetting->macDir == '0') { echo 'selected="selected"';  } ?>value="0">Bottom</option>
-                        </select></td>
-                    </tr>
-                    <tr>
-                        <td><span> Facebook API Id</span></td>
+                        <td><span> Facebook API Id    [Facebook Share]</span></td>
                         <td><input type="text" name="mac_facebook_api" id="mac_facebook_api" value="<?php echo $viewSetting->mac_facebook_api; ?>"><br />
                             <div style="font-size:8pt">Enter Facebook API ID , For example: https://developers.facebook.com/apps#!/apps/<strong>126989914043022</strong><br /></div>
                         </td>
                      </tr>
-              </table>
+                  <!--  <tr>
+                        <td><span>Mac Effect Direction</span></td>
+                        <td><select name="macDir">
+                                <option <?php  //if ($viewSetting->macDir == '1') { echo 'selected="selected"'; } ?> value="1" >Top</option>
+                                <option <?php //if ($viewSetting->macDir == '0') { echo 'selected="selected"';  } ?>value="0">Bottom</option>
+                        </select></td>
+                    </tr> -->
+                   
+                </table>
                 <div id="error_msg" style="color:red"></div>
                 <div align="right"> <p class='submit'><input class='button-primary' name='macSet_upt' id='macSet_upt' type='submit' value='Update Options'></p></div>
             </div>
@@ -385,9 +385,9 @@ var url = '<?php echo $site_url; ?>';
  global $wpdb;
  $insertSettings = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macsettings
 (`macSet_id`, `macrow`, `macimg_page`, `summary_macrow`, `summary_page`, `mouseHei`, `mouseWid`, `resizeHei`, `resizeWid`, `macProximity`, `macDir`, `macImg_dis`, `macAlbum_limit`, `mac_albumdisplay`, `mac_imgdispstyle`, `mac_facebook_api`, `mac_facebook_comment`,`show_share`,`show_download`) VALUES
-(1, 4, 3, 3, 3, 20, 77, 120, 120, 80, 1, 'order', 8, 'no', 1, '', 10 ,'show' , 'allow');");
+(1, 4, 3, 3, 3, 50, 77, 120, 120, 90, 1, 'order', 8, 'no', 1, '', 10 ,'show' , 'restrict');");
  $insertDefault = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macalbum (`macAlbum_id`, `macAlbum_name`, `macAlbum_description`, `macAlbum_image`, `macAlbum_status`, `macAlbum_date`) VALUES
- (1, 'Default', 'Default album', '', 'ON', '2011-07-27 17:11:53')");
+ (1, 'First Album', 'This is my first album ', '', 'ON', '2011-07-27 17:11:53')");
                         }
 
  $lookupObj = array();
@@ -468,10 +468,10 @@ $chars_array[]=$chars_str[$i];
                             $table_macAlbum = $wpdb->prefix . 'macphotos';
                             $table_macPhotos = $wpdb->prefix . 'macalbum';
 
-                              /*$wpdb->query("DROP TABLE IF EXISTS `" . $table_settings . "`");
+                              $wpdb->query("DROP TABLE IF EXISTS `" . $table_settings . "`");
                               $wpdb->query("DROP TABLE IF EXISTS `" . $table_macAlbum . "`");
                               $wpdb->query("DROP TABLE IF EXISTS `" . $table_macPhotos . "`");
-                              $wpdb->query("DELETE FROM " . $wpdb->prefix . "posts WHERE post_content='[macGallery]'");*/
+                              $wpdb->query("DELETE FROM " . $wpdb->prefix . "posts WHERE post_content='[macGallery]'");
                         }
 
                         /* Function to activate player plugin */
@@ -631,10 +631,10 @@ echo '<input type="hidden" id="Contusmacalbum-submit" name="Contusmacalbum-submi
 }
 
 // Register widget for use
-register_sidebar_widget(array('Mac Album Widgets', 'widgets'), 'widget_Contusmacalbum');
+register_sidebar_widget(array('Mac Album', 'widgets'), 'widget_Contusmacalbum');
 
 // Register settings for use, 300x100 pixel form
-register_widget_control(array(' Mac Album Widgets ', 'widgets'), 'widget_Contusmacalbum_control', 300, 200);
+register_widget_control(array(' Mac Album ', 'widgets'), 'widget_Contusmacalbum_control', 300, 200);
 }
 // Run code and init
 add_action('widgets_init', 'widget_Contusmacalbum_init');
@@ -758,10 +758,29 @@ function widget_Contusmacphotos_init()
             }
 
             // Register widget for use
-            register_sidebar_widget(array(' Mac Photos Widgets ', 'widgets'), 'widget_Contusmacphotos');
+            register_sidebar_widget(array(' Mac Photos', 'widgets'), 'widget_Contusmacphotos');
             // Register settings for use, 300x100 pixel form
-            register_widget_control(array('Mac Photos Widgets', 'widgets'), 'widget_Contusmacphotos_control', 300, 200);
+            register_widget_control(array('Mac Photos', 'widgets'), 'widget_Contusmacphotos_control', 300, 200);
             }
+         function setplayerscripts() {
+             $site_url = get_bloginfo('url');
+             ?>
+         
+        <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/ajax.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/jquery164.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/interface.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/jquery.jcarousel.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/facebox.js'; ?>"></script>
+        <script type="text/javascript">
+var mac = jQuery.noConflict();
+mac(document).ready(function() {
+	mac('a[rel*=facebox]').facebox();
+    });
+</script>
+        <link rel="stylesheet" type="text/css" href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css/facebox.css'; ?>" />
+    <?php }
+
+add_action('wp_head', 'setplayerscripts');
             // Run code and init
             add_action('widgets_init', 'widget_Contusmacphotos_init');
 

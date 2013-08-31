@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.4
+ * @version	      : 2.5
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -21,56 +21,6 @@
 global $wpdb;
 $folder   = dirname(plugin_basename(__FILE__));
 $site_url = get_bloginfo('url');
-$split_title = $wpdb->get_var("SELECT option_value FROM ".$wpdb->prefix."options WHERE option_name='get_title_key'");
-$get_title = unserialize($split_title);
-$strDomainName = $site_url;
-preg_match("/^(http:\/\/)?([^\/]+)/i", $strDomainName, $subfolder);
-preg_match("/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i", $subfolder[2], $matches);
-$customerurl = $matches['domain'];
-$customerurl = str_replace("www.", "", $customerurl);
-$customerurl = str_replace(".", "D", $customerurl);
-$customerurl = strtoupper($customerurl);
-$get_key     = macgal_generate($customerurl);
-if($get_title['title'] != $get_key){
-	?>
-<script type="text/javascript">
-
-$(document).ready(function($) {
-    $('a[rel*=facebox]').facebox() })
-</script>
-<p>
-	<a href="#mydiv" rel="facebox"><img
-		src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/licence.png'?>"
-		align="right"> </a> <a
-		href="http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery"
-		target="_blank"><img
-		src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/buynow.png'?>"
-		align="right" style="padding-right: 5px;"> </a>
-</p>
-<div id="mydiv" style="display: none">
-	<form method="POST" action="" onSubmit="return validateKey()">
-		<h2 align="center">License Key</h2>
-		<div align="right">
-			<input type="text" name="get_license" id="get_license" size="58" /> <input
-				type="submit" name="submit_license" id="submit_license" value="Save" />
-		</div>
-	</form>
-</div>
-<script>
-    function validateKey()
-           {
-        	   var Licencevalue = document.getElementById("get_license").value;
-        	   if(Licencevalue == ""||Licencevalue !="<?php echo $get_key ?>"){
-            	   alert('please enter valid licence key');
-            	   return false;
-        	   }
-
-           }
-</script>
-<!-- End of Adding Buy now and Apply licence button in photos page  -->
-	<?php
-}
-
 
 require_once( dirname(__FILE__) . '/macDirectory.php');
 class macPhotos {
@@ -108,7 +58,8 @@ function maccontroller() {
 	src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/jquery-ui-1.7.1.custom.min.js"></script>
 <script
 	type="text/javascript"
-	src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/main.js"></script>
+	src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/mac_preview.js"></script>
+
 <script type="text/javascript">
         var site_url,mac_folder,numfiles;
         site_url = '<?php echo $site_url; ?>';
@@ -116,6 +67,7 @@ function maccontroller() {
         mac_folder  = '<?php echo $folder; ?>';
         keyApps = '<?php echo $configXML->keyApps; ?>';
         videoPage = '<?php echo $meta; ?>';
+        var dragdr = jQuery.noConflict();
                 function GetSelectedItem() {
                   //  alert(document.frm1.macAlbum_name.length);
                 len = document.frm1.macAlbum_name.length;
@@ -150,9 +102,9 @@ function maccontroller() {
                dragdr("#mac-test-list").sortable({
                 handle : '.handle',
                 update : function () {
+                    var pagestart =   parseInt($('#pagestart').val());
                     var order =dragdr('#mac-test-list').sortable('serialize');
-                     dragdr("#info").load(site_url+"/wp-content/plugins/"+mac_folder+"/process-sortable.php?"+order);
-
+                    dragdr("#info").load(site_url+"/wp-content/plugins/"+mac_folder+"/process-sortable.php?"+order+"&pagestart="+pagestart);
                    }
 
                 });
@@ -274,12 +226,9 @@ function maccontroller() {
 <script
 	src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/jquery-pack.js'; ?>"
 	type="text/javascript"></script>
-<link
-	href="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/css/facebox.css';?>"
-	media="screen" rel="stylesheet" type="text/css" />
-<script
-	src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/facebox.js';?>"
-	type="text/javascript"></script>
+<link href="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/css/facebox_admin.css';?>" media="screen" rel="stylesheet" type="text/css" />
+<script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/facebox_admin.js'; ?>" type="text/javascript"></script>
+
 <script type="text/javascript">
 // starting the script on page load
 dragdr(document).ready(function(){
@@ -287,8 +236,8 @@ dragdr(document).ready(function(){
 	imagePreview();
 });
 
- $(document).ready(function($) {
-      $('a[rel*=facebox]').facebox()
+ dragdr(document).ready(function(dragdr) {
+      dragdr('a[rel*=facebox]').facebox()
     })
  </script>
 
@@ -349,6 +298,7 @@ dragdr(document).ready(function(){
 	background: url('../cancel.png') no-repeat;
 	cursor: pointer;
 }
+#mydiv{background:#fff;width:500px;height:100px;}
 </style>
 </head>
 <body>
@@ -498,17 +448,19 @@ if ($_REQUEST['action'] == 'viewPhotos')
 		<div id="icon-upload" class="icon32">
 			<br />
 		</div>
+		
 		<h2 class="nav-tab-wrapper">
 			<a href="?page=macAlbum" class="nav-tab">Albums</a> <a
 				href="?page=macPhotos&action=macPhotos"
-				class="nav-tab  nav-tab-active">Photos</a> <a
+				class="nav-tab  nav-tab-active">View Images</a> <a
 				href="?page=macSettings" class="nav-tab">Settings</a>
 		</h2>
+		
 		<div
 			style="background-color: #ECECEC; padding: 10px; margin: 10px 0px 10px 0px; border: #ccc 1px solid">
 			<strong> Note : </strong>Mac Photo Gallery can be easily inserted to
 			the Post / Page by adding the following code :<br> <br> (i)
-			[macGallery] - This will show the entire gallery<br> (ii) [macGallery
+			[macGallery] - This will show the entire gallery [Only for Page]<br> (ii) [macGallery
 			albid=1 row=3 cols=3] - This will show the particular album with the
 			album id 1
 		</div>
@@ -622,8 +574,9 @@ if ($_REQUEST['action'] == 'viewPhotos')
 
 					$limit = 20;
 					$sql = mysql_query("SELECT * FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albid' ORDER BY macPhoto_sorting ASC");
-					$start = findStart($limit);
-
+                                        $start = findStart($limit); ?>
+                                            <input type="hidden"  value ="<?php echo ($start)<0?0:$start;?>" id="pagestart">
+                                         <?php
 					if($_REQUEST['pages']== 'viewAll')
 					{
 						$w= '';
@@ -643,7 +596,7 @@ if ($_REQUEST['action'] == 'viewPhotos')
 
 					if(count($result) == '0')
 					{
-						echo '<tr><td colspan="8" style="text-align: center;">No photos in that album</td></tr>';
+						echo '<tr><td colspan="8" style="text-align: center;">No photos</td></tr>';
 					}
 					else
 					{
@@ -742,7 +695,7 @@ if ($_REQUEST['action'] == 'viewPhotos')
 		<h2 class="nav-tab-wrapper">
 			<a href="?page=macAlbum" class="nav-tab">Albums</a> <a
 				href="?page=macPhotos&action=macPhotos"
-				class="nav-tab  nav-tab-active">Photos</a> <a
+				class="nav-tab  nav-tab-active">Upload Images</a> <a
 				href="?page=macSettings" class="nav-tab">Settings</a>
 		</h2>
 		<div

@@ -1,47 +1,33 @@
-/*
- ***********************************************************/
-/**
- * @name          : Mac Doc Photogallery.
- * @version	      : 2.4
- * @package       : apptha
- * @subpackage    : mac-doc-photogallery
- * @author        : Apptha - http://www.apptha.com
- * @copyright     : Copyright (C) 2011 Powered by Apptha
- * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
- * @abstract      : The core file of calling Mac Photo Gallery.
- * @Creation Date : June 20 2011
- * @Modified Date : September 30 2011
- * */
-
-/*
- ***********************************************************/
-
 #facebox .b {
-  background:url(../images/facebox/b.png);
+  background:none;
 }
 
 #facebox .tl {
-  background:url(../images/facebox/tl.png);
+  background:none;
 }
 
 #facebox .tr {
-  background:url(../images/facebox/tr.png);
+  background:none;
 }
 
 #facebox .bl {
-  background:url(../images/facebox/bl.png);
+  background:none;
 }
 
 #facebox .br {
-  background:url(../images/facebox/br.png);
+  background:none;
 }
 
 #facebox {
-  position: fixed;
+  position: absolute;
+  width: 100%;
   top: 0;
   left: 0;
-  z-index: 99999999;
+  z-index: 100;
   text-align: left;
+ 
+  opacity:100;
+  filter:inherit !important;
 }
 
 #facebox .popup {
@@ -49,18 +35,16 @@
 }
 
 #facebox table {
+  margin: auto;
   border-collapse: collapse;
-}
-
-#facebox td {
-  border-bottom: 0;
-  padding: 0;
 }
 
 #facebox .body {
   padding: 10px;
-  background: #fff;
-  width: 370px;
+  background: transparent;
+  /*width: 370px;*/
+  height:520px;
+  vertical-align: middle;
 }
 
 #facebox .loading {
@@ -73,7 +57,6 @@
 
 #facebox img {
   border: 0;
-  margin: 0;
 }
 
 #facebox .footer {
@@ -89,25 +72,30 @@
   overflow: hidden;
   padding: 0;
 }
-
-#facebox_overlay {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  height:100%;
-  width:100%;
+.loading
+{
+    background: url('../uploads/loadinfo.gif') no-repeat transparent;
+     width:48px;
+    height:48px;
+}
+a.close{
+    background: url('../uploads/close.png') no-repeat transparent;
+    width:20px;
+    height:20px;
+    display:block;
+    position:absolute;
+    top:5px;
+    right:5px;
+    z-index:100000000000000000;
+   *position:static;
+    
+    
 }
 
-.facebox_hide {
-  z-index:-100;
-}
+@media \0screen {
+  .mac-gallery-image{background:#000;width: 800px;margin: 0 auto;text-align: center;display:block;max-height:500px;visibility: visible;vertical-align: middle;overflow: hidden;}
+  .mac-gallery-image img{display:block;visibility: visible;margin: 0px auto !important;height:100%;}
+  .macpopup_bottom{background:#fff;width: 800px;}
+  .mac-gallery-image{height:auto !important;}
+  .mac-close-image { display: block !important;  }
 
-.facebox_overlayBG {
-  background-color: #000;
-  z-index: 99;
-}
-
-* html #facebox_overlay { /* ie6 hack */
-  position: absolute;
-  height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
-}

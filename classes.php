@@ -3,7 +3,7 @@
  * ********************************************************* */
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.4
+ * @version	      : 2.5
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -17,7 +17,7 @@
  * ********************************************************* */
 class contusMacgallery {
     function macEffectgallery($arguments= array(), $wid) {
-    	
+
         if ($wid == '')
         $wid = 'pirobox_gall';
         global $wpdb;
@@ -28,12 +28,12 @@ class contusMacgallery {
         $macSetting = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings"); // Full settings get form the admin
         // Page id to display the mac effect
         $macGallid = $wpdb->get_var(("SELECT * FROM " . $wpdb->prefix . "posts WHERE post_content LIKE '%[macGallery]%' AND post_type = 'page' AND post_status = 'publish'"));
-?>
-        <div id="fb-root"></div>
+?>      <div id="fb-root"></div>
         <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
         <link rel="stylesheet" href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css/style.css'; ?>">
+        <link rel="stylesheet" href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css/fish-eye.css'; ?>">
         <link rel="stylesheet" href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css/images.css'; ?>" type="text/css" media="screen" />
-    
+        
 <?php
         $aid = '';
         if ($_REQUEST['albid'] != '') {
@@ -52,57 +52,15 @@ class contusMacgallery {
         {
         ?>
         <!-- For the mac Effect and carousel -->
-        <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/ajax.js'; ?>"></script>
-        <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/lib/jquery-1.4.2.min.js'; ?>"></script>
-        <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/interface.js'; ?>"></script>
-        <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/lib/jquery.jcarousel.min.js'; ?>"></script>
-        <link rel="stylesheet" type="text/css" href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css/ie7/skin.css'; ?>" />
-        
-        <!--[if IE]> <link rel="stylesheet" type="text/css" href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css/skin_ie.css'; ?>" /> <![endif]-->
-        <!-- For the Popup Pirobox -->
-        <!--[if IE]> <link href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css_pirobox/style_1/ie_style.css'; ?>" rel="stylesheet" type="text/css" /> <![endif]-->
-        <link href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css_pirobox/style_1/style.css'; ?>" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/pirobox/pirobox_extended.js' ?>"></script>
-        <!-- End of the Popup Pirobox -->
+         <link rel="stylesheet" type="text/css" href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css/ie7/skin.css'; ?>" />
 
         <!--Mac Gallery common js -->
         <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/macGallery.js'; ?>"></script>
-        
-        <style type="text/css">
-            #sample {
-                -ms-filter: "progid:DXImageTransform.Microsoft.Fade(duration=3)";
-                filter :progid:DXImageTransform.Microsoft.Fade(duration=3);
-                width: 175px;
-                height: 230px;
-                padding: 10px;
-                color: white;
-            }
 
-        </style>
-        
         <!-- single image pirobox script-->
-        <script type="text/javascript">
-            var mac = jQuery.noConflict();
-            mac(document).ready(function() {
-                mac().piroBox_ext({
-                    piro_speed : 700,
-                    bg_alpha : 0.5
-                    //piro_scroll : true // pirobox always positioned at the center of the page
-               });
-             });
-
-            mac(document).ready(function() {
-              mac('.first-and-second-carousel').jcarousel();
-
-            });
-
-             function getfacebook()
-            {
-                FB.init({appId:'<?php echo $macSetting->mac_facebook_api; ?>', status: true, cookie: true,
-                    xfbml: true});
-            }</script>
+       
  <?php
-  $macAlbid = $aid;
+   $macAlbid = $aid;
             $macSetting = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings"); // Full settings get form the admin
             /* display randomly */
             if (($macSetting->macImg_dis == 'random')) {
@@ -261,7 +219,13 @@ class contusMacgallery {
                 $phtDis = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "macphotos where macAlbum_id='$macAlbid'
                                                                          and macPhoto_status='ON' $where $w");
             }
-
+            $current_page = $_REQUEST['pages'];
+            $limitperpage = $macSetting->macrow * $macSetting->macimg_page ;
+            $current_limit= 0;
+            for($i=1;$i<$current_page;$i++)
+            {
+                $current_limit = $current_limit+$limitperpage;
+            }
             if (count($phtDis) > 0) {
                 //Parameters for mac Effect
 
@@ -286,7 +250,7 @@ class contusMacgallery {
 
 
                 $div = '<style type="text/css">';
-
+           
                 /* Normal image display style */
                 if ($macSetting->mac_imgdispstyle == 0) {
                     $div .= '.imgcorner{
@@ -335,65 +299,40 @@ class contusMacgallery {
                 }
                 // The black bg color for the mac effect images from the gallery
                 if ($_REQUEST['albid'] != '' && $arguments['walbid'] == '' && $arguments['albid'] == '') {
-                    $div .= '#content #imgwrapper{
-                height:' . (($no_of_row * $itemwidth)) . 'px;
-
-                }
+                    $div .= '
                 #imgmain
                 {
                  width: ' . $width_total . ';
                  margin: 0px auto;
-                }
-';
+                } #imgwrapper
+                {
+width: ' . $width_total . ';
+}';
+                
                 }
 
                 /* if direction is top */
                 if ($direction == 0) {
-                    $position = "top:";
+                    $position = "top:0px";
                     $positionvalue = 0;
                 }
                 /* if direction is bottom */ else {
-                    $position = "bottom:";
-                    $positionvalue = ($itemwidth * $no_of_row);
+                    $position = "bottom:0px";
+                    $positionvalue = ($itemwidth);
                 }
                 for ($l = 1; $l <= $no_of_row; $l++) {
-                    $div .= '#dock' . $t . ' {
-                width: 100%;
-                left: 0px;
-                position: relative;
-                top:' . $positionvalue . 'px;
-       }
+                    $div .= '#dock' . $t . ' { width: 100%;left: 0px;position: relative;  top:' . $positionvalue . 'px; height:'.$itemwidth.'px  }
+                  
+                    #imgmain a.dock-item { '.$position.'; 
+    } ';
+                  /* if direction is top */
+                if ($direction != 0) {
+                     $div .= ' .dock-container' . $t . ' {  position: absolute;padding-left: 20px;}';
+                }
+                /* if direction is bottom */ else {
+                     $div .= ' .dock-container' . $t . ' {  position: absolute;padding-left: 20px;z-index:'.$t.';}';
+                }
 
-            .dock-container' . $t . ' {
-                position: absolute;
-            }
-
-            a.dock-item' . $t . ' {
-                display: block;
-                font: bold 12px Arial, Helvetica, sans-serif;
-                width: 40px;
-
-                color: #000;
-                ' . $position . ' 0px;
-                position: absolute;
-                text-align: center;
-                text-decoration: none;
-            }
-
-            .dock-item' . $t . ' span {
-                display: none;
-            }
-            .dock-item' . $t . ' img {
-                border: none;
-                margin: 5px 0px 0px ;
-                width: 100%;
-            }';
-
-                    if ($direction == 0) {
-                        $positionvalue = $positionvalue + $itemwidth;
-                    } else {
-                        $positionvalue = $positionvalue - $itemwidth;
-                    }
                     $t++;
                 }
                 $div .= '</style>';
@@ -404,6 +343,7 @@ class contusMacgallery {
 
                 foreach ($phtDis as $phtDisplay) {  // Getting all the values and stored in array
                     $imgsrc[$y]['macPhoto_image'] = $phtDisplay->macPhoto_image;
+                    $imgsrc[$y]['macAlbum_id'] = $phtDisplay->macAlbum_id;
                     $imgsrc[$y]['macPhoto_id'] = $phtDisplay->macPhoto_id;
                     $imgsrc[$y]['macPhoto_name'] = $phtDisplay->macPhoto_name;
                     $imgsrc[$y]['macPhoto_desc'] = $phtDisplay->macPhoto_desc;
@@ -411,16 +351,15 @@ class contusMacgallery {
                     $y++;
                 }
 
-                $mac_album = $wpdb->get_row("SELECT macAlbum_name,macAlbum_description FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_id ='$macAlbid'");
+
+                $mac_album = $wpdb->get_row("SELECT macAlbum_name,macAlbum_description,macAlbum_id FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_id ='$macAlbid'");
                 $height = $no_of_row * $itemwidth;
-                 } // End of photos count
-            else {
-                $div .= '<div><h4> No Images in this album</h4></div>';
-                 }
-             
-                $div .= '<div id="imgwrapper">';
-                $div .= '<div id="imgmain" style="height:' . $height . 'px;">';
-                $div .= '<div class="clearfix" style="position:relative;padding-left:15px;z-index:9999;float:left;">';
+               
+                $div .= '<div id="imgwrapper" style="height:'.$no_of_row * $itemwidth.'px">';
+                 if($arguments['walbid'] != '')  {  $maclimit = 0;  $div .= '<div id="imgmain" style="position:absolute;">'; }
+                else {  $maclimit = $current_limit;  $div .= '<div id="imgmain">'; }
+              
+                $div .= '<div class="clearfix" style="width: 100%;position:relative;z-index:9999;">';
                 $m = $n - 1;
                 $e = $t - 1;
                 for ($j = $no_of_row; $j >= 1; $j--) {
@@ -483,12 +422,8 @@ class contusMacgallery {
                             } else {
                                 $file_image = $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/no-photo.png';
                             }
-                  $div .='<a class="' . $wid . ' lightbox dock-item' . $e . '" rel="gallery" title="' . substr($imgsrc[$s]['macPhoto_name'], 0 ,40) . '"
-                  name="' . $imgsrc[$s]['macPhoto_desc'] . '" date="' . $imgsrc[$s]['macPhoto_date'] . '" albname="' . $mac_album->macAlbum_name . '"
-                  macapi_id="' . $macSetting->mac_facebook_api . '" download="' . $macSetting->show_download . '" share="' . $macSetting->show_share . '"
-                  href="' . $path . '/' . $bigImg[$s] . '"
-                  onclick=javascript:fbcomments("' . $imgsrc[$s]['macPhoto_id'] . '","' . preg_replace('/[&:\s]+/i', '-', $imgsrc[$s]['macPhoto_name']). '","' . $site_url . '") />
 
+                  $div .='<a class="dock-item" rel="facebox" href="'.$site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/mac_imageview.php?mac_phtid='.$imgsrc[$s]['macPhoto_id'].'&mac_albid='.$imgsrc[$s]['macAlbum_id'].'&limit='.$maclimit.'">
                    <div class="dock_img_space"><img class="imgcorner mac-no-border" title="' . $imgsrc[$s]['macPhoto_name'] . '"
                    src="' . $file_image . '"
                    alt="" width="' . $twidth . '"> </div>
@@ -503,18 +438,22 @@ class contusMacgallery {
                             break;
                         }
                         $k++;
+                        $maclimit++;
                     }
                     $div .= '</div>';
                     $div .=' </div>';
                     $m = $m + $n;
                     $e--;
                 }
-                
+ 
                 $div .=' </div>';
                 $div .= '</div>';
                 $div .= '</div>';
 
-
+} // End of photos count
+           else {
+                $div .= '<div><h4> No Images in this album</h4></div>';
+                 }
                 if ($_REQUEST['albid'] != '' && $arguments['walbid'] == '' && $arguments['albid'] == '') { // mac effect pagination
                     $pagelist = pageList($_GET['pages'], $pages, $_GET['albid']);
                     $div .= '<div class="page_list">' . $pagelist . '</div>';
@@ -524,9 +463,9 @@ class contusMacgallery {
                     if ($mac_album->macAlbum_description == '') {
                         $div .= '<div id="macshow"></div>';
                     } else {
-                        $div .= '<div id="macshow"><span class="macLeft mac_album_des">' . $mac_album->macAlbum_name . '  </span>  <p class="macLeft">' . $mac_album->macAlbum_description . '</p></div>';
+                        $div .= '<div id="macshow"><h2 class="mac_album_des">' . $mac_album->macAlbum_name . ':'.'  </h2><p>' . $mac_album->macAlbum_description . '</p></div>';
                     }
-              
+
 // Horizontal Carosoule
                     $macGallid = $wpdb->get_var(("SELECT * FROM " . $wpdb->prefix . "posts WHERE post_content LIKE '%[macGallery]%' AND post_type = 'page' AND post_status = 'publish'"));
                     $div .='<div class="album_carosole"><h2 style="margin:0px">ALBUM</h2></div>';
@@ -535,34 +474,35 @@ class contusMacgallery {
 // Default selected first album
                     $get_albid = $_GET['albid'];
                     $get_album_row = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_id='$get_albid' and macAlbum_status='ON'");
-                    $photoCount = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$get_album_row->macAlbum_id' and macPhoto_status='ON'");
-                    $default_first = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$get_album_row->macAlbum_id' and macPhoto_status='ON' ORDER BY macPhoto_id DESC LIMIT 0,1");
+                    $photoCount = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$get_albid' and macPhoto_status='ON'");
+                    $default_first = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$get_albid' and macPhoto_status='ON' ORDER BY macPhoto_id DESC LIMIT 0,1");
                     $uploadDir = wp_upload_dir();
                     $file_image = $uploadDir['basedir'] . '/mac-dock-gallery/' . $get_album_row->macAlbum_image;
 
                     if ((file_exists($file_image)) && ($get_album_row->macAlbum_image != '')) {
                         $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $get_album_row->macAlbum_id . '"><img class="mac-no-border" title="' . $get_album_row->albumname . '" src="' . $path . '/' . $get_album_row->macAlbum_image . '"
-                              alt="" style="height:100px;"/>
-                              <span class="carousel_lefttxt">' . substr($get_album_row->macAlbum_name, 0, 15) . '</span></a></li>';
+                              alt="" style="height:100px;filter:alpha(opacity=30);  opacity:1.0;"/>
+                              <span class="carousel_lefttxt">' . substr(trim($get_album_row->macAlbum_name,' '), 0, 15) . '</span></a></li>';
                     } else if ($get_album_row->macAlbum_image == '' && $photoCount != '0') {
                         $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $get_album_row->macAlbum_id . '"><img class="mac-no-border" title="' . $get_album_row->albumname . '" src="' . $path . '/' . $default_first . '"
-                              alt="" style="height:100px;"/>
-                              <span class="carousel_lefttxt">' . substr($get_album_row->macAlbum_name, 0, 15) . '</span></a></li>';
+                              alt="" style="height:100px;filter:alpha(opacity=30);  opacity:1.0;"/>
+                              <span class="carousel_lefttxt">' . substr(trim(trim($get_album_row->macAlbum_name,' '),''), 0, 15) . '</span></a></li>';
                     } else if (!file_exists($file_image)) {
                         $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $get_album_row->macAlbum_id . '"><img class="mac-no-border" title="' . $get_album_row->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"
-                              alt="" style="height:100px;"/>
-                              <span class="carousel_lefttxt">' . substr($get_album_row->macAlbum_name, 0, 15) . '</span></a></li>';
+                              alt="" style="height:100px;filter:alpha(opacity=30);  opacity:1.0;"/>
+                              <span class="carousel_lefttxt">' . substr(trim($get_album_row->macAlbum_name,' '), 0, 15) . '</span></a></li>';
                     } else {
                         $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $get_album_row->macAlbum_id . '"><img class="mac-no-border" title="' . $get_album_row->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"
-                              alt="" style="height:100px;"/>
-                              <span class="carousel_lefttxt">' . substr($get_album_row->macAlbum_name, 0, 15) . '</span></a></li>';
+                              alt="" style="height:100px;filter:alpha(opacity=30);  opacity:1.0;"/>
+                              <span class="carousel_lefttxt">' . substr(trim($get_album_row->macAlbum_name,' '), 0, 15) . '</span></a></li>';
                     }
 
                     // All other  albums
                     $album_results = $wpdb->get_results("SELECT * FROM  " . $wpdb->prefix . "macalbum WHERE macAlbum_id !='$get_albid' and macAlbum_status='ON'");
-                    $default_first = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id  != '$get_album_row->macAlbum_id' and macPhoto_status='ON' ORDER BY macPhoto_id DESC LIMIT 0,1");
+                    
                     foreach ($album_results as $dis_results) {
                         $uploadDir = wp_upload_dir();
+                        $default_first = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$dis_results->macAlbum_id' and macPhoto_status='ON' ORDER BY macPhoto_id DESC LIMIT 0,1");
                         $file_image = $uploadDir['basedir'] . '/mac-dock-gallery/' . $dis_results->macAlbum_image;
                         $photoCount = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$dis_results->macAlbum_id' and macPhoto_status='ON'");
 
@@ -570,27 +510,38 @@ class contusMacgallery {
                         if ((file_exists($file_image)) && ($dis_results->macAlbum_image != '')) {
                             $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $dis_results->macAlbum_id . '">
                         <img class="mac-no-border" title="' . $dis_results->albumname . '" src="' . $path . '/' . $dis_results->macAlbum_image . '"
-                         alt=""  style="height:100px;filter:alpha(opacity=30);-moz-opacity:0.3;-khtml-opacity: 0.3;opacity: 0.3;" />
-                         <span class="carousel_lefttxt">' . substr($dis_results->macAlbum_name, 0, 15) . '</span></li></a>';
+                         alt=""  style="height:100px;filter:alpha(opacity=30);" />
+                         <span class="carousel_lefttxt">' . substr(trim($dis_results->macAlbum_name,' '), 0, 11) . '</span></a></li>';
                         } else if ($dis_results->macAlbum_image == '' && $photoCount != '0') {
                             $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $dis_results->macAlbum_id . '"><img class="mac-no-border" title="' . $dis_results->albumname . '" src="' . $path . '/' . $default_first . '"
-                              alt="" style="height:100px;"/>
-                              <span class="carousel_lefttxt">' . substr($dis_results->macAlbum_name, 0, 15) . '</span></a></li>';
+                              alt="" style="height:100px;filter:alpha(opacity=30);"/>
+                              <span class="carousel_lefttxt">' . substr(trim($dis_results->macAlbum_name,' '), 0, 11) . '</span></a></li>';
                         } else if (!file_exists($file_image)) {
                             $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $dis_results->macAlbum_id . '">
                         <img class="mac-no-border" title="' . $dis_results->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"
-                         alt=""  style="height:100px;filter:alpha(opacity=30);-moz-opacity:0.3;-khtml-opacity: 0.3;opacity: 0.3;" />
-                         <span class="carousel_lefttxt">' . substr($dis_results->macAlbum_name, 0, 15) . '</span></li></a>';
+                         alt=""  style="height:100px;filter:alpha(opacity=30);" />
+                         <span class="carousel_lefttxt">' . substr(trim($dis_results->macAlbum_name,' '), 0, 11) . '</span></a></li>';
                         } else {
                             $div .='<li><a href="' . $site_url . '?page_id=' . $macGallid . '&albid=' . $dis_results->macAlbum_id . '">
                         <img class="mac-no-border" title="' . $dis_results->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"
-                         alt=""  style="height:100px;filter:alpha(opacity=30);-moz-opacity:0.3;-khtml-opacity: 0.3;opacity: 0.3;" />
-                         <span class="carousel_lefttxt">' . substr($dis_results->macAlbum_name, 0, 15) . '</span></li></a>';
+                         alt=""  style="height:100px;filter:alpha(opacity=30);" />
+                         <span class="carousel_lefttxt">' . substr(trim($dis_results->macAlbum_name,' '), 0, 11) . '</span></a></li>';
                         }
                     }
                     $div .= '</ul>';
 
                     $div .= '</div>';
+
+                    ?>
+         <script type="text/javascript">
+            var mac = jQuery.noConflict();
+          // alert(document.body.offsetWidth);
+            mac(document).ready(function() {
+              mac('.first-and-second-carousel').jcarousel();
+
+            });
+            </script>
+        <?php
                 }
           }  // If only that album exixt
         else
@@ -608,7 +559,8 @@ class contusMacgallery {
                 global $d;
 ?>
                 <script type="text/javascript">
-
+  var mac = jQuery.noConflict();
+       
                     var site_url,mac_folder,numfiles;
                     site_url = '<?php echo $site_url; ?>';
                     mac_folder  = '<?php echo $folder; ?>';
@@ -623,15 +575,14 @@ class contusMacgallery {
                         for(k=docinarr<?php echo $t; ?>;k>(docinarr<?php echo $t; ?>-totalrec<?php echo $t; ?>);k--){
 
                             mac('#dock'+k).Fisheye({
-                                maxWidth: <?php echo $maxwidth; ?>,
+                                maxWidth: <?php echo $macSetting->mouseHei;?>,
                                 items: 'a',
                                 itemsText: 'span',
+                                valign: 'top',
                                 container: '.dock-container'+k,
                                 itemWidth: <?php echo $itemwidth; ?>,
-                                proximity: <?php echo $prox; ?>,
-                                alignment : '<?php echo $alignment; ?>',
-                                valign: 'top',
-                                halign : '<?php echo $halign; ?>'
+                                proximity: <?php echo $macSetting->macProximity?>,
+                                halign : '<?php echo 'center'; ?>'
                             });
 
                         }
@@ -645,13 +596,19 @@ class contusMacgallery {
 
                     });
                 </script>
-
+ <script type="text/javascript">
+          
+             function getfacebook()
+            {
+                FB.init({appId:'<?php echo $macSetting->mac_facebook_api; ?>', status: true, cookie: true,
+                    xfbml: true});
+            }</script>
 
 
 <?PHP
             } // Second End of photos count
-           
-       
+
+
      }   // Photos of the respective alubm
         else
         {
@@ -705,15 +662,15 @@ class contusMacgallery {
                     $self = '?page_id=' . get_query_var('page_id');
                 }
 
-                if (($curpage - 1) > 0) {
-                    $page_list .= "<a href=\"" . $self . "&pages=" . ($curpage - 1) . "\" title=\"Previous Page\" class='macpag_left'>
-                                            <img src=" . $site_url . "/wp-content/plugins/" . dirname(plugin_basename(__FILE__)) . "/images/circle.GIF></a> ";
-                }
-                /* Print the Next and Last page links if necessary */
-                if (($curpage + 1) <= $pages) {
-                    $page_list .= "<a href=\"" . $self . "&pages=" . ($curpage + 1) . "\" title=\"Next Page\" class='macpag_right'>
-                                            <img src=" . $site_url . "/wp-content/plugins/" . dirname(plugin_basename(__FILE__)) . "/images/circle.GIF></a> ";
-                }
+              if (($curpage - 1) > 0) {
+                        $page_list .= "<a href=\"" . $self . "&pages=" . ($curpage - 1) . "\" title=\"Previous Page\" class='macpag_left'>
+                                                    <img src='" . $site_url . "/wp-content/plugins/" . dirname(plugin_basename(__FILE__)) . "/images/left.png' class='mac-no-border'></a> ";
+                    }
+                    /* Print the Next and Last page links if necessary */
+                    if (($curpage + 1) <= $pages) {
+                        $page_list .= "<a href=\"" . $self . "&pages=" . ($curpage + 1) . "\" title=\"Next Page\"  class='macpag_right'>
+                                                    <img src='" . $site_url . "/wp-content/plugins/" . dirname(plugin_basename(__FILE__)) . "/images/right.png' class='mac-no-border'></a> ";
+                    }
                 $page_list .= "</td>\n";
                 return $page_list;
             }
@@ -742,7 +699,7 @@ class contusMacgallery {
                 return $next_prev;
             }
             //End of Pagination
-            
+
             $limit = $macSetting->macAlbum_limit;
             $sql = mysql_query("SELECT * FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_status='ON'");
             $start = findStart($limit);
@@ -773,7 +730,7 @@ class contusMacgallery {
                 } else {
                     $div .='<div class="inner_albim_image"><a class="thumbnail" href="' . $site_url . '/?page_id=' . $macGallid . '&albid=' . $albDisplay->macAlbum_id . '"><img title="' . $albDisplay->macAlbum_name . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"></a></div>';
                 }
-                $div .='<div class="mac_title">' . substr($albDisplay->macAlbum_name, 0, 22) . '</div>';
+                $div .='<div class="mac_title"><a class="thumbnail" href="' . $site_url . '/?page_id=' . $macGallid . '&albid=' . $albDisplay->macAlbum_id . '">' . substr($albDisplay->macAlbum_name, 0, 15) . '</a></div>';
 
                 $macDate = explode(' ', $albDisplay->macAlbum_date);
                 $exDate = explode('-', $macDate[0]);
@@ -789,8 +746,10 @@ class contusMacgallery {
             $div .= '</div>';
 
             $pagelist = pageList($_GET['pages'], $pages, $_GET['albid']);
-            $div .= '<div align="right">' . $pagelist . '</div>';
+            $div .= '<div align="center">' . $pagelist . '</div>';
+            
         }   // End of the Album list show
+//$div.='';
         return $div;
     }
 // End of the function

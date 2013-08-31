@@ -1,3 +1,21 @@
+/*
+ ***********************************************************/
+/**
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.5
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
+ * */
+
+/*
+ ***********************************************************/
+
 // Ajax Library
 
 function createREQ()
@@ -37,7 +55,6 @@ function requestGET(url, query, req)
 
 function requestPOST(url, query, req)
 {
-	createREQ();	
     req.open("POST", url,true);
     req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     req.send(query);
@@ -65,7 +82,7 @@ function doAjax(url,query,callback,reqtype,getxml)
                 {
                     item = myreq.responseXML;
                 }
-                doCallback(callback,item);
+                doCallback(callback, item);
             }
         }
     }

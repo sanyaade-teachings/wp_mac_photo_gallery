@@ -3,7 +3,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.4
+ * @version	      : 2.5
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -183,8 +183,7 @@ function controller() {
     <link rel='stylesheet' href='<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder ?>/css/style.css' type='text/css' />
     <script type="text/javascript" src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/jquery.js"></script>
     <script type="text/javascript" src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/macGallery.js"></script>
-
-    <script type="text/javascript" src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/main.js" ></script>
+    <script type="text/javascript" src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/mac_preview.js" ></script>
     <script type="text/javascript">
 
         var site_url = '<?php echo $site_url; ?>';
@@ -196,11 +195,11 @@ function controller() {
         var dragdr = jQuery.noConflict();
          dragdr(document).ready(function(dragdr) {
         macAlbum(pages)
-         })
+         });
     </script>
     <script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/jquery-pack.js'; ?>" type="text/javascript"></script>
-<link href="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/css/facebox.css';?>" media="screen" rel="stylesheet" type="text/css" />
-<script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/facebox.js';?>" type="text/javascript"></script>
+<link href="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/css/facebox_admin.css';?>" media="screen" rel="stylesheet" type="text/css" />
+<script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/facebox_admin.js'; ?>" type="text/javascript"></script>
 <script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/jquery.colorbox.js';?>"></script>
 <script type="text/javascript">
 
@@ -249,7 +248,7 @@ function controller() {
                 // Made it a local variable by using "var"
                 var macAlbum_name = document.getElementById("macAlbum_name").value;
                 if(macAlbum_name == ""){
-                    document.getElementById("error_alb").innerHTML = 'Please Enter the Album ';
+                    document.getElementById("error_alb").innerHTML = 'Please enter the album name';
                     return false;
                 }
                 else if(get_title != title_value && <?php echo $mac_album_count?> != 0 )
@@ -266,11 +265,11 @@ function controller() {
     <div class="wrap nosubsub"><div id="icon-upload" class="icon32"><br /></div>
         <h2 class="nav-tab-wrapper">
         <a href="?page=macAlbum" class="nav-tab nav-tab-active">Albums</a>
-        <a href="?page=macPhotos&albid=0" class="nav-tab">Photos</a>
+        <a href="?page=macPhotos&albid=0" class="nav-tab">Upload Images</a>
         <a href="?page=macSettings" class="nav-tab">Settings</a></h2>
         <div style="background-color:#ECECEC;padding: 10px;margin-top:10px;border: #ccc 1px solid">
         <strong> Note : </strong>Mac Photo Gallery can be easily inserted to the Post / Page by adding the following code :<br><br>
-                 (i)  [macGallery] - This will show the entire gallery<br>
+                 (i)  [macGallery] - This will show the entire gallery [Only for Page]<br>
                  (ii) [macGallery albid=1 row=3 cols=3] - This will show the particular album images with the album id 1
           </div>
          <h3 style="float:left;width:200px;padding-top: 10px">Add New Album</h3>
@@ -279,54 +278,32 @@ if (isset($_REQUEST['macAlbum_submit']))
         {
             $uploadDir = wp_upload_dir();
             $path = $uploadDir['basedir'].'/mac-dock-gallery';
+          
           if($get_title['title'] == $get_key || $mac_album_count <= 1)
           {
             $macAlbum_name        = filter_input(INPUT_POST, 'macAlbum_name');
             $macAlbum_description = filter_input(INPUT_POST, 'macAlbum_description');
             $current_image        = $_FILES['macAlbum_image']['name'];
-        if ($current_image == '')
-        {
+           
+            $get_albname =  $wpdb->get_var("SELECT macAlbum_name FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_name like '%$macAlbum_name%'");
+            if(!$get_albname)
+            {
+        
             $sql = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macalbum
                     (`macAlbum_name`, `macAlbum_description`,`macAlbum_image`,`macAlbum_status`,`macAlbum_date`) VALUES
                     ('$macAlbum_name', '$macAlbum_description', '','ON',NOW())");
-        } else {
-            $extension = substr(strrchr($current_image, '.'), 1);
-            if (($extension != "jpg") && ($extension != "JPEG") && ($extension != 'JPG') && ($extension != "png") && ($extension != 'gif')&& ($extension != 'jpeg')) {
-                die('Unknown extension');
+    
             }
-            $destination = "$path/" . $current_image;
-            $action = @move_uploaded_file($_FILES['macAlbum_image']['tmp_name'], $destination);
-            if (!$action) {
-                die('File copy failed');
+            else
+            {
+                echo "<script> alert('Album name already exist');</script>";
             }
-            $sql = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macalbum
-           (`macAlbum_name`, `macAlbum_description`,`macAlbum_image`, `macAlbum_status`,`macAlbum_date`)
-           VALUES ('$macAlbum_name', '$macAlbum_description', '$current_image','ON',NOW())");
-            $lastid = $wpdb->insert_id;
-            $album_image = $wpdb->get_var("select macAlbum_image from " . $wpdb->prefix . "macalbum WHERE macAlbum_id='$lastid'");
-            $filenameext = explode('.', $album_image);
-            $filenameextcount = count($filenameext);
-            $thumbfile = $lastid . "_thumbalb." . $filenameext[(int) $filenameextcount - 1];
-            $bigfile = $lastid . "alb." . $filenameext[(int) $filenameextcount - 1];
-            $path1 = "$path/" . $album_image;
-            define(contus, "$path/");
-            /* create an object to call the required image to resize */
-            $image = new simpleimage();
-            $image->loads($path1);
-            $twidth = $macSet->resizeWid;
-            $theight = $macSet->resizeHei;
-            /* create thumb image and save */
-            $image->resize($twidth + $theight, $twidth + $theight);
-            $image->save(contus . $thumbfile);
-            /* reload for resizing image for our slideshow */
-            $image->loads($path1);
-            if (file_exists(contus . $bigfile))
-                unlink(contus . $bigfile);
-            rename($path1, contus . $bigfile);
-            $upd = $wpdb->query("UPDATE " . $wpdb->prefix . "macalbum SET macAlbum_image='$thumbfile' WHERE macAlbum_id=$lastid");
-        }
+         
       }
+      else
+      {
        echo '<div class="mac-error_msg">Album Created successfully</div>';
+      }
     }
    
 $options = get_option('get_title_key');
@@ -348,21 +325,28 @@ if(isset($_POST['submit_license']))
  <a href="http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery" target="_blank"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/buynow.png'?>" align="right" style="padding-right:5px;"></a>
 </p>
 
-<div id="mydiv" style="display:none">
+<div id="mydiv" style="display:none;width:500px;background:#fff;">
 <form method="POST" action=""  onSubmit="return validateKey()">
     <h2 align="center">License Key</h2>
-   <div align="right"><input type="text" name="get_license" id="get_license" size="58" />
+   <div align="center"><input type="text" name="get_license" id="get_license" size="58" value="" />
    <input type="submit" name="submit_license" id="submit_license" value="Save"/></div>
 </form>
 </div>
+
 <script>
+   
     function validateKey()
            {
         	   var Licencevalue = document.getElementById("get_license").value;
-        	   if(Licencevalue == ""||Licencevalue !="<?php echo $get_key ?>"){
-            	   alert('please enter valid licence key');
+                   if(Licencevalue == "" || Licencevalue !="<?php echo $get_key ?>"){
+            	   alert('Please enter valid license key');
             	   return false;
         	   }
+                   else
+                       {
+                            alert('Valid License key is entered successfully');
+            	           return true;
+                       }
 
            }
 </script>
@@ -388,7 +372,7 @@ if(isset($_POST['submit_license']))
             <form name="macAlbum" method="POST" id="macAlbum" enctype="multipart/form-data"  ><div class="form-wrap">
 
                     <div class="form-macAlbum">
-                        <label for="macAlbum_name">Album Name</label>
+                        <label for="macAlbum_name">Album Name *</label>
                         <input name="macAlbum_name" id="macAlbum_name" type="text" value="" size="40" aria-required="true" />
                         <div id="error_alb" style="color:red"></div>
                         <p><?php _e('The album name is how it appears on your site.'); ?></p>
@@ -401,12 +385,7 @@ if(isset($_POST['submit_license']))
                     </div>
 
 
-                <div class="form-macAlbum">
-                    <label for="macAlbum_image">Album Image</label>
-                    <input type="file" name="macAlbum_image" id="macAlbum_image">
-                    <p><?php _e('Upload Image for the album.'); ?></p>
-                </div>
-
+           
                 <p class="submit"><a href="#oops" rel="oops">
 <input type="submit" class="button" name="macAlbum_submit" id="macAlbum_submit" value="<?php echo 'Add new Album'; ?>" /></a></p>
             </div></form>

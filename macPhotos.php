@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.4
+ * @version	      : 2.5
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -36,7 +36,7 @@ $p = 1;
                                         $p++;
                                     }
 
-       $album .= "<div class='left_align' style='color: #21759B'>Following are the list of images that has been uploaded</div>";
+       $album .= "<div class='left_align' style='color: #21759B'>Following are the list of uploaded images</div>";
        $album .='<ul class="actions"><li><a href="javascript:void(0)" onclick=" upd_disphoto(\''.$queue.'\',\''.$albid.'\');" class="gallery_btn" style="cursor:pointer">Update</a></li></ul>';
        for($i=1;$i<=$queue;$i++)
        {
@@ -49,7 +49,7 @@ $p = 1;
        $album .= '<form name="macEdit_'.$phtsrc[$i]['macPhoto_id'].'" method="POST"  class="macEdit">';
        $album .= '<table cellpadding="0" cellspacing="0" width="100%"><tr><td style="margin:0 10px;">Name</td><td style="margin:0 10px;">';
        $album .= '<input type="text" name="macedit_name" id="macedit_name_'.$i.'" value="'.$phtsrc[$i]['macPhoto_name'].'" style="width:100%"></td></tr>';
-       $album .= '<tr><td style="margin:0 10px;vertical-align:top">Caption</td><td style="margin:0 10px;">';
+       $album .= '<tr><td style="margin:0 10px;vertical-align:top">Description</td><td style="margin:0 10px;">';
        $album .= '<textarea  name="macedit_desc_'.$i.'" id="macedit_desc_'.$i.'" row="10" column="10">'. $phtsrc[$i]['macPhoto_desc'].'</textarea></td></tr></table>';
        $album .= '<tr ><td colspan="2" align="right" style="padding-top:10px;">';
        $album .= '<input type="hidden" name="macedit_id_'.$i.'" id="macedit_id_'.$i.'" value="'.$phtsrc[$i]['macPhoto_id'].'">' ;

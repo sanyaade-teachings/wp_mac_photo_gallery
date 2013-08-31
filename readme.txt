@@ -3,16 +3,18 @@ Contributors: Apptha
 Tags: Mac photo gallery plugin, Photo gallery, Gallery, Apptha Mac photo gallery, mac dock effect, widgets,  Wordpress Mac photo gallery, wp Mac photo gallery , Mac Gallery plugin, Gallery Plugin
 Requires at least: 2.8
 Tested up to: 3.2.1
-Stable tag: 2.4
+Stable tag: 2.5
 Get the most exciting Photo Gallery in the internet, designed and modified to suit your Wordpress websites.  Installing this Mac Photo Gallery Plugin is real easy and if you have any difficulty in installation, contact our support team and quickly resolve your issue.  You can either download this Gallery Plugin directly from our website or through Wordpress plugins page itself.  This Mac Photo Gallery Version  has many advanced features that you cannot find elsewhere, you can photo gallery with Mac Dock effect.
 
 == Description ==
 
-Player Demo - http://www.apptha.com/demo/wordpress/mac-gallery/
-
-Player Home Page - http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery
+The Mac Dock effect of the Wordpress Image Gallery gives a stylish look to your images. The effect of Mac Doc is that when you roll the cursor over a set of photos, the photo which comes in contact with the cursor will be blown out whereas the rest of the photos go to the back. This best Wordpress Gallery allows you to switch between the previous image and next image easily. Most importantly, you can create multiple albums, smooth gallery slideshow; display the album list in thumbnail formats, etc. The download, share and Facebook commenting option of the Wordpress slideshow gallery makes it a brilliant and obvious choice of photo gallery plug-in for your Wordpress site.
 
 ***Alert: If you are upgrading the latest version of mac photo gallery means, Kindly take backup of your previous version data & then do upgrade.
+
+Mac Photo Gallery Demo - http://www.apptha.com/demo/wordpress/mac-gallery/
+
+Mac Photo Gallery Home Page - http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery
 
 * Easy to install Mac Photo Gallery Plugin comes through admin panel, with fantastic support.
 * You can upload images of size upto 10 MB.
@@ -42,7 +44,7 @@ Player Home Page - http://www.apptha.com/category/extension/Wordpress/Mac-Photo-
 = Basic Installation =
 1. Download and unzip the current version of the Mac Photo Gallery plugin.
 2. Transfer the entire Mac Photo Gallery directory to your /wp-content/plugins/ directory
-3. Activate the Mac Photo Gallery, Mac Photos Widgets, and Mac Album Widgets through the 'Plugins' menu in WordPress
+3. Activate the Mac Photo Gallery through the 'Plugins' menu in WordPress
 4. That's it! You're done.
 
 
@@ -82,6 +84,3 @@ Download the zip file , install it.Then activate the plugin.
 
 = Can I get the Mac Photo Gallery plugin customized to my needs? =
 Yes, but there will be additional charges based on the request for customization has to be made by the requester.
-
-= What is the advantage of using this Wordpress Mac Gallery Plugin? =
-To know more features and advantages of our mac gallery plugin, visit this link - http://www.apptha.com/category/extension/Wordpress/Mac Photo Gallery.html
