@@ -3,7 +3,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.3
+ * @version	      : 2.4
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -147,7 +147,6 @@ function controller() {
     $macSet   = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings");
     $mac_album_count = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macalbum");
     
-
     if (isset($_REQUEST['doaction_album']))
      {
         if (isset($_REQUEST['action_album']) == 'delete')
@@ -330,7 +329,7 @@ if (isset($_REQUEST['macAlbum_submit']))
        echo '<div class="mac-error_msg">Album Created successfully</div>';
     }
    
-         $options = get_option('get_title_key');
+$options = get_option('get_title_key');
 if ( !is_array($options) )
 {
   $options = array('title'=>'', 'show'=>'', 'excerpt'=>'','exclude'=>'');

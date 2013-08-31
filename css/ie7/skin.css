@@ -2,7 +2,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.3
+ * @version	      : 2.4
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -67,7 +67,7 @@
 
 .jcarousel-skin-ie7 .jcarousel-item-horizontal {
     margin-left: 0;
-   margin-right: 6px;
+    margin-right: 2px;
 }
 
 .jcarousel-skin-ie7 .jcarousel-direction-rtl .jcarousel-item-horizontal {

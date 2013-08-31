@@ -2,7 +2,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.3
+ * @version	      : 2.4
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -20,8 +20,10 @@
 	margin:0;
 	padding:0;
 }
+
+.div_reg {text-align: center !important;}
 .piro_html {position:absolute; top:0; left:0; padding:10px 30px 0 30px; width:760px; height: 500px; margin:0; display:block; padding:0; z-index:150001; padding:0; }
-.piro_html table,.piro_html tbody,.piro_html tr,.piro_html th,.piro_html td{margin:0;padding:10px;border:none; }
+.piro_html table,.piro_html tbody,.piro_html tr,.piro_html th,.piro_html td{margin:0;padding:0px 10px 0px 10px;border:none; }
 .piro_html img{ margin:0; padding:0; border:none;}
 
 .piro_html .h_t_l{ width:10px; height:10px;}
@@ -54,9 +56,9 @@
 a.piro_next{position:absolute;width:20px;    top: 50%; right:5px; height:20px;text-indent:-999em;outline:none; display:block; margin:0;background:url(next.png) center right no-repeat; border:none; cursor:pointer;z-index:150023}
 a:hover.piro_next{background:url(next.png) center right no-repeat;}
 .piro_next_fake{position:absolute;width:20px; top: 50%; right:5px; height:20px;outline:none; text-indent:-999em; display:none; margin:0;background: url(next.png) center right no-repeat; border:none; cursor:auto;z-index:150020}
-.piro_prev_fake{position:absolute;width:20px; left: 5px;right:40px; top: 50%; height:20px;outline:none; text-indent:-999em; display:none; margin:0;background: url(prev.png) center right no-repeat; border:none; cursor:auto;z-index:150020}
+.piro_prev_fake{position:absolute;width:20px; left: 20px;right:40px; top: 50%; height:20px;outline:none; text-indent:-999em; display:none; margin:0;background: url(prev.png) center right no-repeat; border:none; cursor:auto;z-index:150020}
 
-a.piro_prev{position:absolute;width:20px;left: 5px; top: 50%;right:40px; height:20px; text-indent:-999em; outline:none;display:block;margin:0;background: url(prev.png) center left no-repeat;border:none; cursor:pointer; z-index:150024}
+a.piro_prev{position:absolute;width:20px;left: 20px; top: 50%;right:40px; height:20px; text-indent:-999em; outline:none;display:block;margin:0;background: url(prev.png) center left no-repeat;border:none; cursor:pointer; z-index:150024}
 
 
 a.close_pirobox{color:#bb0f05;}
@@ -89,3 +91,8 @@ a.close_pirobox{color:#bb0f05;}
 .div_regw img{width:auto;height:auto;}
 
 .widget_alb_img a img {margin:0 auto;}
+
+.piro_facebook { padding: 15px 0px 0px 20px;margin-left:220px;}
+.piro_des_parent { height: 120px;position: absolute;top: 10px;width:270px;margin-left: 720px; }
+.piro_innerdiv{width:190px;padding:10px;position:absolute;}
+.piro_secondtd {background-color: #ffffff;width:1000px;}

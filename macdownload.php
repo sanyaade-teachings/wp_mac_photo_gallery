@@ -3,7 +3,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.3
+ * @version	      : 2.4
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -20,18 +20,31 @@
 require_once( dirname(__FILE__) . '/macDirectory.php');
 
 /* Getting the file path */
-$site_url = get_bloginfo('url');
+//$site_url = get_bloginfo('url');
 $folder = dirname(plugin_basename(__FILE__));
 
-$file = "$site_url/wp-content/uploads/mac-dock-gallery/".$_GET['albid']."";
+$file = dirname(dirname(dirname(__FILE__)))."/uploads/mac-dock-gallery/".$_GET['albid'];
+//header("Pragma: public");
+//header("Expires: 0");
+//header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 
-header("Pragma: public");
-header("Expires: 0");
-header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+//header("Content-Type: application/force-download");
+//header( "Content-Disposition: attachment; filename=".basename($file));
 
-header("Content-Type: application/force-download");
-header( "Content-Disposition: attachment; filename=".basename($file));
+//header( "Content-Description: File Transfer");
+//@readfile($file);
+//if (file_exists($file)) {
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename='.basename($file));
+    header('Content-Transfer-Encoding: binary');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Pragma: public');
+    header('Content-Length: ' . filesize($file));
+    ob_clean();
+    flush();
+    readfile($file);
 
-header( "Content-Description: File Transfer");
-@readfile($file);
+//}
 ?>

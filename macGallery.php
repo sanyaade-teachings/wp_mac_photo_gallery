@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Mac Photo Gallery
  * Description:  Mac Photo Gallery for Wordpress. It gives you a stylish gallery effect with mac effect. Mac Photo Gallery is a simple and easy gallery for wordpress.        ***Alert: If you are upgrading the latest version of mac photo gallery means, Kindly take backup of your previous version data & then do upgrade.
- * Version: 2.3
+ * Version: 2.4
  * Author:  <div class="active second plugin-version-author-uri"><a href="http://www.apptha.com" title="Visit author homepage">Apptha</a> | <a href="http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery/" title="Visit plugin site">Visit plugin site</a></div>
  * @since       Wordpress 3.2.1
  * @package	  apptha
@@ -221,6 +221,10 @@ var url = '<?php echo $site_url; ?>';
         $resizeHei        = $_REQUEST['resizeHei'];
         $resizeWid        = $_REQUEST['resizeWid'];
         $macAlbum_limit   = $_REQUEST['macAlbum_limit'];
+        
+         $show_share  = $_REQUEST['show_share'];
+        $show_download  = $_REQUEST['show_download'];
+        
         if($macrow == '' || $macrow == '0' || $macimg_page == '' || $macimg_page == '0' ||
            $summary_macrow == '' || $summary_macrow == '0' ||$summary_page == '' || $summary_page == '0' ||
            $mouseHei == '' || $mouseHei == '0' ||
@@ -238,7 +242,7 @@ var url = '<?php echo $site_url; ?>';
          `mouseHei` = '$mouseHei' , `mouseWid` = '$mouseWid',`resizeHei`='$resizeHei',`resizeWid` = '$resizeWid',
          `macProximity` = '$macProximity', `macDir` = '$macDir',`macImg_dis` = '$macImg_dis',`macAlbum_limit`= '$macAlbum_limit',
          `mac_imgdispstyle` = '$mac_imgdispstyle',
-         `mac_facebook_api` = '$mac_facebook_api', `mac_facebook_comment` = '$mac_facebook_comment' WHERE `macSet_id` = 1");
+         `mac_facebook_api` = '$mac_facebook_api', `mac_facebook_comment` = '$mac_facebook_comment',show_share='$show_share',show_download='$show_download' WHERE `macSet_id` = 1");
          echo '<div class="mac-error_msg"">Settings updated successfully</div>';
         }
          }
@@ -310,6 +314,20 @@ var url = '<?php echo $site_url; ?>';
                             </select>
                        </td>
                    </tr>
+                      <tr>
+                        <td><span>Download settings:</span></td>
+                        <td>
+                            <input type="radio" name="show_download" <?php if ($viewSetting->show_download == 'allow') { echo 'checked'; } ?> value="allow" >Allow
+                     <input type="radio" name="show_download" <?php if ($viewSetting->show_download == 'restrict') { echo 'checked'; } ?> value="restrict">Restrict
+                        </td>
+                   </tr>
+                   <tr>
+                        <td><span>Facebook Share:</span></td>
+                        <td>
+                            <input type="radio" name="show_share" <?php if ($viewSetting->show_share == 'show') { echo 'checked'; } ?> value="show" >Show
+                     <input type="radio" name="show_share" <?php if ($viewSetting->show_share == 'hide') { echo 'checked'; } ?> value="hide">Hide
+                        </td>
+                   </tr>
                 </table>
 
                 <table>
@@ -366,8 +384,8 @@ var url = '<?php echo $site_url; ?>';
  function loadsettings() {
  global $wpdb;
  $insertSettings = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macsettings
-(`macSet_id`, `macrow`, `macimg_page`, `summary_macrow`, `summary_page`, `mouseHei`, `mouseWid`, `resizeHei`, `resizeWid`, `macProximity`, `macDir`, `macImg_dis`, `macAlbum_limit`, `mac_albumdisplay`, `mac_imgdispstyle`, `mac_facebook_api`, `mac_facebook_comment`) VALUES
-(1, 4, 3, 3, 3, 20, 77, 120, 120, 80, 1, 'order', 8, 'no', 1, '', 10);");
+(`macSet_id`, `macrow`, `macimg_page`, `summary_macrow`, `summary_page`, `mouseHei`, `mouseWid`, `resizeHei`, `resizeWid`, `macProximity`, `macDir`, `macImg_dis`, `macAlbum_limit`, `mac_albumdisplay`, `mac_imgdispstyle`, `mac_facebook_api`, `mac_facebook_comment`,`show_share`,`show_download`) VALUES
+(1, 4, 3, 3, 3, 20, 77, 120, 120, 80, 1, 'order', 8, 'no', 1, '', 10 ,'show' , 'allow');");
  $insertDefault = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macalbum (`macAlbum_id`, `macAlbum_name`, `macAlbum_description`, `macAlbum_image`, `macAlbum_status`, `macAlbum_date`) VALUES
  (1, 'Default', 'Default album', '', 'ON', '2011-07-27 17:11:53')");
                         }
@@ -517,8 +535,7 @@ function widget_Contusmacalbum_init()
                                                     <!-- For Contus macalbum -->
 <?php
 echo $before_widget;
-$macPageid = $wpdb->get_var("SELECT ID FROM " . $wpdb->prefix . "posts WHERE post_content='[macGallery]'");
-
+$macPageid = $wpdb->get_var(("SELECT * FROM " . $wpdb->prefix . "posts WHERE post_content LIKE '%[macGallery]%' AND post_type = 'page' AND post_status = 'publish'"));
 $div    = '<div id="contusMac" class="sidebar-wrap clearfix">
            <div><h3 class="widget-title">'.$title.'</h3></div>';
 $show   = $options['show']; //Number of shows

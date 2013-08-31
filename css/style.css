@@ -2,7 +2,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.3
+ * @version	      : 2.4
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -52,11 +52,11 @@ li.clearfix {
 {
      background: #DFDFDF url(../images/gray-grad.png) repeat-x scroll 0% 0%;
      color: #333;text-shadow: rgb(255, 255, 255, 0.796875) 0px 1px 0px;line-height: 1.3em;
-     padding: 7px 0px 7px 0px;text-align: left; font-size: 11px;}
+     padding: 7px 0px 7px 7px;text-align: left; font-size: 11px;}
 .mac_gallery td
 { 
     text-align: justify;vertical-align: top;
-    padding: 5px 0px 10px 2px; font-size: 11px;
+    padding: 5px 0px 10px 7px; font-size: 11px;
     color:#666;border-bottom:1px solid #DFDFDF;
 }
 .mac_album_des

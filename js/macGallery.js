@@ -501,8 +501,7 @@ xmlhttp.send();
 }
 function fbcomments(pid,title,siteurl) {
 
-
-   if (window.XMLHttpRequest)
+if (window.XMLHttpRequest)
   {// code for IE7+, Firefox, Chrome, Opera, Safari
    httpxml=new XMLHttpRequest();
 //alert(xmlhttp);

@@ -8,12 +8,10 @@
 
 (function($) {
 
-
 	$.fn.piroBox_ext = function(opt) {
 		opt = jQuery.extend({
 		piro_speed : 700,
-		bg_alpha : 0.9,
-		piro_scroll : true
+		bg_alpha : 0.9
 		}, opt);
 	$.fn.piroFadeIn = function(speed, callback) {
 		$(this).fadeIn(speed, function() {
@@ -49,50 +47,50 @@
 	var piro_gallery = $(my_gall_obj);
 	$('a[class*="pirobox_gall"]').each(function(rev){this.rev = rev+0});
 	var struct =(
-
-                '<div id="fb-root"></div>'+
-		'<div class="piro_overlay"></div>'+
+        '<div id="fb-root"></div>'+
+		'<div class="piro_overlay" id="piro_overlay"></div>'+
 		'<table class="piro_html"  cellpadding="0" cellspacing="0" >'+
-		'<tr style="background-color: #000000;">'+
-		'<td align="center">'+
+		'<tr><td><table><tr style="background-color: #000000;">'+
+		'<td align="center" class="piro_topblack" height="520" style="vertical-align:middle;text-align:center;">'+
 		'<div class="piro_loader" title="Close"><span></span></div>'+
+		'<div class="piro_arrow">'+
+		'<a href="#prev" class="piro_prev" title="Prev"></a>'+
+        '<a href="#next" class="piro_next" title="Next"></a>'+
+        '</div>'+
 		'<div class="resize">'+
 		'<div class="nav_container">'+
-		'<a href="#prev" class="piro_prev" title="Prev"></a>'+
-		'<a href="#next" class="piro_next" title="Next"></a>'+
 		'<div class="piro_prev_fake">Prev</div>'+
 		'<div class="piro_next_fake">Next</div>'+
-               ' <div id="mac_close" style="margin-left:450px;float:left;display:none;position:absolute;"></div>'+
-                '<div id="mac_cross" class="piro_close" onMouseOver="toggleDiv(1)" onMouseOut="toggleDiv(0)"></div>'+
+        '<div id="mac_close" style="margin-left:450px;float:left;display:none;position:absolute;"></div>'+
+        '<div id="mac_cross" class="piro_close"></div>'+
 		'</div>'+
-                '<div class="clear"></div>'+
-		'<div class="div_reg"></div>'+'</div>'+
-               	'</td>'+
-		'</tr>'+
-                '<tr class="facebookcomment">'+
-	        '<td class="" style="padding:0px;position:relative">'+
+        '<div class="clear"></div>'+
+  		'<div class="div_reg"></div>'+'</div>'+
+        '</td>'+
+		'</tr></table><div class="clear"></div>'+
+                '<table><tr class="facebookcomment">'+
+	        '<td class="piro_secondtd" style="padding:0px;position:relative">'+
                 '<table cellspacing="0" cellpadding="0" border="0">'+
-                '<div style="position:relative;"><div style="width:190px;padding:10px;float:left;"><div style="border-bottom:1px solid #ccc;line-height:13px;"><span style="padding:10px 10px 0 0;font-size:12px;color:#3B5998;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:bold;" class="macAlbum" ></span><br />'+
+                '<div style="position:relative;background-color:#ffffff;"><div class="piro_innerdiv"><div style="border-bottom:1px solid #ccc;line-height:13px;"><span style="padding:10px 10px 0 0;font-size:12px;color:#3B5998;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:bold;" class="macAlbum" ></span><br />'+
                 '<span style="font-size:10px;color:#666;font-family:tahoma;font-weight:normal;">on</span> <span class="macDate" style="padding:0px 0px 4px 4px;font-size:11px;color:#3B5998;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:normal;"></span></div>'+
                 '<div style="padding:5px 0 0 0;"><span padding:4px 2px 0 0;  class="downloadimage"></span><span padding:4px 2px 0 0;  class="macfb_url"></span></div></div>'+
-                '<div id="facebook" style="padding: 15px 0px 0px 20px;float:left;width: 460px;"></div><div class"clear"></div>'+
-                '<div style="height: 120px;overflow: hidden;padding: 0px 5px 10px;top: 10px;right:0px;vertical-align:top;width:270px;">'+
-                '<div style="color:#3B5998;font-size:11px;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:bold;">Description:</div>'+
+                '<div id="facebook" class="piro_facebook"></div><div class"clear"></div>'+
+                '<div class="piro_des_parent">'+
+                '<div class="macPhtname" style="color:#3B5998;font-size:11px;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:bold;"></div>'+
                 '<div style="color:#333;height:300px;text-align:justify;font-size:11px;font-family:lucida grande,tahoma,verdana,arial,sans-serif" class="macDesc"></div>'+
-                '<div class="clear"></div></div></table></td>'+
-                '</tr>'+
-
-
-                '</table>'
+                '<div class="clear"></div></div><div class="clear"></div></table><div class="clear"></div></td>'+
+                '</tr></table>'+
+                '</td></tr></table><div class="clear"></div>'
 		);
 	$('body').append(struct);
 	var wrapper = $('.piro_html'),
 	piro_capt = $('.caption'),
         piro_desc = $('.macDesc'),
+        piro_phtname = $('.macPhtname'),
         piro_date  = $('.macDate'),
         piro_albname = $('.macAlbum'),
-	piro_bg = $('.piro_overlay'),
-	piro_next = $('.piro_next'),
+	    piro_bg = $('.piro_overlay'),
+	    piro_next = $('.piro_next'),
         image_download = $('.downloadimage'),
         image_fburl    = $('.macfb_url'),
 	piro_prev = $('.piro_prev'),
@@ -150,10 +148,9 @@ var y = $(window).height();
 			var new_h = wrapper.height();
 			var new_w = wrapper.width();
                         h =  parseInt($(document).scrollTop()-80);
-
 			wrapper.css({
-				left:  ((new_x/2)-(new_w/2)+10)+ 'px',
-				top: h+ 'px'
+				left:  ((new_x/2)-(new_w/2)+10)+ 'px'
+				//top: h+ 'px'
 			});
 	});
 	function scrollIt (){
@@ -184,12 +181,14 @@ var y = $(window).height();
                 var dateDis  = dateSplit[2]+'-'+dateSplit[1]+'-'+dateSplit[0];
 
               	var params = $(this).attr('rel').split('-');
-		var p_link = $(this).attr('href');
+		        var p_link = $(this).attr('href');
                 var img_url = p_link.split("/");
                 var img_id  = img_url[img_url.length-1];
                 var fbUrl = 'http://www.facebook.com/dialog/feed?app_id='+macapi+'&description='+ldescr+'&picture='+p_link+'&name='+descr+'&message=Comments&redirect_uri='+site_url+'/';
                 var img_site = site_url+'/wp-content/plugins/'+mac_folder+'/macdownload.php?albid='+img_id;
 
+                var piro_download = $(this).attr('download');
+                var piro_share = $(this).attr('share');
 		$(this).unbind();
 		$(this).bind('click', function(e) {
 
@@ -272,8 +271,8 @@ var y = $(window).height();
 							var y = 560;
 							var x = wrapper.width();
 							var	imgH = img.height;
-							var	imgW = img.width;
-
+                            var	imgW = img.width;
+                                                        
 							//var rz_img =1.203; /*::::: ORIGINAL SIZE :::::*/
 							if(imgH+20 > y || imgW+20 > x){
 								var _x = (imgW + 20)/x;
@@ -304,7 +303,7 @@ var y = $(window).height();
 							wrapper.animate({
 								height : 520 + 'px' ,
 								width : 1000 + 'px' ,
-                                                              left:  (x-980)/2 + 'px'
+                                left:  (x-980)/2 + 'px'
 								//top: parseInt($(document).scrollTop())+(y-imgH)/2-20
 								},opt.piro_speed, function(){
 									var cap_w = resize.width();
@@ -382,13 +381,26 @@ var y = $(window).height();
 					piro_capt.html('<p>' + descr + '</p>');
 					}
 
-image_fburl.html('<a class="links" title="Facebook Share" href="'+fbUrl+'" target="_blank" style="display:block;font-size:11px;color:#3B5998;font-family:tahoma;font-weight:normal;text-decoration: underline;">Share</a>');
-image_download.html('<a href="'+img_site+'" style="display:block;font-size:11px;color:#3B5998;font-family:tahoma;font-weight:normal;text-decoration: underline;">Download</a>');
-
+					if(piro_share== "hide"){
+						image_fburl.html('');
+						}else{
+						    image_fburl.html('<a class="links" title="Facebook Share" href="'+fbUrl+'" target="_blank" style="display:block;font-size:11px;color:#3B5998;font-family:tahoma;font-weight:normal;text-decoration: underline;">Share</a>');
+						}
+						if(piro_download== "restrict"){
+						image_download.html('');
+						}else{
+						  image_download.html('<a href="'+img_site+'" style="display:block;font-size:11px;color:#3B5998;font-family:tahoma;font-weight:normal;text-decoration: underline;">Download</a>');
+						}
                                         if(ldescr == ""){
 						piro_desc.html('No description is available for this image');
 						}else{
 					piro_desc.html( ldescr );
+					}
+                                        if(descr == "")
+                                            {
+                                          piro_phtname.html('No Name is available for this image');
+						}else{
+					piro_phtname.html( descr );
 					}
 
                                           if(dateDis == ""){
@@ -428,6 +440,7 @@ image_download.html('<a href="'+img_site+'" style="display:block;font-size:11px;
 	});
 
 	function close_all (){
+           
 		if($('.piro_close').is(':visible')){
 			$('.my_frame').remove();
 			wrapper.add(div_reg).add(resize).stop();
@@ -442,6 +455,7 @@ image_download.html('<a href="'+img_site+'" style="display:block;font-size:11px;
 				div_reg.html('');
 				piro_loader.add(piro_capt).add(btn_info).hide();
 				$('.nav_container').hide();
+                                document.getElementById('piro_overlay').style.visibility = 'hidden';
 				piro_bg.add(wrapper).hide().css('visibility','visible');
 			});
 			}
@@ -449,4 +463,3 @@ image_download.html('<a href="'+img_site+'" style="display:block;font-size:11px;
 		piro_close.add(piro_loader).add(piro_bg).bind('click',function(y){y.preventDefault();close_all();});
 	}
 })(jQuery);
- 

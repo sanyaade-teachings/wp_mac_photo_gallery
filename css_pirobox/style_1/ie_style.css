@@ -1,0 +1,37 @@
+/*
+ ***********************************************************/
+/**
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.4
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
+ * */
+/*
+ ***********************************************************/
+
+  .div_reg img {display: block !important;filter: alpha(opacity=100) !important; margin: 0 auto !important;}
+  .piro_des_parent { height: 120px;position: absolute;top: 10px;left:0px;width:270px;margin-left: 720px; }
+  .piro_close{right:15px !important;background: transparent url(close.png) no-repeat center center;cursor:pointer;margin:0 0 0 0;z-index:150022;display:block !important;top:15px;}
+  a.piro_prev{position:absolute;visibility:visible !important;width:20px;left: 5px; top: 0px ; height:20px; text-indent:-999em; outline:none;display:block;margin:0;background: url(prev.png) center left no-repeat;border:none; cursor:pointer; z-index:150024}
+  a.piro_next{position:absolute; visibility:visible !important;width:20px;top: 0px; right:15px !important; height:20px;text-indent:-999em;outline:none; display:block !important; margin:0;background:url(next.png) center right no-repeat; border:none; cursor:pointer;z-index:150023}
+  .nav_container{ bottom:-20px; right:0;display: block !important; width:60px;  z-index:1500190000000;}
+  .piro_topblack {background-color: #000000;width:1000px;}
+  .piro_secondtd {background-color: #ffffff;width:1000px;}
+  .piro_html { margin-top: 100px !important; top:100px !important}
+  .piro_innerdiv { width:190px;padding:10px;position:absolute !important;left:0px;}
+  .resize{margin:0 auto !important;text-align: center !important;}
+  .div_reg{width:1000px !important;}
+  *:first-child+html .div_reg{width:960px !important;}
+  *:first-child+html a.piro_next{width:20px; position:absolute; visibility:visible !important;  top: 0% !important; right:10px; height:20px;text-indent:-999em;outline:none; display:block !important; margin:0;background:url(next.png) center right no-repeat; border:none; cursor:pointer;z-index:150023}
+  *:first-child+html a.piro_prev{position:absolute;visibility:visible !important;width:20px;left: 10px; top: 0% !important; height:20px; text-indent:-999em; outline:none;display:block;margin:0;background: url(prev.png) center left no-repeat;border:none; cursor:pointer; z-index:150024}
+  .piro_arrow {position:absolute;top:35%;left:0px;display:block;z-index:160005;  cursor:pointer;width:1000px; }
+  
+.piro_next_fake{display:none;}
+.piro_prev_fake{display:none;}
+  

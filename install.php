@@ -3,7 +3,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.3
+ * @version	      : 2.4
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -66,9 +66,15 @@ function macGallery_install()
           `mac_albumdisplay` varchar(5) NOT NULL,
           `mac_imgdispstyle` int(11) NOT NULL,
           `mac_facebook_api` varchar(50) NOT NULL,
-          `mac_facebook_comment` int(5) NOT NULL
+          `mac_facebook_comment` int(5) NOT NULL,
+          `show_share` varchar(10) NOT NULL,
+          `show_download` varchar(10) NOT NULL
               ) $charset_collate;";
           $res = $wpdb->get_results($sql);
+            }
+            else {
+            	$sql = "ALTER TABLE ".$table_settings." ADD `show_share` VARCHAR(10) DEFAULT 'show' AFTER `mac_facebook_comment`, ADD `show_download` VARCHAR(10) DEFAULT 'allow' AFTER `show_share`";
+            	$res = $wpdb->get_results($sql);
             }
 
           if (!$afound)
