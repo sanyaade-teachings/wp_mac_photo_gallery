@@ -1,0 +1,226 @@
+/*
+ ***********************************************************
+
+ * Name:  Mac Photo Gallery
+ * Description: Mac Photo Gallery component for Wordpress
+ * Version: 1.0
+ * Edited By: Saranya
+ * Author URI: http://www.contussupport.com/
+ * Date :May 19 2011
+
+ **********************************************************
+
+ @Copyright Copyright (C) 2010-2011 Contus Support
+ @license GNU/GPL http://www.gnu.org/copyleft/gpl.html,
+
+ **********************************************************/
+
+/* Overall style for images page */
+
+.lfloat
+{
+    float: left;
+}
+.rfloat
+{
+    float: right;
+}
+.page_list a{
+/*left: -20px;*/
+position: relative;
+vertical-align: middle;
+z-index: 99999;
+}
+
+       .ulwidget #imgmain
+                {
+                 width: 150px;
+                 margin: 0px auto;
+                 padding-left: 10px;
+                }
+#container #imgwrapper{
+    margin:0 auto;
+    padding:10px;
+    height:auto;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+         position:relative;
+         background-position:center bottom;
+         background-repeat:no-repeat;
+         margin-bottom:10px;
+ }
+
+#imgmain { border-radius: 5px 0 0 5px; }
+.description {
+    float:left;
+    width:100px;
+    height:62px;
+    font-family:  Georgia, 'Bitstream Charter', serif;
+}
+.description h4{
+    color: #fff;
+    float: left;
+    font-size: 13px;
+    font-weight: normal;
+    margin: 0 0 5px 5px;
+    padding: 0;
+    width:100%;
+    font-family:  Georgia, 'Bitstream Charter', serif;
+}
+.description .desc {
+    color:  #A2A2A2;
+    float: left;
+    font-size: 11px;
+    font-weight: normal;
+    padding: 0;
+    text-align: justify;line-height: 15px;
+    font-family:  Georgia, 'Bitstream Charter', serif;
+}
+
+#pagination {
+    width:100%;
+    height:30px;
+/*    padding-bottom: 10px;*/
+}
+
+.prev {
+    background: url(img/left.png) no-repeat 0 0;
+    width:100px;
+    height:29px;
+    text-indent:-9999px;
+    cursor:pointer;
+    float:left;
+}
+
+.prev a {
+    width:100px;
+    height:29px;
+}
+.next {
+   background: url(img/right.png) no-repeat 0 0;
+    width:40px;
+    height:29px;
+    text-indent:-9999px;
+    cursor:pointer;
+    float:right;
+}
+
+.button{
+margin-left: 25px;
+}
+
+.clearfix:after {
+    clear: both;
+    display: block;
+    content: " ";
+    height: 0px;
+    visibility: hidden;
+}
+.clearfix {
+    display: inline-block;
+}
+
+.countimg{font-size: 12px;width:20px;height:10px}
+#content .countimg img{max-width: 20px;}
+#content .thumbnail img{width: 140px; height: 140px; padding: 10px 6px 10px 6px;}
+#content .albumimg{float:left;margin:10px 8px 0px 0;font-family:Helvetica,Arial,sans-serif;background: none repeat scroll 0 0 #000000;color:#fff;width:151px;height: 210px}
+.albumimg{float:left;margin:10px 8px 0px 0;font-family:Helvetica,Arial,sans-serif;background: none repeat scroll 0 0 #000000;color:#fff;width:151px;height: 200px}
+.widget-area .albumimg{float:left;margin:10px 8px 0px 0;font-family:Helvetica,Arial,sans-serif;background: none repeat scroll 0 0 #000000;color:#fff}
+.dock_img_space
+{
+    padding-left: 5px;
+}
+.mac_count_img
+{
+  padding:0 2px 0 0px;margin:0px;
+}
+.widget_alb_img
+{
+    padding: 5px;
+}
+
+/* For the carousle*/
+#mac_id{
+
+    background:#f9f9f7;
+    padding:10px;
+    margin:0 auto;
+    
+    -moz-box-shadow: 0px 0px 5px #888;
+-webkit-box-shadow: 0px 0px 5px #888;
+box-shadow: 0px 0px 5px #888;
+
+}
+
+#mac_slider{
+    margin:0px auto;
+    border-top:1px solid #dcdcd9;
+    border-bottom:1px solid #dcdcd9;
+
+}
+#mac_all{
+     background:#dededa;
+     border:1px solid #ccc;
+    padding:10px;
+
+}
+
+.jcarousel-skin-ie7{
+
+    border-top:1px solid #fff;
+    border-bottom:1px solid #fff;
+}
+#macshow{
+    border-top: 1px solid #dadad8;
+padding: 10px 0px 10px;
+margin-top: 30px;
+font-size: 14px;
+
+color:#000;
+font-family: arial;
+margin-bottom:5px;
+
+}
+
+#macshow span{
+border-top: 1px solid white;
+font-size: 14px;
+font-weight: bold;
+color:#0D3573;
+margin-right: 5px;
+font-family: arial;
+margin-bottom:5px;
+}
+.album_carosole h4
+{
+ text-align:center;color:#0D3573;margin:0px;background-color:#CCC;padding:4px 0px 4px 0px;font-weight:bold;font-family:arial;
+}
+
+#macshow p{
+   margin-bottom:5px;
+}
+.album_href
+{
+  float:right;padding:0 3px 0 0px;text-decoration:none;
+}
+.macpag_left
+{
+    padding-bottom: 10px;
+    float: left;
+ }
+.macpag_right
+{
+    padding-bottom: 10px;
+    float: right;
+ }
+#macshow p{
+    font-size: 12px;
+    font-family: arial;
+     color:#6f6f6f;
+}
+#contusMac ul li{
+   list-style: none;
+}
+/* End of Carsoule */
