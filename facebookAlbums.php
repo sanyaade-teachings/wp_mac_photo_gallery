@@ -1,7 +1,7 @@
 <?php
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.9
+ * @version	      : 3.0
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com

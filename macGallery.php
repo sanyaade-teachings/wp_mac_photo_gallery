@@ -1,13 +1,14 @@
 <?php
 /*
-Plugin Name: Mac Photo Gallery
+Plugin Name: Mac Dock Photo Gallery
 Plugin URI: http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery
-Description: Mac Photo Gallery for Wordpress. It gives you a stylish gallery effect with mac effect. Mac Photo Gallery is a simple and easy gallery for wordpress. Alert: If you are upgrading the latest version of mac photo gallery means, Kindly take backup of your previous version data & then do upgrade.
-Version:2.9
+Description: Mac Dock Photo Gallery for Wordpress. It gives you a stylish gallery effect with mac effect. Mac Photo Gallery is a simple and easy gallery for wordpress. Alert: If you are upgrading the latest version of mac photo gallery means, Kindly take backup of your previous version data & then do upgrade.
+Version:3.0
 Author: Apptha
 Author URI: http://www.apptha.com
 License: GNU General Public License version 2 or later; see LICENSE.txt
 */
+
 /* The first loading page of the Mac Photo Gallery these contain admin setting too */
 require_once("classes.php"); // Front view of the Mac Photo Gallery
 require_once('sdk/facebook.php');//for facebook sdk 
@@ -87,15 +88,12 @@ function show_macMenu()
             $macPhotos = new macPhotos();
             break;
        case 'macSettings' :
-
             include_once (dirname(__FILE__) . '/macGallery.php'); // admin functions
                macSettings();
             break;
-       case 'ImportAlbums' :
-                
-            include_once (dirname(__FILE__) . '/macImportAlbums.php'); // admin functions
-               //macSettings();
-               $macImportAlb = new macImportAlbums();
+       case 'ImportAlbums' :                
+            include_once (dirname(__FILE__) . '/macImportAlbums.php'); // admin functions             
+            $macImportAlb = new macImportAlbums();
             break;  
     }
 }

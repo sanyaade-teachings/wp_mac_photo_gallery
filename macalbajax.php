@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.9
+ * @version	      : 3.0
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -15,7 +15,13 @@
 
 /*
  ***********************************************************/
+require_once('../../../wp-load.php');
+$dbtoken = md5(DB_NAME);
+$token = trim($_REQUEST["token"]);
 
+if($dbtoken != $token ){
+    die("You are not authorized to access this file");
+}
 require_once( dirname(__FILE__) . '/macDirectory.php');
 $maceditId = $_REQUEST['macEdit'];
 $site_url = get_bloginfo('url');
@@ -27,28 +33,6 @@ if(isset($_REQUEST['importalubmsdelete']))
 {
 	$ok = $_REQUEST['importalubmsdelete'];
 	update_option('allowImportOfCurrentAlbs',$ok);
-	/*$site = $_REQUEST['site'];
-	$table = $wpdb->prefix.'macimportalbums';
-	$albTable = $wpdb->prefix.'macalbum';
-	$phoTalbe = $wpdb->prefix.'macphotos';
-	$importId = get_option('importedTalbleId');
-	$sql = "DELETE FROM $table WHERE importid = $importId";
-	$wpdb->query($sql);
-	$sql = "SELECT macAlbum_id FROM $albTable WHERE importid = $importId";
-	$deletAlbums = $wpdb->get_results($sql);
-	$listOfPhotos = array();
-	foreach($deletAlbums as $k => $album)
-	{
-		$id = $album->macAlbum_id;
-		$sql = "SELETE macPhoto_id FROM $phoTalbe WHERE macAlbum_id = $id";
-		$listOfPhotos = $wpdb->get_results($sql);
-		$sql = "DELETE FROM $phoTalbe WHERE macAlbum_id = $id";
-		$wpdb->query($sql);
-		
-	}
-	print_r($listOfPhotos);
-	exit;
-	*/
 }
  
 if(isset($_REQUEST['importalubms']))
@@ -58,9 +42,7 @@ if(isset($_REQUEST['importalubms']))
 	$table = $wpdb->prefix.'macimportalbums';
 	switch($site){
 		
-		case 'picasa' :
-			
-				//$table = $wpbd->prefix.'macimportalbums';
+		case 'picasa' :						
 				 $sql = "SELECT accountids , importid FROM  $table  WHERE  importsite = 'picasa' ";
 				$picasaAlbums = $wpdb->get_results($sql);
 				
@@ -142,7 +124,7 @@ if(isset($_REQUEST['importalubms']))
  }
   else if(($_REQUEST['macPhoto_desc']) != '')
  {
-     $macPhoto_desc = $_REQUEST['macPhoto_desc'] ;
+     $macPhoto_desc = strip_tags($_REQUEST['macPhoto_desc']);          
      $macPhoto_id   = $_REQUEST['macPhoto_id'];
      $sql = $wpdb->query("UPDATE " . $wpdb->prefix . "macphotos SET `macPhoto_desc` = '$macPhoto_desc' WHERE `macPhoto_id` = '$macPhoto_id'");
  echo $macPhoto_desc;
@@ -173,9 +155,9 @@ if(isset($_REQUEST['importalubms']))
  }
   else if($_REQUEST['macedit_phtid'] != '')
  {
-      $macedit_name = addslashes($_REQUEST['macedit_name']);
-     
-      $macedit_desc = addslashes($_REQUEST['macedit_desc']);
+      $macedit_name = strip_tags($_REQUEST['macedit_name']);
+      $macedit_name = preg_replace("/[^a-zA-Z0-9\/_-\s]/", ' ', $macedit_name);
+      $macedit_desc = strip_tags($_REQUEST['macedit_desc']);      
       $macedit_id   = $_REQUEST['macedit_phtid'];
       $sql = $wpdb->get_results("UPDATE " . $wpdb->prefix . "macphotos SET `macPhoto_name` = '$macedit_name', `macPhoto_desc` = '$macedit_desc' WHERE `macPhoto_id` = '$macedit_id'");
       echo "success";

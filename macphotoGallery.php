@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.9
+ * @version	      : 3.0
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -20,10 +20,12 @@
 ?>
 <!-- Adding Buy now and Apply licence button in photos page  -->
 <?php
+$dbtoken = md5(DB_NAME);
+?>
+<?php
 global $wpdb;
 $folder   = dirname(plugin_basename(__FILE__));
 $site_url = get_bloginfo('url');
-
 require_once( dirname(__FILE__) . '/macDirectory.php');
 class macPhotos {
 	var $base_page = '?page=macPage';
@@ -97,7 +99,6 @@ function maccontroller() {
 
        window.onload = function()
        {
-           //alert(document.getElementById('macAlbum_name').value);
            if (document.getElementById('macAlbum_name').value == 0 ||document.getElementById('macAlbum_name').value == -1)
            {
         	   document.getElementById('swfupload-control').style.visibility='hidden';
@@ -128,6 +129,7 @@ QueueCountApptha = 0;
                 upload_url: site_url+"/wp-content/plugins/"+mac_folder+"/upload-file.php?albumId=<?php echo $_REQUEST['albid'] ?>",
                 file_post_name: 'uploadfile',
                 file_size_limit : 0,
+                post_params: {"token" : "<?php echo md5(DB_NAME); ?>"},
                 file_types : "*.jpg;*.png;*.jpeg;*.gif",
                 file_types_description : "Image files",
                 file_upload_limit : 1000,
@@ -831,5 +833,5 @@ if ($_REQUEST['action'] == 'viewPhotos')
 	</div>
 	<?php
 }
-}
-?>
+}?>
+<input type="hidden" name="token" id="token" value="<?php echo $dbtoken;?>"/>

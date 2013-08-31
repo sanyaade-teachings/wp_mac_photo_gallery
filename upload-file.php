@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.9
+ * @version	      : 3.0
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -18,6 +18,16 @@
  ***********************************************************/
 
 /* Upload the photos to the album */
+
+require_once('../../../wp-load.php');
+
+$dbtoken = md5(DB_NAME);
+$token = trim($_REQUEST["token"]);
+
+if($dbtoken != $token ){
+    die("You are not authorized to access this file");
+}
+
 
 class SimpleImage {
    var $image;
@@ -93,8 +103,7 @@ class SimpleImage {
 require_once( dirname(__FILE__) . '/macDirectory.php');
 global $wpdb;
 
-if ( ! current_user_can( 'manage_options' ) )
-	wp_die( __( 'Direct access not permitted.' ) );
+
  $albumId = $_REQUEST['albumId'];
 $uploadDir = wp_upload_dir();
 $path = $uploadDir['basedir'].'/mac-dock-gallery';

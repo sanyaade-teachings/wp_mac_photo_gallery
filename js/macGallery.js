@@ -1,7 +1,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.9
+ * @version	      : 3.0
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -20,10 +20,9 @@
 //For Showing the list of Album in adjacent
 
 
+var token = document.getElementById('token').value;    
 
-function facebookImportAlbumsConfirm(){
-	
-	
+function facebookImportAlbumsConfirm(){	
 	if(confirm("Do you want Import Albums and photos from facebook ? "))
 		{
 		     names1 = document.getElementById('macFacebookApi').value;
@@ -31,14 +30,11 @@ function facebookImportAlbumsConfirm(){
 		     names1 = names1.trim();
 		     names2 = names2.trim();
 		     names = names1+','+names2;
-		importalbumschecking(names , 'facebook');
-		
+		importalbumschecking(names , 'facebook');		
 		}
-	//alert(facebookloginSite);
 }
 
 function valideatefacebookAlbums(){
-	
 	
 	var facebookapi = document.getElementById('macFacebookApi').value;
 	var facbooksecrkey = document.getElementById('macFacebookSecKey').value;
@@ -78,22 +74,17 @@ function valideatefacebookAlbums(){
 				return false;
 }
 
-function displaySelectedAlbum(albid,pageurl){
-					//alert(albid+'---------'+pageurl);
-					window.location = pageurl+'albid='+albid;
-					
-					
+function displaySelectedAlbum(albid,pageurl){					
+					window.location = pageurl+'albid='+albid;									
 				}
 
 
 function valideatePicasaImportAlbums(){
 	
 	var userName = document.getElementById('macPicasaUserNames').value;
-	//var pluginName = document.getElementById('pluginName').value;
 	
 		userName = userName.trim();
-		 var Error = 0;
-		//var numberOfAlbu = parseInt(document.getElementById('macGetNumOfPicasaAlbums').value);	
+		 var Error = 0;	
 		 
 		if(userName == '')
 		{	
@@ -107,18 +98,12 @@ function valideatePicasaImportAlbums(){
 		
 		 if(Error)
 			 return false;
-		 else{
-			
+		 else{			
 	 		var site = 'picasa';
-	 		var importflag = 0;
-	 		 		
-	 		 importflag = importalbumschecking(userName , site );
-	 	 		 	
-		 }
-		
-			return false;
-	
-
+	 		var importflag = 0;	 		 		
+	 		 importflag = importalbumschecking(userName , site );	 	 		 
+		 }		
+			return false;	
 }
 
 function valideateFlickrImportAlbums(){
@@ -254,8 +239,7 @@ else
 		      
     }//if end hear
   }//onready state change end 
- // alert(pluginName+'/macalbajax.php?importalubms='+names+'&site='+site);
-xmlhttp.open("GET",pluginName+'/macalbajax.php?importalubms='+names+'&site='+site,true);
+xmlhttp.open("GET",pluginName+'/macalbajax.php?importalubms='+names+'&site='+site+'&token='+token,true);
 xmlhttp.send();
  }
 
@@ -274,13 +258,10 @@ else
   {
     if (xmlhttp.readyState==4)
     {
-    	var responce = xmlhttp.responseText;
-     // document.getElementById('bind_macAlbum').innerHTML = xmlhttp.responseText
-      
+    	var responce = xmlhttp.responseText;         
     }
   }
- // alert(pluginName+'/macalbajax.php?importalubms='+names+'&site='+site);
-xmlhttp.open("GET",pluginName+'/macalbajax.php?importalubmsdelete='+allowimport,true);
+xmlhttp.open("GET",pluginName+'/macalbajax.php?importalubmsdelete='+allowimport+'&token='+token,true);
 xmlhttp.send();
  }
 
@@ -316,7 +297,6 @@ xmlhttp.send();
  //showing the name edit form
 function albumNameform(macAlbum_id)
 {
-     
  if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
    xmlhttp=new XMLHttpRequest();
@@ -333,7 +313,7 @@ else
         document.getElementById('showAlbumedit_'+macAlbum_id).innerHTML = xmlhttp.responseText
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macAlbumname_id='+macAlbum_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macAlbumname_id='+macAlbum_id+'&token='+token,true);
 xmlhttp.send();
 
 }
@@ -341,10 +321,13 @@ xmlhttp.send();
 //Update the album name
 function updAlbname(macAlbum_id)
 {
-
 var macAlbum_id = macAlbum_id;
 var macAlbum_name   = document.getElementById('macedit_name_'+macAlbum_id).value;
 var macAlbum_desc   = document.getElementById('macAlbum_desc_'+macAlbum_id).value;
+
+var regex = /(<([^>]+)>)/ig;
+macAlbum_name = macAlbum_name.replace(regex, '');
+macAlbum_desc = macAlbum_desc.replace(regex, '');
 
   if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -364,7 +347,7 @@ else
     }
   }
  
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macAlbum_id='+macAlbum_id+'&macAlbum_name='+macAlbum_name+'&macAlbum_desc='+macAlbum_desc,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macAlbum_id='+macAlbum_id+'&macAlbum_name='+macAlbum_name+'&macAlbum_desc='+macAlbum_desc+'&token='+token,true);
 xmlhttp.send();
 }
 
@@ -387,7 +370,7 @@ else
         document.getElementById('showPageedit_'+macAlbum_id).innerHTML = xmlhttp.responseText
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macAlbumpage_id='+macAlbum_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macAlbumpage_id='+macAlbum_id+'&token='+token,true);
 xmlhttp.send();
 }
 
@@ -413,14 +396,13 @@ else
       document.getElementById('macPageid_'+macAlbum_id).innerHTML = xmlhttp.responseText
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macAlbum_pageid='+macAlbum_pageid+'&macAlbum_id='+macAlbum_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macAlbum_pageid='+macAlbum_pageid+'&macAlbum_id='+macAlbum_id+'&token='+token,true);
 xmlhttp.send();
 }
 
 //For changing the Album Status
  function macAlbum_status(status,macAlbum_id)
  {
- // alert(status+'=========='+macAlbum_id); 
   if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
    xmlhttp=new XMLHttpRequest();
@@ -437,7 +419,7 @@ else
        document.getElementById('status_bind_'+macAlbum_id).innerHTML = xmlhttp.responseText;
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?status='+status+'&albid='+macAlbum_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?status='+status+'&albid='+macAlbum_id+'&token='+token,true);
 xmlhttp.send();
  }
 
@@ -455,28 +437,6 @@ function albumtoggle(macAlbum_id) {
 	}
 }
 
-function macAlbumdesc_updt(macAlbum_id)
-{
-var macAlbum_desc = document.getElementById('macAlbum_desc_'+macAlbum_id).value;
-alert('updat'+macAlbum_desc); 
-    if (window.XMLHttpRequest)
-{// code for IE7+, Firefox, Chrome, Opera, Safari
-   xmlhttp=new XMLHttpRequest();
-}
-else
-{// code for IE6, IE5
-    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-}
-  xmlhttp.onreadystatechange=function()
-  {
-    if (xmlhttp.readyState==4)
-    {
-      document.getElementById('displayAlbum_'+macAlbum_id).innerHTML = xmlhttp.responseText
-    }
-  }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macAlbum_desc='+macAlbum_desc+'&macAlbum_id='+macAlbum_id,true);
-xmlhttp.send();
-}
 function macdeleteAlbum(macAlbum_id)
 {
   if (window.XMLHttpRequest)
@@ -494,7 +454,7 @@ else
         window.location = self.location;
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macdelAlbum='+macAlbum_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macdelAlbum='+macAlbum_id+'&token='+token,true);
 xmlhttp.send();
 }
 
@@ -542,7 +502,7 @@ else
         document.getElementById('remve_macPhotos_'+macPhoto_id).innerHTML += xmlhttp.responseText
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macDelid='+macPhoto_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macDelid='+macPhoto_id+'&token='+token,true);
 xmlhttp.send();
 }
 //For showing the name,description box adjacent to photos
@@ -564,7 +524,7 @@ else
         document.getElementById('edit_macPhotos').innerHTML = xmlhttp.responseText
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macEdit='+rst,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macEdit='+rst+'&token='+token,true);
 xmlhttp.send();
  }
 
@@ -572,17 +532,19 @@ xmlhttp.send();
 
 function upd_disphoto(queue,albid)
 {
-
     for(i=1;i<=queue;i++)
     {
      var macedit_phtid = document.getElementById("macedit_id_"+i).value;
      var macedit_name  = document.getElementById("macedit_name_"+i).value;
      var macedit_desc  = document.getElementById("macedit_desc_"+i).value;
-dragdr = jQuery.noConflict();
-dragdr.ajax({
-    method:"GET",
+     var regex = /(<([^>]+)>)/ig;
+     macedit_name = macedit_name.replace(regex, '');
+     macedit_desc = macedit_desc.replace(regex, '');
+     dragdr = jQuery.noConflict();
+	 dragdr.ajax({
+     method:"GET",
        url: site_url+'/wp-content/plugins/mac-dock-gallery/macphtajax.php',
-       data : "macedit_phtid="+macedit_phtid+"&macedit_name="+macedit_name+"&macedit_desc="+macedit_desc,
+       data : "macedit_phtid="+macedit_phtid+"&macedit_name="+macedit_name+"&macedit_desc="+macedit_desc+'&token='+token,
        asynchronous:false,
        error: function(html){
             },
@@ -616,7 +578,7 @@ else
         document.getElementById('photo_delete_'+macdeleteId).style.visibility = 'hidden';
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macdeleteId='+macdeleteId,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macdeleteId='+macdeleteId+'&token='+token,true);
 xmlhttp.send();
  }
  }
@@ -640,7 +602,7 @@ else
         document.getElementById('edit_macDesc').innerHTML = xmlhttp.responseText
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macphotoDesc_id='+macPhoto_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macphotoDesc_id='+macPhoto_id+'&token='+token,true);
 xmlhttp.send();
  }
 
@@ -658,10 +620,13 @@ else
   {
     if (xmlhttp.readyState==4)
     {
-        document.getElementById('showPhotosedit_'+macPhotos_id).innerHTML = xmlhttp.responseText
+    	var photoName = document.getElementById('showPhotosedit_'+macPhotos_id); 
+    	photoName.innerHTML = xmlhttp.responseText;
+    	photoName.style.display = '';
+    	} 	
     }
-  }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macPhotoname_id='+macPhotos_id,true);
+
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macPhotoname_id='+macPhotos_id+'&token='+token,true);
 xmlhttp.send();
 }
  //Update the Photo name
@@ -669,7 +634,8 @@ function updPhotoname(macPhotos_id)
 {
 
 var macPhoto_name = document.getElementById('macPhoto_name_'+macPhotos_id).value;
-
+var regex = /(<([^>]+)>)/ig;
+macPhoto_name = macPhoto_name.replace(regex, '');
  if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
    xmlhttp=new XMLHttpRequest();
@@ -681,13 +647,12 @@ else
   xmlhttp.onreadystatechange=function()
   {
     if (xmlhttp.readyState==4)
-    {
-       
+    {       
       document.getElementById('macPhotos_'+macPhotos_id).innerHTML = xmlhttp.responseText
       document.getElementById('showPhotosedit_'+macPhotos_id).style.display = 'none';
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macPhoto_name='+macPhoto_name+'&macPhotos_id='+macPhotos_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macPhoto_name='+macPhoto_name+'&macPhotos_id='+macPhotos_id+'&token='+token,true);
 xmlhttp.send();
 }
 // View Photo description Update
@@ -707,6 +672,8 @@ function phototoggle(macPhoto_id) {
 function macdesc_updt(macPhoto_id)
 {
 var macPhoto_desc = document.getElementById('macPhoto_desc_'+macPhoto_id).value;
+var regex = /(<([^>]+)>)/ig;
+macPhoto_desc = macPhoto_desc.replace(regex, '');
 var ele = document.getElementById("toggleText"+macPhoto_id);
     if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -724,8 +691,7 @@ else
       ele.style.display = "none";
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macPhoto_desc='+macPhoto_desc+'&macPhoto_id='+macPhoto_id,true);
-
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macalbajax.php?macPhoto_desc='+macPhoto_desc+'&macPhoto_id='+macPhoto_id+'&token='+token,true);
 xmlhttp.send();
 }
 function macAlbcover_status(addCover,albumId,macPhoto_id)
@@ -745,14 +711,13 @@ else
       window.location = self.location;
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?albumCover='+addCover+'&albumId='+albumId+'&macCovered_id='+macPhoto_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?albumCover='+addCover+'&albumId='+albumId+'&macCovered_id='+macPhoto_id+'&token='+token,true);
 xmlhttp.send();
 }
 
 //Photos Status Changing
 function macPhoto_status(status,macPhoto_id)
 {
-	//alert(status+' ++++++++ '+macPhoto_id);
   if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
    xmlhttp=new XMLHttpRequest();
@@ -768,7 +733,7 @@ else
        document.getElementById('photoStatus_bind_'+macPhoto_id).innerHTML = xmlhttp.responseText;
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?status='+status+'&macPhoto_id='+macPhoto_id,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?status='+status+'&macPhoto_id='+macPhoto_id+'&token='+token,true);
 xmlhttp.send();
 }
 function fbcomments(pid,title,siteurl) {
@@ -776,13 +741,11 @@ function fbcomments(pid,title,siteurl) {
 if (window.XMLHttpRequest)
   {// code for IE7+, Firefox, Chrome, Opera, Safari
    httpxml=new XMLHttpRequest();
-//alert(xmlhttp);
   }
 httpxml.onreadystatechange=function()
   {
   if (httpxml.readyState==4 && httpxml.status==200)
-    {
-  
+    {  
     var fbComments = httpxml.responseText;
     document.getElementById("facebook").innerHTML = fbComments;
      getfacebook();

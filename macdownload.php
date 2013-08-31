@@ -3,7 +3,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.9
+ * @version	      : 3.0
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -25,7 +25,13 @@ $folder = dirname(plugin_basename(__FILE__));
 $filepart = explode(".",$_GET['albid']);
 $file = dirname(dirname(dirname(__FILE__)))."/uploads/mac-dock-gallery/".$_GET['albid'];
 
-if(file_exists($file) && (count($filepart) === 2) && (is_int( (int)$filepart[0]) ) && ((int)$filepart[0] > 0)  ){
+$fileExt = '';
+$allowedExtensions = array("jpg", "jpeg", "png", "gif");
+ if(preg_grep( "/$filepart[1]/i" , $allowedExtensions )){
+ 	$fileExt = true;
+ }
+
+if(file_exists($file) && (count($filepart) === 2) && (is_int( (int)$filepart[0]) ) && ((int)$filepart[0] > 0) && $fileExt == '1'){
 
     header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream');

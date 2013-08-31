@@ -3,7 +3,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.9
+ * @version	      : 3.0
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -18,6 +18,7 @@
 
 /*
  ***********************************************************/
+$dbtoken = md5(DB_NAME);
 require_once( dirname(__FILE__) . '/macDirectory.php');
 
 class macManage {
@@ -331,8 +332,9 @@ if (isset($_REQUEST['macAlbum_submit']))
           
           if($get_title['title'] == $get_key || $mac_album_count <= 1)
           {
-            $macAlbum_name        = filter_input(INPUT_POST, 'macAlbum_name');
-            $macAlbum_description = filter_input(INPUT_POST, 'macAlbum_description');
+            $macAlbum_name        = strip_tags(filter_input(INPUT_POST, 'macAlbum_name'));
+            $macAlbum_description = strip_tags(filter_input(INPUT_POST, 'macAlbum_description'));
+            $macAlbum_name = preg_replace("/[^a-zA-Z0-9\/_-\s]/", '', $macAlbum_name);
             $current_image        = $_FILES['macAlbum_image']['name'];
            
             $get_albname =  $wpdb->get_var("SELECT macAlbum_name FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_name like '%$macAlbum_name%'");
@@ -482,3 +484,4 @@ if(isset($_POST['submit_license']))
 <?php
    }
 ?>
+<input type="hidden" name="token" id="token" value="<?php echo $dbtoken;?>"/>
