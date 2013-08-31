@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.0: macfbcomment.php 2011-08-15
+ * @version	2.1: macfbcomment.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -11,7 +11,6 @@
  * */
 
 require_once( dirname(__FILE__) . '/macDirectory.php');
-
 global $wpdb;
 $pid        = $_REQUEST['pid'];
 $phtName    = $_REQUEST['phtName'];
@@ -23,8 +22,8 @@ if($pid != '')
 {
         $site_url = $_REQUEST['site_url'];
         $div .= '<div id="fbcomments">
-                 <fb:comments canpost="true" candelete="false" numposts="'.$mac_facebook_comment.'"  xid="photo'.'.'.$pid.'"
-                     href="'.$site_url.'/?page_id='.$returnfbid.'&macphid='.$pid.'"  title="'.$phtName.'"  publish_feed="true">
+                 <fb:comments canpost="true" candelete="false" numposts="'.$mac_facebook_comment.'"  xid="'.$pid.'"
+                     href="http://192.168.1.25/banner_styles/?page_id='.$returnfbid.'&macphid='.$pid.'"  title="'.$phtName.'"  publish_feed="true">
                  </fb:comments></div>';
         echo  $div;
 }

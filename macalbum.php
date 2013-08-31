@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.0: macalbum.php 2011-08-15
+ * @version	2.1: macalbum.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -235,17 +235,22 @@ function controller() {
         var pages  = '<?php echo $_REQUEST['pages']; ?>';
         var get_title = '<?php echo $get_title['title'];?>';
         var title_value = '<?php echo $get_url ?>';
+        var dragdr = jQuery.noConflict();
+         dragdr(document).ready(function(dragdr) {
         macAlbum(pages)
-
+         })
     </script>
     <script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/jquery-pack.js'; ?>" type="text/javascript"></script>
 <link href="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/css/facebox.css';?>" media="screen" rel="stylesheet" type="text/css" />
 <script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/facebox.js';?>" type="text/javascript"></script>
+<script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/jquery.colorbox.js';?>"></script>
 <script type="text/javascript">
 
-    $(document).ready(function($) {
-      $('a[rel*=facebox]').facebox()
+    dragdr(document).ready(function(dragdr) {
+      dragdr('a[rel*=facebox]').facebox()
+
     })
+
         function check_all(frm, chAll)
         {
             var i=0;
@@ -290,7 +295,9 @@ function controller() {
                 }
                 else if(get_title != title_value)
                     {
-                        alert('This is a free version so, you will not be able to add new albums. Please click on Buy now button to purchase license key for your domain.');
+                        dragdr(document).ready(function($) {
+                        dragdr('a[rel*=oops]').facebox();
+                         });
                     }
 
             });
@@ -314,13 +321,10 @@ if(isset($_POST['submit_license']))
         <a href="?page=macAlbum" class="nav-tab nav-tab-active">Albums</a>
         <a href="?page=macPhotos&albid=0" class="nav-tab">Photos</a>
         <a href="?page=macSettings" class="nav-tab">Settings</a></h2>
-        <div style="background-color: #ffffff;padding: 10px;margin-top:10px;border: #ccc 1px solid">
-        <strong> Note : </strong> Adding macGallery Photos of a particular album in your post/page, or displaying all
-    the albums can be easily done by adding a simple code there. <br/><br />
-       (i)In case you want to insert a particular photo album into your post or page,
-       you can do it easily by following the example:<br />
-        <strong>[macGallery albid=1 row=3 cols=3]</strong>.
-        (ii) Else you want the full gallery in Post/ Page put this code <strong>[macGallery]</strong>
+        <div style="background-color:#ECECEC;padding: 10px;margin-top:10px;border: #ccc 1px solid">
+        <strong> Note : </strong>Mac Photo Gallery can be easily inserted to the Post / Page by adding the following code :<br><br>
+                 (i)  [macGallery] - This will show the entire gallery<br>
+                 (ii) [macGallery albid=1 row=3 cols=3] - This will show the particular album with the album id 1
           </div>
          <h3 style="float:left;width:200px">Add New Album</h3>
 
@@ -333,10 +337,21 @@ if(isset($_POST['submit_license']))
 </p>
 <div id="mydiv" style="display:none">
 <form method="POST" action="">
-    <h2 align="center"> Apply Your License Key Here</h2>
+    <h2 align="center">License Key</h2>
    <div align="right"><input type="text" name="get_license" id="get_license" size="58" />
    <input type="submit" name="submit_license" id="submit_license" value="Save"/></div>
 </form>
+</div>
+
+<div id="oops" style="display:none">
+<p><strong>Oops! you will not be able to create more than one album with the free version.</strong></p>
+<p>However you can play with the default album</p>
+<ul>
+    <li> - You can add n number of photos to the default album</li>
+    <li> - You can rename the default photo album</li>
+    <li> - You can use widgets to show the photos from the default album</li>
+</ul>
+<p>Please purchase the <a href="http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery" target="_blank">license key</a> to use complete features of this plugin.</p>
 </div>
 <?php } //else { ?>
  <div class="clear"></div>
@@ -363,7 +378,8 @@ if(isset($_POST['submit_license']))
                     <p><?php _e('Upload Image for the album.'); ?></p>
                 </div>
 
-                <p class="submit"><input type="submit" class="button" name="macAlbum_submit" id="macAlbum_submit" value="<?php echo 'Add new Album'; ?>" /></p>
+                <p class="submit"><a href="#oops" rel="oops">
+<input type="submit" class="button" name="macAlbum_submit" id="macAlbum_submit" value="<?php echo 'Add new Album'; ?>" /></a></p>
             </div></form>
     </div>
 <?php //} ?>

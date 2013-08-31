@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.0: macalbajax.php 2011-08-15
+ * @version	2.1: macalbajax.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya

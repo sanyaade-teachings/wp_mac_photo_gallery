@@ -4,7 +4,7 @@
  * Plugin Name: Mac Photos Widgets
  * Component Name:  Mac Photo Gallery
  * Description: Mac Photo gallery widget, This is a photo displaying widget in this you can give row and column and the image width in Doc effect.
- * Version: 2.0
+ * Version: 2.1
  * Edited By: Saranya
  * Author URI: http://www.apptha.com/
  * Date :May 19 2011

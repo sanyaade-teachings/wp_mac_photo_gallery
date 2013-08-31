@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.0: macalblist.php 2011-08-15
+ * @version	2.1: macalblist.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -180,17 +180,17 @@ foreach($res as $results)
 
         if($results->macAlbum_status == 'ON')
         {
-           $album .= "<td><div name='status_bind' id='status_bind_$results->macAlbum_id'  style='text-align:center'><img src='$site_url/wp-content/plugins/$folder/images/tick.png' width='16' height='16' onclick=macAlbum_status('OFF',$results->macAlbum_id) style='cursor:pointer'  /></div></td>";
+           $album .= "<td><div name='status_bind' id='status_bind_$results->macAlbum_id'  style='text-align:left'><img src='$site_url/wp-content/plugins/$folder/images/tick.png' width='16' height='16' onclick=macAlbum_status('OFF',$results->macAlbum_id) style='cursor:pointer'  /></div></td>";
         }
         else
         {
-           $album .= "<td><div name='status_bind' id='status_bind_$results->macAlbum_id'  style='text-align:center'><img src='$site_url/wp-content/plugins/$folder/images/publish_x.png' width='16' height='16' onclick=macAlbum_status('ON',$results->macAlbum_id) style='cursor:pointer' /></div></td>";
+           $album .= "<td><div name='status_bind' id='status_bind_$results->macAlbum_id'  style='text-align:left'><img src='$site_url/wp-content/plugins/$folder/images/publish_x.png' width='16' height='16' onclick=macAlbum_status('ON',$results->macAlbum_id) style='cursor:pointer' /></div></td>";
         }
-           $album .="<td style='text-align:center'>$results->macAlbum_id</td> ";
+           $album .="<td style='text-align:left'>$results->macAlbum_id</td> ";
 
-           $album .="<td><a href='$site_url/wp-admin/upload.php?page=macPhotos&albid=$results->macAlbum_id'>Add</a>
-         <a href='$site_url/wp-admin/upload.php?page=macPhotos&action=viewPhotos&albid=$results->macAlbum_id'>View</a>
-         <a onclick='albumNameform($results->macAlbum_id)' title='Edit Name' style='cursor:pointer;text-decoration:underline'>Edit</a>
+           $album .="<td><a href='$site_url/wp-admin/admin.php?page=macPhotos&albid=$results->macAlbum_id'>Add</a>
+                     <a href='$site_url/wp-admin/admin.php?page=macPhotos&action=viewPhotos&albid=$results->macAlbum_id'>View</a>
+         
                     </td></tr>";
  $i++;
 }

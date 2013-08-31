@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.0: macPhotos.php 2011-08-15
+ * @version	2.1: macPhotos.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -13,11 +13,11 @@
 require_once( dirname(__FILE__) . '/macDirectory.php');
 global $wpdb;
 $queue    =  $_REQUEST['queue'];
+$albid    = $_REQUEST['albid'];
 $site_url = get_bloginfo('url');
 $folder   = dirname(plugin_basename(__FILE__));
 $album ='';
 $res = $wpdb->get_results("SELECT * FROM  " . $wpdb->prefix . "macphotos ORDER BY macPhoto_id DESC LIMIT 0,$queue");
-
 $p = 1;
                                     foreach($res as $results)
                                     {
@@ -27,8 +27,9 @@ $p = 1;
                                         $phtsrc[$p]['macPhoto_desc']  = $results->macPhoto_desc;
                                         $p++;
                                     }
+                                 
        $album .= "<div class='left_align' style='color: #21759B'>Following are the list of images that has been uploaded</div>";
-       $album .='<ul class="actions"><li><a onclick="upd_disphoto('.$queue.');" class="gallery_btn" style="cursor:pointer">Update</a></li></ul>';
+       $album .='<ul class="actions"><li><a onclick="upd_disphoto('.$queue.','.$albid.');" class="gallery_btn" style="cursor:pointer">Update</a></li></ul>';
        for($i=1;$i<=$queue;$i++)
        {
        $album .= "<div class='left_align' id='remve_macPhotos_$results->macPhoto_id'>";

@@ -3,7 +3,7 @@
  ***********************************************************
  * Plugin Name:  Mac Photo Gallery
  * Description: Mac Photo Gallery component for Wordpress. In this you can Stylish gallery effect with mac effect. Mac Photo Gallery is a simple and easy gallery for wordpress.
- * Version: 2.0
+ * Version: 2.1
  * Edited By: Saranya
  * Author URI: http://www.apptha.com/
  * Date :May 19 2011
@@ -60,9 +60,9 @@ function fbmacpage()
 
 function macPage()
  {
-    add_media_page(__('Macgallery', 'Macgallery'), __('Mac Photo Gallery', 'Mac Photo Gallery'), 'edit_posts', 'macAlbum', 'show_macMenu');
-    add_media_page(__('Macphotos', 'Macphotos'), __('', ''), 'edit_posts', 'macPhotos', 'show_macMenu');
-    add_media_page(__('Mac Photo Gallery', 'Mac Photo Gallery'),__('', ''), 'edit_posts', 'macSettings', 'show_macMenu');
+add_menu_page('Mac Gallery', 'Mac Gallery', 'manage_options', 'macAlbum', 'show_macMenu',get_bloginfo('url').'/wp-content/plugins/'.dirname(plugin_basename(__FILE__)).'/images/icon.png');
+add_submenu_page( 'macAlbum', 'Page title', 'Image Upload', 'manage_options', 'macPhotos', 'show_macMenu');
+add_submenu_page( 'macAlbum', 'Page title', 'Settings', 'manage_options', 'macSettings', 'show_macMenu');
  }
 
 function show_macMenu()
@@ -137,7 +137,7 @@ var url = '<?php echo $site_url; ?>';
 
 <div id="mydiv" style="display:none">
 <form method="POST" action="">
-    <h2 align="center"> Apply Your License Key Here</h2>
+    <h2 align="center">License Key</h2>
    <div align="right"><input type="text" name="get_license" id="get_license" size="58" />
    <input type="submit" name="submit_license" id="submit_license" value="Save"/></div>
 </form>
@@ -163,25 +163,16 @@ var url = '<?php echo $site_url; ?>';
         $resizeHei        = $_REQUEST['resizeHei'];
         $resizeWid        = $_REQUEST['resizeWid'];
         $macAlbum_limit   = $_REQUEST['macAlbum_limit'];
-
-        if($get_title['title'] == $get_key)
-        {
-        $updSet = $wpdb->query("UPDATE " . $wpdb->prefix . "macsettings SET  `macrow` = '$macrow',
+         $updSet = $wpdb->query("UPDATE " . $wpdb->prefix . "macsettings SET  `macrow` = '$macrow',
          `macimg_page` = '$macimg_page',`summary_macrow` = '$summary_macrow', `summary_page`='$summary_page',
          `albumRow` = '$albumRow', `mouseHei` = '$mouseHei' , `mouseWid` = '$mouseWid',`resizeHei`='$resizeHei',`resizeWid` = '$resizeWid',
          `macProximity` = '$macProximity', `macDir` = '$macDir',`macImg_dis` = '$macImg_dis',`macAlbum_limit`= '$macAlbum_limit',
-        `mac_imgdispstyle` = '$mac_imgdispstyle',
+         `mac_imgdispstyle` = '$mac_imgdispstyle',
          `mac_facebook_api` = '$mac_facebook_api', `mac_facebook_comment` = '$mac_facebook_comment' WHERE `macSet_id` = 1");
-        echo 'Updated Successfully';
-    }
-    else
-        {
-           echo "<script>alert('Get licence Key');</script>";
-        }
-        }
-
-    $viewSetting = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings");
-?>
+          echo 'Updated Successfully';
+          }
+       $viewSetting = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings");
+    ?>
 
     <script>
         var mac = jQuery.noConflict();
@@ -196,11 +187,10 @@ var url = '<?php echo $site_url; ?>';
                 var resizeHei = document.getElementById("resizeHei").value;
                 var resizeWid = document.getElementById("resizeWid").value;
                 var macProximity = document.getElementById("macProximity").value;
-                var mac_facebook_api = document.getElementById("mac_facebook_api").value;
-
+               
                 if(macrow == ""  || macrow == "0" || macimg_page =="" || macimg_page =="0" || albumRow == "" || albumRow == "0" ||
                     resizeHei == "" || resizeHei == "0" || resizeWid =="" || resizeWid == "0" || mouseWid == ""  || mouseWid == "0"
-                   ||mouseHei == "" || mouseHei == "0" ||  macProximity == "0" || mac_facebook_api == "" ){
+                   ||mouseHei == "" || mouseHei == "0" ||  macProximity == "0"){
                     document.getElementById("error_msg").innerHTML = 'Please Enter Values For All The Fields ';
                     return false;
                 }
@@ -215,81 +205,49 @@ var url = '<?php echo $site_url; ?>';
         <a href="?page=macAlbum" class="nav-tab">Albums</a>
         <a href="?page=macPhotos&albid=0" class="nav-tab">Photos</a>
         <a href="?page=macSettings" class="nav-tab nav-tab-active">Settings</a></h2>
-          <div style="background-color: #ffffff;padding: 10px;margin-top:10px;border: #ccc 1px solid">
-        <strong> Note : </strong> Adding macGallery Photos of a particular album in your post/page, or displaying all
-    the albums can be easily done by adding a simple code there. <br/><br />
-       (i)In case you want to insert a particular photo album into your post or page,
-       you can do it easily by following the example:<br />
-        <strong>[macGallery albid=1 row=3 cols=3]</strong>.
-        (ii) Else you want the full gallery in Post/ Page put this code <strong>[macGallery]</strong>
+          <div style="background-color: #ECECEC;padding: 10px;margin-top:10px;border: #ccc 1px solid">
+        <strong> Note : </strong>Mac Photo Gallery can be easily inserted to the Post / Page by adding the following code :<br><br>
+                 (i)  [macGallery] - This will show the entire gallery<br>
+                 (ii) [macGallery albid=1 row=3 cols=3] - This will show the particular album with the album id 1
           </div>
         <div id="error_msg" style="color:red"></div>
+
         <form name="macSet" method="POST">
             <div class="macSettings">
-                <table>
+                <div align="right"><input class='button-primary' name='macSet_upt' id='macSet_upt' type='submit' value='Update Options'></p></div>
+                <table style="margin-right: 10px;">
+
+                        <caption class="header">Display Settings</caption>
+                     
                     <tr>
-                        <td>Columns</td>
+                        <td><span>Columns</span></td>
                         <td><input type="text" name="macrow" id="macrow" value="<?php echo $viewSetting->macrow; ?>"></td>
                     </tr>
                     <tr>
-                        <td>Rows</td>
+                        <td><span>Rows</span></td>
                         <td><input type="text" name="macimg_page" id="macimg_page" value="<?php echo $viewSetting->macimg_page; ?>"></td>
                     </tr>
                     <tr>
-                        <td>Home Page Columns</td>
+                        <td><span>Home Page Columns</span></td>
                         <td><input type="text" name="summary_page" id="summary_page" value="<?php echo $viewSetting->summary_page; ?>"></td>
                     </tr>
                      <tr>
-                        <td>Home Page Rows</td>
+                        <td><span>Home Page Rows</span></td>
                         <td><input type="text" name="summary_macrow" id="summary_macrow" value="<?php echo $viewSetting->summary_macrow; ?>"></td>
                     </tr>
                     <tr>
-                        <td>Album List / Row (Px)</td>
+                        <td><span>Album List / Row (Px)</span></td>
                         <td><input type="text" name="albumRow" id="albumRow" value="<?php echo $viewSetting->albumRow; ?>"></td>
                     </tr>
-
-
-                    <tr>
-                        <td>  Mac Dock  Image Width(Px)</td>
-                        <td><input type="text" name="mouseWid" id="mouseWid" value="<?php echo $viewSetting->mouseWid; ?>"></td>
-                    </tr>
                      <tr>
-                        <td>Mouseover Width/ Height / Row (Px)</td>
-                        <td><input type="text" name="mouseHei" id="mouseHei" value="<?php echo $viewSetting->mouseHei; ?>"></td>
-                    </tr>
-
-
-                    <tr>
-                        <td> Resizing Height(Px)</td>
-                        <td><input type="text" name="resizeHei" id="resizeHei" value="<?php echo $viewSetting->resizeHei; ?>"></td>
-                    </tr>
-
-
-                    <tr>
-                        <td>  Resizing Width(Px)</td>
-                        <td><input type="text" name="resizeWid" id="resizeWid" value="<?php echo $viewSetting->resizeWid; ?>"></td>
-                    </tr>
-
-                    <tr>
-                        <td>Proximity</td>
-                        <td><input type="text"  name="macProximity" id="macProximity" value="<?php echo $viewSetting->macProximity; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td>Mac_Effect Direction</td>
-                        <td><select name="macDir">
-                                <option <?php  if ($viewSetting->macDir == '1') { echo 'selected="selected"'; } ?> value="1" >Top</option>
-                                <option <?php if ($viewSetting->macDir == '0') { echo 'selected="selected"';  } ?>value="0">Bottom</option>
-                        </select></td>
-                    </tr>
-                    <tr>
-                        <td>Image display:</td>
+                        <td><span>Image display:</span></td>
                         <td>
                             <input type="radio" name="macImg_dis" <?php if ($viewSetting->macImg_dis == 'random') { echo 'checked'; } ?> value="random" >Random
-                            <input type="radio" name="macImg_dis" <?php if ($viewSetting->macImg_dis == 'order') { echo 'checked'; } ?> value="order">Order
+                     <input type="radio" name="macImg_dis" <?php if ($viewSetting->macImg_dis == 'order') { echo 'checked'; } ?> value="order">Order
                         </td>
                    </tr>
-                    <tr>
-                        <td>Number of Albums / Page</td>
+                        <tr>
+                        <td><span>Number of Albums / Page</span></td>
                         <td>
                             <select name="macAlbum_limit">
                             <option  <?php if ($viewSetting->macAlbum_limit == '4')  { echo 'selected="selected"'; } ?>value="4">4</option>
@@ -300,18 +258,17 @@ var url = '<?php echo $site_url; ?>';
                             </select>
                        </td>
                    </tr>
-
-
-
-                    <tr>
-                        <td> Facebook API Id</td>
-                        <td><input type="text" name="mac_facebook_api" id="mac_facebook_api" value="<?php echo $viewSetting->mac_facebook_api; ?>"><br />
-                            <div style="font-size:8pt">Enter Facebook API ID , For example: https://developers.facebook.com/apps#!/apps/<strong>126989914043022</strong><br /></div>
-
+                   <tr>
+                        <td><span>Image Display Style <br> [Works only for Chrome]:</span></td>
+                        <td>
+                           <input type="radio" name="mac_imgdispstyle" <?php if ($viewSetting->mac_imgdispstyle == '0') { echo 'checked';}?> value="0" >Normal
+                           <input type="radio" name="mac_imgdispstyle" <?php if ($viewSetting->mac_imgdispstyle == '1') { echo 'checked';}?> value="1">Rounded corner<br>
+                           <input type="radio" name="mac_imgdispstyle" <?php if ($viewSetting->mac_imgdispstyle == '2') { echo 'checked';} ?> value="2">Winged display
+                           <input type="radio" name="mac_imgdispstyle" <?php if ($viewSetting->mac_imgdispstyle == '3') { echo 'checked';}?> value="3">Rounded  image
                         </td>
-                     </tr>
+                    </tr>
                      <tr>
-                        <td>Number of Fb comments / Page</td>
+                        <td><span>Number of Fb comments / Page</span></td>
                         <td>
                             <select name="mac_facebook_comment">
                             <option  <?php if ($viewSetting->mac_facebook_comment == '5')  { echo 'selected="selected"'; } ?>value="5">5</option>
@@ -322,20 +279,55 @@ var url = '<?php echo $site_url; ?>';
                             <option  <?php if ($viewSetting->mac_facebook_comment == '30') { echo 'selected="selected"'; } ?>value="30">30</option>
                             </select>
                        </td>
-                   </tr>
-                     <tr>
-                        <td>Image Display Style [Works only for Chrome]:</td>
-                        <td>
-                           <input type="radio" name="mac_imgdispstyle" <?php if ($viewSetting->mac_imgdispstyle == '0') { echo 'checked';}?> value="0" >Normal
-                           <input type="radio" name="mac_imgdispstyle" <?php if ($viewSetting->mac_imgdispstyle == '1') { echo 'checked';}?> value="1">Rounded corner
-                           <input type="radio" name="mac_imgdispstyle" <?php if ($viewSetting->mac_imgdispstyle == '2') { echo 'checked';} ?> value="2">Winged display
-                           <input type="radio" name="mac_imgdispstyle" <?php if ($viewSetting->mac_imgdispstyle == '3') { echo 'checked';}?> value="3">Rounded  image
-                        </td>
+                   </tr>  
+                </table> 
+                
+                <table>
+                    <thead>
+                        <caption>Image Settings</caption>
+                    <thead>                
+                    <tr>
+                        <td><span>  Mac Dock  Image Width(Px)</span></td>
+                        <td><input type="text" name="mouseWid" id="mouseWid" value="<?php echo $viewSetting->mouseWid; ?>"></td>
                     </tr>
-              
-                </table>
+                     <tr>
+                        <td><span>Mouseover Width/ Height / Row (Px)</span></td>
+                        <td><input type="text" name="mouseHei" id="mouseHei" value="<?php echo $viewSetting->mouseHei; ?>"></td>
+                    </tr>
+
+
+                    <tr>
+                        <td><span> Resizing Height(Px)</span></td>
+                        <td><input type="text" name="resizeHei" id="resizeHei" value="<?php echo $viewSetting->resizeHei; ?>"></td>
+                    </tr>
+
+
+                    <tr>
+                        <td><span>  Resizing Width(Px)</span></td>
+                        <td><input type="text" name="resizeWid" id="resizeWid" value="<?php echo $viewSetting->resizeWid; ?>"></td>
+                    </tr>
+
+                    <tr>
+                        <td><span>Proximity</span></td>
+                        <td><input type="text"  name="macProximity" id="macProximity" value="<?php echo $viewSetting->macProximity; ?>"></td>
+                    </tr>
+                    <tr>
+                        <td><span>Mac_Effect Direction</span></td>
+                        <td><select name="macDir">
+                                <option <?php  if ($viewSetting->macDir == '1') { echo 'selected="selected"'; } ?> value="1" >Top</option>
+                                <option <?php if ($viewSetting->macDir == '0') { echo 'selected="selected"';  } ?>value="0">Bottom</option>
+                        </select></td>
+                    </tr>
+
+                    <tr>
+                        <td><span> Facebook API Id</span></td>
+                        <td><input type="text" name="mac_facebook_api" id="mac_facebook_api" value="<?php echo $viewSetting->mac_facebook_api; ?>"><br />
+                            <div style="font-size:8pt">Enter Facebook API ID , For example: https://developers.facebook.com/apps#!/apps/<strong>126989914043022</strong><br /></div>
+                        </td>
+                     </tr>
+              </table>
                 <div id="error_msg" style="color:red"></div>
-                <div> <p class='submit' style="float:left;"><input class='button-primary' name='macSet_upt' id='macSet_upt' type='submit' value='Update Options'></p></div>
+                <div align="right"> <p class='submit'><input class='button-primary' name='macSet_upt' id='macSet_upt' type='submit' value='Update Options'></p></div>
             </div>
         </form>
     </div>

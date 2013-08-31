@@ -49,14 +49,14 @@ li.clearfix {
 {
      background: #DFDFDF url(../images/gray-grad.png) repeat-x scroll 0% 0%;
      color: #333;text-shadow: rgb(255, 255, 255, 0.796875) 0px 1px 0px;line-height: 1.3em;
-     padding: 7px 0px 7px 0px;text-align: center; font-size: 11px;}
+     padding: 7px 0px 7px 0px;text-align: left; font-size: 11px;}
 .mac_gallery td
 { 
     text-align: justify;vertical-align: top;
     padding: 5px 0px 10px 2px; font-size: 11px;
     color:#666;border-bottom:1px solid #DFDFDF;
 }
-.mac_gallery .checkall {width:15%;text-align: center;}
+.mac_gallery .checkall {width:15%;text-align: left;}
 .mac_gallery .image {width:10%;}
 .mac_gallery .name {width:10%;}
 .mac_gallery .desc {width:15%;}
@@ -209,7 +209,7 @@ tr:hover .delView a
     line-height: 18px !important;
 }
 .macSettings{ padding-top: 35px;}
-.macSettings table tr td{ padding-bottom: 20px;}
+.macSettings table tr td{ padding-bottom: 20px; width: 50%}
 
 a.thumbnail{
     opacity:0.4;
@@ -251,3 +251,10 @@ line-height: 12px;
 }
 #content #macshow { display:block; }
 .ulwidget #macshow { display:none; }
+
+.macSettings table{width: 48%;border: 1px solid #ccc; border-radius:0 0 5px 5px;margin: 10px 0px;float:left}
+.macSettings table caption{ background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f9f9f9), to(#ececec));
+                           -webkit-box-shadow: white 0px 1px 0px;
+                            text-align: left; padding: 5px 0 0 5px;  border-radius:5px 5px 0 0; font-weight: bold; height: 25px; border: 1px solid #ccc;}
+
+.macSettings table tr td span{width: 80%; float: left;padding: 0 0 0 5px;}

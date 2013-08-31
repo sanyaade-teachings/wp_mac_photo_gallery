@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.0: macphtajax.php 2011-08-15
+ * @version	2.1: macphtajax.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -63,5 +63,6 @@ $site_url = get_bloginfo('url');
       $macedit_desc = $_REQUEST['macedit_desc'];
       $macedit_id   = $_REQUEST['macedit_phtid'];
       $sql = $wpdb->get_results("UPDATE " . $wpdb->prefix . "macphotos SET `macPhoto_name` = '$macedit_name', `macPhoto_desc` = '$macedit_desc' WHERE `macPhoto_id` = '$macedit_id'");
+      
  }
 ?>

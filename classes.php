@@ -527,7 +527,16 @@ $aid = '';
 
                                       if($arguments['walbid'] == '' && $arguments['albid'] == '')
                                     {
-                                    $div .= '<div id="macshow"><span>Description:</span>'.$mac_album->macAlbum_description.'</div>';
+
+                                      if($mac_album->macAlbum_description == '')
+                                      {
+                                        $div .= '<div id="macshow"></div>';
+                                      }
+                                      else
+                                      {
+                                        $div .= '<div id="macshow"><span>Description:</span>'.$mac_album->macAlbum_description.'</div>';
+                                      }
+                                    
 // Horizontal Carosoule
  $macGallid =$wpdb->get_var("SELECT ID FROM " . $wpdb->prefix . "posts WHERE post_content= '[macGallery]'");
  $div .='<div class="album_carosole"><h4 style="margin:0px">ALBUM</h4></div>';
@@ -616,20 +625,27 @@ $aid = '';
                                             }
 
 
+//
+//                                            mac(document).ready(function() {
+//                                                mac().piroBox_ext({
+//                                                    piro_speed : 700,
+//                                                    bg_alpha : 0.5,
+//                                                    piro_scroll : true // pirobox always positioned at the center of the page
+//                                                    //open_all  :'.piro_loader'
+//                                                });
+//                                                //piro_capt.animate_html();
+//                                             });
 
-                                            mac(document).ready(function() {
-                                                mac().piroBox_ext({
+
+                                        }
+window.onload = function(){
+ mac().piroBox_ext({
                                                     piro_speed : 700,
                                                     bg_alpha : 0.5,
                                                     piro_scroll : true // pirobox always positioned at the center of the page
                                                     //open_all  :'.piro_loader'
                                                 });
-                                                //piro_capt.animate_html();
-                                             });
-
-
-                                        }
-
+}
 
                                     </script>
                                     <script>

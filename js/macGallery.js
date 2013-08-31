@@ -1,6 +1,7 @@
 //For Showing the list of Album in adjacent
 function macAlbum(pages)
 {
+
 if(pages == '')
 {
     pages = 1;
@@ -211,7 +212,7 @@ xmlhttp.send();
 
 
 //For Showing the Multiple Photo Upload in Adjacent
-function macPhotos(numFilesQueued)
+function macPhotos(numFilesQueued,albid)
 {
     var show_pht = document.getElementById('bind_value').value;
     document.getElementById('bind_value').value = Number(show_pht)+Number(numFilesQueued);
@@ -232,7 +233,7 @@ else
         document.getElementById('bind_macPhotos').innerHTML = xmlhttp.responseText
     }
   }
-xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macPhotos.php?queue='+rst_pht,true);
+xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macPhotos.php?queue='+rst_pht+'&albid='+albid,true);
 xmlhttp.send();
  }
 //For Delete from the upload images
@@ -281,7 +282,7 @@ xmlhttp.send();
 
 //Update Name and Description
 
-function upd_disphoto(queue)
+function upd_disphoto(queue,albid)
 {
 
     for(i=1;i<=queue;i++)
@@ -297,10 +298,7 @@ dragdr.ajax({
        asynchronous:false
 });
     }
-alert('Your Datas are Updated. Please Click View Image to see the uploaded image');
- window.location = self.location;
-  
-  
+  window.location = site_url+'/wp-admin/admin.php?page=macPhotos&action=viewPhotos&albid='+albid;
 }
 
 //Mac Individual Photo Delete
