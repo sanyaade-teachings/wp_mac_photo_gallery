@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.1: upload-file.php 2011-08-15
+ * @version	2.2: upload-file.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -79,9 +79,11 @@ class SimpleImage {
 require_once( dirname(__FILE__) . '/macDirectory.php');
 global $wpdb;
 echo $albumId = $_REQUEST['albumId'];
+$uploadDir = wp_upload_dir();
+$path = $uploadDir['basedir'].'/mac-dock-gallery';
 if($albumId !='')
 {
-$uploaddir = './uploads/';
+$uploaddir = "$path/";
 $file = $uploaddir . basename($_FILES['uploadfile']['name']);
 $size=$_FILES['uploadfile']['size'];
 if($size>10485760)
@@ -106,7 +108,7 @@ if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file) && $albumId !='
                 $thumbfile = $lastid . "_thumb." . $filenameext[(int) $filenameextcount - 1];
                 $bigfile = $lastid . "." . $filenameext[(int) $filenameextcount - 1];
                 $path = $uploaddir.$album_image;
-                define(contus, "../wp-content/plugins/". dirname(plugin_basename(__FILE__)) . "/uploads/");
+                define(contus, "$uploaddir/");
                 $macSetting = $wpdb->get_row("SELECT * FROM ". $wpdb->prefix."macsettings");
                 $twidth = $macSetting->resizeWid;
                 $theight =$macSetting->resizeHei;

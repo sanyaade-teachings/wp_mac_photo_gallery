@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.1: macalblist.php 2011-08-15
+ * @version	2.2: macalblist.php 2011-09-19
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -46,7 +46,7 @@ require_once( dirname(__FILE__) . '/macDirectory.php');
 
                                 /*
                                  * string pageList (int curpage, int pages)
-                                 * Returns a list of pages in the format of "Â« < [pages] > Â»"
+                                 * Returns a list of pages in the format of "Ã‚Â« < [pages] > Ã‚Â»"
                                  * */
 
                                 function pageList($curpage, $pages) {
@@ -61,7 +61,7 @@ require_once( dirname(__FILE__) . '/macDirectory.php');
 
                                     /* Print the first and previous page links if necessary */
                                     if (($curpage != 1) && ($curpage)) {
-                                        $page_list .= "  <a href=\"" . $self . "&pages=1\" title=\"First Page\">«</a> ";
+                                        $page_list .= "  <a href=\"" . $self . "&pages=1\" title=\"First Page\">Â«</a> ";
                                     }
 
                                     if (($curpage - 1) > 0) {
@@ -84,7 +84,7 @@ require_once( dirname(__FILE__) . '/macDirectory.php');
                                     }
 
                                     if (($curpage != $pages) && ($pages != 0)) {
-                                        $page_list .= "<a href=\"" . $self . "&pages=" . $pages . "\" title=\"Last Page\">»</a> ";
+                                        $page_list .= "<a href=\"" . $self . "&pages=" . $pages . "\" title=\"Last Page\">Â»</a> ";
                                     }
                                     $page_list .= "</td>\n";
 
@@ -157,10 +157,15 @@ $start = findStart($limit);
 
 $res = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "macalbum ORDER BY macAlbum_id DESC $w" );
 $album ='';
+ $uploadDir = wp_upload_dir();
+            $path = $uploadDir['baseurl'].'/mac-dock-gallery';
 foreach($res as $results)
 {
    $album .= "<tr>
-  <td class='checkall'><input type='checkbox' class='checkSing' name='checkList[]' class='others' value='$results->macAlbum_id' ></td>";
+  <td class='checkall'>";
+  if($results->macAlbum_id!=1){
+  $album .= "<input type='checkbox' class='checkSing' name='checkList[]' class='others' value='$results->macAlbum_id' ></td>";
+  }
   if($results->macAlbum_image == '')
          {
            $album .="<td><a href='javascript:void(0)' id='$site_url/wp-content/plugins/$folder/images/default_star.gif' class='preview'>
@@ -168,8 +173,8 @@ foreach($res as $results)
 
          } else
          {
-          $album .="<td><a href='javascript:void(0)' id='$site_url/wp-content/plugins/$folder/uploads/$results->macAlbum_image' class='preview' >
-                  <img src='$site_url/wp-content/plugins/$folder/uploads/$results->macAlbum_image' width='40' height='20' /></a></td>";
+          $album .="<td><a href='javascript:void(0)' id='$path/$results->macAlbum_image' class='preview' >
+                  <img src='$path/$results->macAlbum_image' width='40' height='20' /></a></td>";
          }
           $album .="<td class='macName'>
                     <div id='albName_".$results->macAlbum_id."'>".$results->macAlbum_name."</div>
@@ -190,7 +195,7 @@ foreach($res as $results)
 
            $album .="<td><a href='$site_url/wp-admin/admin.php?page=macPhotos&albid=$results->macAlbum_id'>Add</a>
                      <a href='$site_url/wp-admin/admin.php?page=macPhotos&action=viewPhotos&albid=$results->macAlbum_id'>View</a>
-         
+
                     </td></tr>";
  $i++;
 }

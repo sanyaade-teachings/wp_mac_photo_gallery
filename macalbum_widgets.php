@@ -4,7 +4,7 @@
  * Plugin Name: Mac Widgets
  * Component Name:  Mac Photo Gallery
  * Description: Mac Photo gallery widget, This is a album displaying widget in this you can give number of albums to be display in widget.
- * Version: 2.1
+ * Version: 2.2
  * Edited By: Saranya
  * Author URI: http://www.apptha.com/
  * Date :May 19 2011
@@ -37,6 +37,8 @@ function widget_Contusmacalbum_init()
         $dir = dirname(plugin_basename(__FILE__));
         $dirExp = explode('/', $dir);
         $dirPage = $dirExp[0];
+        $uploadDir = wp_upload_dir();
+        $path = $uploadDir['baseurl'].'/mac-dock-gallery';
         ?>
         <link rel="stylesheet" type="text/css" href="<?php echo $site_url; ?>/wp-content/plugins/<?php echo dirname(plugin_basename(__FILE__))?>/css/style.css" />
         <link rel="stylesheet" href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css/images.css'; ?>">
@@ -72,11 +74,11 @@ if (!empty($albDis))
                     }
                     else if($albDisplay->macAlbum_image == '' && $photoCount != '0')
                     {
-                    $div .='<div class="widget_alb_img"><a class="thumbnail" href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/'.$default_first.'" width="140" height="140"></a></div>';
+                    $div .='<div class="widget_alb_img"><a class="thumbnail" href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $path . '/'.$default_first.'" width="140" height="140"></a></div>';
                     }
                     else
                     {
-                      $div .='<div class="widget_alb_img"><a class="thumbnail" href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/' . $albDisplay->macAlbum_image . '"   width="140" height="140"></a></div>';
+                      $div .='<div class="widget_alb_img"><a class="thumbnail" href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $path . '/' . $albDisplay->macAlbum_image . '"   width="140" height="140"></a></div>';
                     }
                       $div .='<div class="mac_title">' . $albDisplay->macAlbum_name . '</div>';
                                         $macDate = explode(' ', $albDisplay->macAlbum_date);
@@ -87,7 +89,7 @@ if (!empty($albDis))
                              <img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/images/photo.jpg" />' . $photoCount . ' </span></a>';
                      $div .='</div>';
        }
-                              
+
                      $div .= '</li>';
    }
 else

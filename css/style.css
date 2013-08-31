@@ -3,7 +3,7 @@
 
  * Name:  Mac Photo Gallery
  * Description: Mac Photo Gallery component for Wordpress
- * Version: 1.0
+ * Version: 2.2
  * Edited By: Saranya
  * Author URI: http://www.contussupport.com/
  * Date :May 19 2011
@@ -157,7 +157,12 @@ tr:hover .delView a
     color:white;
     padding: 0px 5px;
 }
+.mac_sort_arrow
+{
+    text-align: center;
+    cursor:move;
 
+}
 .ulwidget .mac_title
 {
     font-family: Helvetica,Arial,sans-serif;
@@ -196,17 +201,17 @@ tr:hover .delView a
     font-size: 16px;
     color: #0066cc;
 }
-#albwrapper{
-/*    background:#1a1a1a;*/
-    margin:0 auto;
-    width:100%;
-    padding:0 13px 0 15px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    border-radius: 5px;
-    font-size: 12px;
-    line-height: 18px !important;
+#albwrapper {
+margin: 0 auto;
+width: 100%;
+padding: 0 13px 0 15px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+-khtml-border-radius: 5px;
+border-radius: 5px;
+font-size: 12px;
+line-height: 18px !important;
+margin-bottom: 10px;
 }
 .macSettings{ padding-top: 35px;}
 .macSettings table tr td{ padding-bottom: 20px; width: 50%}

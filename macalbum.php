@@ -1,9 +1,9 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.1: macalbum.php 2011-08-15
+ * @version	2.2: macalbum.php 2011-09-19
  * @package	apptha
- * @subpackage  mac-doc-photogallery
+ * @subpackage  mac-dock-gallery
  * @author      saranya
  * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
  * @license	GNU General Public License version 2 or later; see LICENSE.txt
@@ -137,61 +137,8 @@ function controller() {
             $customerurl = strtoupper($customerurl);
             $get_url     = macgal_generate($customerurl);
     $macSet   = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings");
-    if (isset($_REQUEST['macAlbum_submit']))
-        {
-
-          if($get_title['title'] == $get_url)
-          {
-            $macAlbum_name        = $_REQUEST['macAlbum_name'];
-        $macAlbum_description = $_REQUEST['macAlbum_description'];
-        $macAlbum_pageid      = $_REQUEST['macAlbum_pageid'];
-        $current_image        = $_FILES['macAlbum_image']['name'];
-        if ($current_image == '')
-        {
-            $sql = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macalbum
-                    (`macAlbum_name`, `macAlbum_description`,`macAlbum_image`,`macAlbum_status`,`macAlbum_date`) VALUES
-                    ('$macAlbum_name', '$macAlbum_description', '','ON',NOW())");
-        } else {
-           echo $extension = substr(strrchr($current_image, '.'), 1);
-            if (($extension != "jpg") && ($extension != "JPEG") && ($extension != 'JPG') && ($extension != "png") && ($extension != 'gif')&& ($extension != 'jpeg')) {
-                die('Unknown extension');
-            }
-            $destination = '../wp-content/plugins/'.$folder.'/uploads/' . $current_image;
-            $action = move_uploaded_file($_FILES['macAlbum_image']['tmp_name'], $destination);
-            if (!$action) {
-                die('File copy failed');
-            } else {
-                echo "File copy successful";
-            }
-
-            $sql = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macalbum
-           (`macAlbum_name`, `macAlbum_description`,`macAlbum_image`, `macAlbum_status`,`macAlbum_date`)
-           VALUES ('$macAlbum_name', '$macAlbum_description', '$current_image','ON',NOW())");
-            $lastid = $wpdb->insert_id;
-            $album_image = $wpdb->get_var("select macAlbum_image from " . $wpdb->prefix . "macalbum WHERE macAlbum_id='$lastid'");
-            $filenameext = explode('.', $album_image);
-            $filenameextcount = count($filenameext);
-            $thumbfile = $lastid . "_thumbalb." . $filenameext[(int) $filenameextcount - 1];
-            $bigfile = $lastid . "alb." . $filenameext[(int) $filenameextcount - 1];
-            $path = "../wp-content/plugins/$folder/uploads/" . $album_image;
-            define(contus, "../wp-content/plugins/$folder/uploads/");
-            /* create an object to call the required image to resize */
-            $image = new simpleimage();
-            $image->loads($path);
-            $twidth = $macSet->resizeWid;
-            $theight = $macSet->resizeHei;
-            /* create thumb image and save */
-            $image->resize($twidth + $theight, $twidth + $theight);
-            $image->save(contus . $thumbfile);
-            /* reload for resizing image for our slideshow */
-            $image->loads($path);
-            if (file_exists(contus . $bigfile))
-                unlink(contus . $bigfile);
-            rename($path, contus . $bigfile);
-            $upd = $wpdb->query("UPDATE " . $wpdb->prefix . "macalbum SET macAlbum_image='$thumbfile' WHERE macAlbum_id=$lastid");
-        }
-      }
-    }
+    $mac_album_count = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macalbum");
+    
 
     if (isset($_REQUEST['doaction_album']))
      {
@@ -202,18 +149,21 @@ function controller() {
                 $macAlbum_id = $_POST['checkList'][$i];
                 $alumImg = $wpdb->get_var("SELECT macAlbum_image FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_id='$macAlbum_id' ");
                 $delete = $wpdb->query("DELETE FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_id='$macAlbum_id'");
-                define(upload, "../wp-content/plugins/$folder/uploads/");
+                //define(upload, "$path/");
 
                 //unlink(upload . $macAlbum_id . 'alb.' . $extense[1]);
 
                 $phtImg = $wpdb->get_results("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$macAlbum_id'");
-
+                $uploadDir = wp_upload_dir();
+                $path = $uploadDir['basedir'].'/mac-dock-gallery';
+            
                 foreach($phtImg as $phtImgs)
                 {
-                unlink(upload.$phtImgs->macPhoto_image);
+                unlink($path.'/'.$phtImgs->macPhoto_image);
                 $extense  = explode('.', $phtImgs->macPhoto_image);
                 $phtalbid = explode('_',$extense[0]);
-                unlink(upload.$phtalbid[0]. '.' . $extense[1]);
+                unlink($path.'/'.$phtalbid[0]. '.' . $extense[1]);
+
                 }
 
                 $deletePht = $wpdb->query("DELETE FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$macAlbum_id'");
@@ -246,10 +196,11 @@ function controller() {
 <script src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/js/jquery.colorbox.js';?>"></script>
 <script type="text/javascript">
 
-    dragdr(document).ready(function(dragdr) {
+    dragdr(document).ready(function($) {
       dragdr('a[rel*=facebox]').facebox()
-
     })
+</script>
+<script type="text/javascript">
 
         function check_all(frm, chAll)
         {
@@ -293,7 +244,7 @@ function controller() {
                     document.getElementById("error_alb").innerHTML = 'Please Enter the Album ';
                     return false;
                 }
-                else if(get_title != title_value)
+                else if(get_title != title_value && <?php echo $mac_album_count?> != 0 )
                     {
                         dragdr(document).ready(function($) {
                         dragdr('a[rel*=oops]').facebox();
@@ -303,19 +254,7 @@ function controller() {
             });
         });
     </script>
-<?php
-$options = get_option('get_title_key');
-if ( !is_array($options) )
-{
-  $options = array('title'=>'', 'show'=>'', 'excerpt'=>'','exclude'=>'');
-}
-if(isset($_POST['submit_license']))
-    {
-       $options['title'] = strip_tags(stripslashes($_POST['get_license']));
 
-       update_option('get_title_key', $options);
-    }
-?>
     <div class="wrap nosubsub"><div id="icon-upload" class="icon32"><br /></div>
         <h2 class="nav-tab-wrapper">
         <a href="?page=macAlbum" class="nav-tab nav-tab-active">Albums</a>
@@ -326,15 +265,81 @@ if(isset($_POST['submit_license']))
                  (i)  [macGallery] - This will show the entire gallery<br>
                  (ii) [macGallery albid=1 row=3 cols=3] - This will show the particular album with the album id 1
           </div>
-         <h3 style="float:left;width:200px">Add New Album</h3>
-
+         <h3 style="float:left;width:200px;padding-top: 10px">Add New Album</h3>
          <?php
+if (isset($_REQUEST['macAlbum_submit']))
+        {
+            $uploadDir = wp_upload_dir();
+            $path = $uploadDir['basedir'].'/mac-dock-gallery';
+          if($get_title['title'] == $get_url || $mac_album_count <= 1)
+          {
+            $macAlbum_name        = filter_input(INPUT_POST, 'macAlbum_name');
+            $macAlbum_description = filter_input(INPUT_POST, 'macAlbum_description');
+            $current_image        = $_FILES['macAlbum_image']['name'];
+        if ($current_image == '')
+        {
+            $sql = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macalbum
+                    (`macAlbum_name`, `macAlbum_description`,`macAlbum_image`,`macAlbum_status`,`macAlbum_date`) VALUES
+                    ('$macAlbum_name', '$macAlbum_description', '','ON',NOW())");
+        } else {
+            $extension = substr(strrchr($current_image, '.'), 1);
+            if (($extension != "jpg") && ($extension != "JPEG") && ($extension != 'JPG') && ($extension != "png") && ($extension != 'gif')&& ($extension != 'jpeg')) {
+                die('Unknown extension');
+            }
+            $destination = "$path/" . $current_image;
+            $action = @move_uploaded_file($_FILES['macAlbum_image']['tmp_name'], $destination);
+            if (!$action) {
+                die('File copy failed');
+            }
+            $sql = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macalbum
+           (`macAlbum_name`, `macAlbum_description`,`macAlbum_image`, `macAlbum_status`,`macAlbum_date`)
+           VALUES ('$macAlbum_name', '$macAlbum_description', '$current_image','ON',NOW())");
+            $lastid = $wpdb->insert_id;
+            $album_image = $wpdb->get_var("select macAlbum_image from " . $wpdb->prefix . "macalbum WHERE macAlbum_id='$lastid'");
+            $filenameext = explode('.', $album_image);
+            $filenameextcount = count($filenameext);
+            $thumbfile = $lastid . "_thumbalb." . $filenameext[(int) $filenameextcount - 1];
+            $bigfile = $lastid . "alb." . $filenameext[(int) $filenameextcount - 1];
+            $path1 = "$path/" . $album_image;
+            define(contus, "$path/");
+            /* create an object to call the required image to resize */
+            $image = new simpleimage();
+            $image->loads($path1);
+            $twidth = $macSet->resizeWid;
+            $theight = $macSet->resizeHei;
+            /* create thumb image and save */
+            $image->resize($twidth + $theight, $twidth + $theight);
+            $image->save(contus . $thumbfile);
+            /* reload for resizing image for our slideshow */
+            $image->loads($path1);
+            if (file_exists(contus . $bigfile))
+                unlink(contus . $bigfile);
+            rename($path1, contus . $bigfile);
+            $upd = $wpdb->query("UPDATE " . $wpdb->prefix . "macalbum SET macAlbum_image='$thumbfile' WHERE macAlbum_id=$lastid");
+        }
+      }
+       echo '<div class="mac-error_msg">Album Created successfully</div>';
+    }
+   
+         $options = get_option('get_title_key');
+if ( !is_array($options) )
+{
+  $options = array('title'=>'', 'show'=>'', 'excerpt'=>'','exclude'=>'');
+}
+if(isset($_POST['submit_license']))
+    {
+       $options['title'] = strip_tags(stripslashes($_POST['get_license']));
+
+       update_option('get_title_key', $options);
+    }
+
          if($get_title['title'] != $get_url)
         {
         ?>
-         <p><a href="#mydiv" rel="facebox"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/licence.png'?>" align="right"></a>
-    <a href="http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery" target="_blank"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/buynow.png'?>" align="right"></a>
+    <p><a href="#mydiv" rel="facebox"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/licence.png'?>" align="right"></a>
+ <a href="http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery" target="_blank"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/buynow.png'?>" align="right" style="padding-right:5px;"></a>
 </p>
+
 <div id="mydiv" style="display:none">
 <form method="POST" action="">
     <h2 align="center">License Key</h2>
@@ -384,13 +389,14 @@ if(isset($_POST['submit_license']))
     </div>
 <?php //} ?>
     <div name="right_content" class="right_column">
-                        <form name="all_action"  action="" method="POST"><div class="alignleft actions">
+                        <form name="all_action"  action="" method="POST"><div class="alignleft actions">                       
+                           <?php   if($get_title['title'] == $get_url) {?>
                         <select name="action_album">
                             <option value="" selected="selected"><?php _e('Bulk Actions'); ?></option>
                             <option value="delete"><?php _e('Delete'); ?></option>
                         </select>
                         <input type="submit" value="<?php esc_attr_e('Apply'); ?>" name="doaction_album" id="doaction_album" class="button-secondary action" />
-                <?php wp_nonce_field('bulk-tags'); ?>
+                         <?php }?>  <?php wp_nonce_field('bulk-tags'); ?>
             </div>
 
             <div id="bind_macAlbum" name="right_content" ></div></form>

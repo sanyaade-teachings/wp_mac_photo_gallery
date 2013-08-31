@@ -4,7 +4,7 @@
  * Plugin Name: Mac Photos Widgets
  * Component Name:  Mac Photo Gallery
  * Description: Mac Photo gallery widget, This is a photo displaying widget in this you can give row and column and the image width in Doc effect.
- * Version: 2.1
+ * Version: 2.2
  * Edited By: Saranya
  * Author URI: http://www.apptha.com/
  * Date :May 19 2011
@@ -35,7 +35,7 @@ function widget_Contusmacphotos_init()
         $exclude   = $options['exclude'];  // Categories to exclude
         $site_url  = get_bloginfo('url');
 
-        
+
         ?>
         <link rel="stylesheet" type="text/css" href="<?php echo $site_url; ?>/wp-content/plugins/<?php echo dirname(plugin_basename(__FILE__))?>/css/style.css" />
         <script type="text/javascript">
@@ -67,7 +67,7 @@ function widget_Contusmacphotos_init()
             {
                  global $wpdb, $wp_version, $popular_posts_current_ID;
                  $widmac = $wpdb->get_results("select * from " . $wpdb->prefix . "macalbum");
-                
+
                     // Get options
                     $options = get_option('widget_Contusmacphotos');
                     // options exist? if not set defaults

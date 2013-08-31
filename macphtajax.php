@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.1: macphtajax.php 2011-08-15
+ * @version	2.2: macphtajax.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -13,6 +13,8 @@
 require_once( dirname(__FILE__) . '/macDirectory.php');
 $maceditId = $_REQUEST['macEdit'];
 $site_url = get_bloginfo('url');
+ $uploadDir = wp_upload_dir();
+            $path = $uploadDir['baseurl'];
 ?>
 <?php
  if($_REQUEST['macdeleteId'] != '')
@@ -20,7 +22,7 @@ $site_url = get_bloginfo('url');
     $macPhoto_id = $_REQUEST['macdeleteId'];
     $photoImg    = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$macPhoto_id' ");
     $deletePhoto  = $wpdb->get_results("DELETE FROM " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$macPhoto_id'");
-    $path = "./uploads/";
+    $path = "$path/";
                 unlink($path . $photoImg);
             $extense = explode('.', $photoImg);
             unlink($path . $macPhoto_id . '.' . $extense[1]);
@@ -38,10 +40,10 @@ $site_url = get_bloginfo('url');
         $macAlbum_id = $_REQUEST['macdelAlbum'];
         $alumImg = $wpdb->get_var("SELECT macAlbum_image FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_id='$macAlbum_id' ");
         $delete = $wpdb->query("DELETE FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_id='$macAlbum_id'");
-        $path = './uploads/';
-        unlink($path.$alumImg);
+        $path1 = "$path/";
+        unlink($path1.$alumImg);
         $extense = explode('.', $alumImg);
-        unlink($path.$macAlbum_id.'alb.'.$extense[1]);
+        unlink($path1.$macAlbum_id.'alb.'.$extense[1]);
         //Photos respect to album deleted
         $photos  =$wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$macAlbum_id' ");
 
@@ -51,10 +53,10 @@ $site_url = get_bloginfo('url');
         $macPhoto_id = $albPhotos->macPhoto_id;
         $photoImg    = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$macPhoto_id' ");
         $deletePhoto  = $wpdb->get_results("DELETE FROM " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$macPhoto_id'");
-        $path = "./uploads/";
-            unlink($path . $photoImg);
+        $path1 = "$path/";
+            unlink($path1 . $photoImg);
             $extense = explode('.', $photoImg);
-            unlink($path . $macPhoto_id . '.' . $extense[1]);
+            unlink($path1 . $macPhoto_id . '.' . $extense[1]);
         }
  }
   else if($_REQUEST['macedit_phtid'] != '')

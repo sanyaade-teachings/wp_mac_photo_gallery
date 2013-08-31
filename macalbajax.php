@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.1: macalbajax.php 2011-08-15
+ * @version	2.2: macalbajax.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -53,8 +53,9 @@ else if($_REQUEST['macDelid'] != '')
 {
     $macPhoto_id = $_REQUEST['macDelid'];
     $photoImg    = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$macPhoto_id' ");
-   
-    $path = "./uploads/";
+    $uploadDir = wp_upload_dir();
+    $path = $uploadDir['baseurl'];
+    $path = "$path/";
                 unlink($path . $photoImg);
             $extense = explode('.', $photoImg);
             unlink($path . $macPhoto_id . '.' .$extense[1]);

@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.0: classes.php 2011-08-15
+ * @version	2.2: classes.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -19,6 +19,8 @@ function macEffectgallery($arguments= array(), $wid)
       global $wpdb;
       global $t;
       $site_url = get_bloginfo('url');
+      $uploadDir = wp_upload_dir();
+      $path = $uploadDir['baseurl'].'/mac-dock-gallery';
 ?>
                                           <!-- For the mac Effect and carousel -->
 
@@ -478,6 +480,7 @@ $aid = '';
                                         }
                                         $div .='<div class="dock" id="dock' . $e . '">';
                                         $div .='<div class="dock-container' . $e . '">';
+
                                         for ($i = $k; $i <= $total; $i++) {
                                             $l= $totalimages - 1 - $s;
                                             if ($k <= $o) {
@@ -487,11 +490,11 @@ $aid = '';
                   $div .='<a class="'.$wid.' lightbox dock-item' . $e . '" rel="gallery" title="' . $imgsrc[$s]['macPhoto_name'] . '"
                   name="'.$imgsrc[$s]['macPhoto_desc'].'" date="'. $imgsrc[$s]['macPhoto_date'].'" albname="'.$mac_album->macAlbum_name.'"
                   macapi_id="'.$macSetting->mac_facebook_api.'"
-                  href="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/' . $bigImg[$s] . '"
+                  href="' . $path . '/' . $bigImg[$s] . '"
                   onclick=javascript:fbcomments("' . $imgsrc[$s]['macPhoto_id'] . '","' . $imgsrc[$s]['macPhoto_name'] . '","' . $site_url . '") />
 
                    <div class="dock_img_space"><img class="imgcorner" title="' . $imgsrc[$s]['macPhoto_name'] . '"
-                   src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/' . $imgsrc[$s]['macPhoto_image'] . '"
+                   src="' . $path . '/' . $imgsrc[$s]['macPhoto_image'] . '"
                    alt="" width="' . $twidth . '"> </div>
                    <span></span></a>';
                                                 if ($direction == 0)
@@ -536,7 +539,7 @@ $aid = '';
                                       {
                                         $div .= '<div id="macshow"><span>Description:</span>'.$mac_album->macAlbum_description.'</div>';
                                       }
-                                    
+
 // Horizontal Carosoule
  $macGallid =$wpdb->get_var("SELECT ID FROM " . $wpdb->prefix . "posts WHERE post_content= '[macGallery]'");
  $div .='<div class="album_carosole"><h4 style="margin:0px">ALBUM</h4></div>';
@@ -549,16 +552,19 @@ $aid = '';
    $photoCount    = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$get_album_row->macAlbum_id' and macPhoto_status='ON'");
              if($get_album_row->macAlbum_image == '')
              {
-               $album_img = 'star.jpg';
+                $div .='<li><a href="' . $site_url . '?page_id='.$macGallid.'&albid='.$get_album_row->macAlbum_id.'"><img title="' . $get_album_row->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"
+                              alt="" style="height:100px;"/>
+                              <span class="carousel_lefttxt">'.substr($get_album_row->macAlbum_name,0,15).'</span></li></a>';
+
              }
              else
              {
-              $album_img = $get_album_row->macAlbum_image;
-             }
-
-              $div .='<li><a href="' . $site_url . '?page_id='.$macGallid.'&albid='.$get_album_row->macAlbum_id.'"><img title="' . $get_album_row->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/' .$album_img. '"
+               $div .='<li><a href="' . $site_url . '?page_id='.$macGallid.'&albid='.$get_album_row->macAlbum_id.'"><img title="' . $get_album_row->albumname . '" src="' . $path . '/'.$get_album_row->macAlbum_image.'"
                               alt="" style="height:100px;"/>
                               <span class="carousel_lefttxt">'.substr($get_album_row->macAlbum_name,0,15).'</span></li></a>';
+
+             }
+
 
  // All other  albums
  $album_results = $wpdb->get_results("SELECT * FROM  " . $wpdb->prefix . "macalbum WHERE macAlbum_id !='$get_albid'");
@@ -567,19 +573,20 @@ $aid = '';
               $photoCount = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$dis_results->macAlbum_id' and macPhoto_status='ON'");
              if($dis_results->macAlbum_image == '')
              {
-               $album_img = 'star.jpg';
+             $div .='<li><a href="' . $site_url . '?page_id='.$macGallid.'&albid='.$dis_results->macAlbum_id.'">
+                        <img title="' . $dis_results->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"
+                         alt=""  style="height:100px;filter:alpha(opacity=30);-moz-opacity:0.3;-khtml-opacity: 0.3;opacity: 0.3;" />
+                         <span class="carousel_lefttxt">'.substr($dis_results->macAlbum_name,0,15).'</span></li></a>';
+
+
              }
              else
              {
-              $album_img = $dis_results->macAlbum_image;
+              $div .='<li><a href="' . $site_url . '?page_id='.$macGallid.'&albid='.$dis_results->macAlbum_id.'">
+                        <img title="' . $dis_results->albumname . '" src="' . $path . '/'.$dis_results->macAlbum_image.'"
+                         alt=""  style="height:100px;filter:alpha(opacity=30);-moz-opacity:0.3;-khtml-opacity: 0.3;opacity: 0.3;" />
+                         <span class="carousel_lefttxt">'.substr($dis_results->macAlbum_name,0,15).'</span></li></a>';
              }
-
-
-             $div .='<li><a href="' . $site_url . '?page_id='.$macGallid.'&albid='.$dis_results->macAlbum_id.'"><img title="' . $dis_results->albumname . '" src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/' .$album_img. '"
-                              alt=""  style="height:100px;filter:alpha(opacity=30);-moz-opacity:0.3;-khtml-opacity: 0.3;opacity: 0.3;" />
-                              <span class="carousel_lefttxt">'.substr($dis_results->macAlbum_name,0,15).'</span></li></a>';
-
-
           }
   $div .= '</ul>';
 
@@ -785,11 +792,11 @@ window.onload = function(){
                                         }
                                         else if($albDisplay->macAlbum_image == '' && $photoCount != '0')
                                         {
-                                            $div .='<div><a class="thumbnail" href="' .$site_url. '/?page_id='.$macGallid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/'.$default_first.'"></a></div>';
+                                            $div .='<div><a class="thumbnail" href="' .$site_url. '/?page_id='.$macGallid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $path. '/'.$default_first.'"></a></div>';
                                         }
                                         else
                                         {
-                                            $div .='<div><a class="thumbnail" href="' .$site_url. '/?page_id='.$macGallid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/' . $albDisplay->macAlbum_image . '" ></a></div>';
+                                            $div .='<div><a class="thumbnail" href="' .$site_url. '/?page_id='.$macGallid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $path . '/' . $albDisplay->macAlbum_image . '" ></a></div>';
                                         }
 
                                         $div .='<div class="mac_title">' . $albDisplay->macAlbum_name . '</div>';

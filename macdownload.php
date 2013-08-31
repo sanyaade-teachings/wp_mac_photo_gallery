@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.1: macdownload.php 2011-08-15
+ * @version	2.2: macdownload.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -16,7 +16,7 @@ require_once( dirname(__FILE__) . '/macDirectory.php');
 $site_url = get_bloginfo('url');
 $folder = dirname(plugin_basename(__FILE__));
 
-$file = "$site_url/wp-content/plugins/$folder/uploads/".$_GET['albid']."";
+$file = "$site_url/wp-content/uploads/mac-dock-gallery/".$_GET['albid']."";
 
 header("Pragma: public");
 header("Expires: 0");

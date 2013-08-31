@@ -72,10 +72,10 @@
                 '<tr class="facebookcomment">'+
 	        '<td class="" style="padding:0px;position:relative">'+
                 '<table cellspacing="0" cellpadding="0" border="0">'+
-                '<div style="position:relative;"><div style="width:190px;padding:10px;position:absolute;"><div style="border-bottom:1px solid #ccc;line-height:13px;"><span style="padding:10px 10px 0 0;font-size:12px;color:#3B5998;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:bold;" class="macAlbum" ></span><br />'+
+                '<div style="position:relative;"><div style="width:190px;padding:10px;float:left;"><div style="border-bottom:1px solid #ccc;line-height:13px;"><span style="padding:10px 10px 0 0;font-size:12px;color:#3B5998;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:bold;" class="macAlbum" ></span><br />'+
                 '<span style="font-size:10px;color:#666;font-family:tahoma;font-weight:normal;">on</span> <span class="macDate" style="padding:0px 0px 4px 4px;font-size:11px;color:#3B5998;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:normal;"></span></div>'+
                 '<div style="padding:5px 0 0 0;"><span padding:4px 2px 0 0;  class="downloadimage"></span><span padding:4px 2px 0 0;  class="macfb_url"></span></div></div>'+
-                '<div id="facebook" style="padding: 15px 0px 0px 20px;margin-left:220px;float:left;"></div><div class"clear"></div>'+
+                '<div id="facebook" style="padding: 15px 0px 0px 20px;float:left;"></div><div class"clear"></div>'+
                 '<div style="height: 120px;overflow: hidden;padding: 0px 5px 10px;position: absolute;top: 10px;right:0px;vertical-align:top;width:270px;">'+
                 '<div style="color:#3B5998;font-size:11px;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:bold;">Description:</div>'+
                 '<div style="color:#333;height:300px;text-align:justify;font-size:11px;font-family:lucida grande,tahoma,verdana,arial,sans-serif" class="macDesc"></div>'+

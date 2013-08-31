@@ -3,7 +3,7 @@
 
  * Name:  Mac Photo Gallery
  * Description: Mac Photo Gallery component for Wordpress
- * Version: 1.0
+ * Version: 2.2
  * Edited By: Saranya
  * Author URI: http://www.contussupport.com/
  * Date :May 19 2011
@@ -158,15 +158,14 @@ box-shadow: 0px 0px 5px #888;
     margin:0px auto;
     border-top:1px solid #dcdcd9;
     border-bottom:1px solid #dcdcd9;
-
-}
-#mac_all{
-     background:#dededa;
-     border:1px solid #ccc;
-    padding:10px;
-
 }
 
+#mac_all {
+background: #DEDEDA;
+border: 1px solid #CCC;
+padding: 10px;
+margin-bottom: 10px;
+}
 .jcarousel-skin-ie7{
 
     border-top:1px solid #fff;

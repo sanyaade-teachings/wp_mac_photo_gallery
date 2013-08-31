@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.1: install.php 2011-08-15
+ * @version	2.2: install.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -17,7 +17,7 @@ function macGallery_install()
     $table_settings		= $wpdb->prefix . 'macsettings';
     $table_macAlbum		= $wpdb->prefix . 'macalbum';
     $table_macPhotos		= $wpdb->prefix . 'macphotos';
-   
+
     $sfound = false;
     $afound = false;
     $pfound = false;
@@ -39,7 +39,7 @@ function macGallery_install()
         if ( ! empty($wpdb->collate) )
         $charset_collate .= " COLLATE $wpdb->collate";
     }
-    
+
           if (!$sfound)
             {
           $sql = "CREATE TABLE ".$table_settings." (
@@ -94,8 +94,8 @@ function macGallery_install()
          $res = $wpdb->get_results($sql);
             }
         $site_url = get_option('siteurl');  //Getting the site domain path
-        
-           
+
+
  $page_found  = $wpdb->get_results("SELECT * FROM ".$wpdb->prefix."posts where post_content='[macGallery]'");
  if (empty($page_found)) {
 $mac_gallery_page    =  "INSERT INTO ".$wpdb->prefix."posts(`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`)
@@ -108,5 +108,18 @@ $res_macpage_id    =  $wpdb->get_var("select ID from ".$wpdb->prefix."posts ORDE
 $upd_macPage       =  "UPDATE ".$wpdb->prefix."posts SET post_parent='$videoId',guid='$site_url/?page_id=$res_macpage_id' WHERE ID='$res_macpage_id'";
 $rst_updated       =  $wpdb->get_results($upd_macPage);
  }
+}
+function create_mac_folder()
+{
+      $structure = dirname(dirname(dirname(__FILE__))).'\uploads\mac-dock-gallery';
+// to mkdir() must be specified.
+    if (is_dir($structure))
+    {
+        
+    } 
+    else
+    {
+        mkdir($structure);
+    }
 }
 ?>

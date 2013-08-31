@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.1: macPhotos.php 2011-08-15
+ * @version	2.2: macPhotos.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -17,6 +17,8 @@ $albid    = $_REQUEST['albid'];
 $site_url = get_bloginfo('url');
 $folder   = dirname(plugin_basename(__FILE__));
 $album ='';
+ $uploadDir = wp_upload_dir();
+            $path = $uploadDir['baseurl'].'/mac-dock-gallery';
 $res = $wpdb->get_results("SELECT * FROM  " . $wpdb->prefix . "macphotos ORDER BY macPhoto_id DESC LIMIT 0,$queue");
 $p = 1;
                                     foreach($res as $results)
@@ -27,14 +29,14 @@ $p = 1;
                                         $phtsrc[$p]['macPhoto_desc']  = $results->macPhoto_desc;
                                         $p++;
                                     }
-                                 
+
        $album .= "<div class='left_align' style='color: #21759B'>Following are the list of images that has been uploaded</div>";
        $album .='<ul class="actions"><li><a onclick="upd_disphoto('.$queue.','.$albid.');" class="gallery_btn" style="cursor:pointer">Update</a></li></ul>';
        for($i=1;$i<=$queue;$i++)
        {
        $album .= "<div class='left_align' id='remve_macPhotos_$results->macPhoto_id'>";
        $album .='<div style="float:left;margin:0 10px 0 0;display:block;">
-                 <img src="'.$site_url.'/wp-content/plugins/'.$folder.'/uploads/'.$phtsrc[$i]['macPhoto_image'].'" style="height:108px;"/></div>';
+                 <img src="'.$path.'/'.$phtsrc[$i]['macPhoto_image'].'" style="height:108px;"/></div>';
        $album .='<div class="mac_gallery_photos" style="float:left" id="macEdit_'.$i.'">';
 
        $album .= '<form name="macEdit_'.$phtsrc[$i]['macPhoto_id'].'" method="POST"  class="macEdit">';
@@ -45,7 +47,7 @@ $p = 1;
        $album .= '<tr ><td colspan="2" align="right" style="padding-top:10px;">';
        $album .= '<input type="hidden" name="macedit_id_'.$i.'" id="macedit_id_'.$i.'" value="'.$phtsrc[$i]['macPhoto_id'].'">' ;
        $album .='</form></div>';
-       
+
        $album .='<div class="clear"></div>';
        $album .='<div><h3 style="margin:0px;padding:3px 0" class="photoName">'.$phtsrc[$i]['macPhoto_name'].'</h3>';
        $album .='</div></div>';

@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	2.1: macphotoGallery.php 2011-08-15
+ * @version	2.2: macphotoGallery.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -28,7 +28,7 @@ function maccontroller() {
    <script type="text/javascript" src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/jquery-1.3.2.js"></script>
 
     <script type="text/javascript" src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/macGallery.js"></script>
-    
+
     <script type="text/javascript" src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/swfupload/swfupload.js"></script>
     <script type="text/javascript" src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/jquery.swfupload.js"></script>
     <script type="text/javascript" src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/jquery-ui-1.7.1.custom.min.js"></script>
@@ -126,7 +126,7 @@ function maccontroller() {
                 item.find('div.progress').css('width', '100%');
                 item.find('span.progressvalue').text('100%');
                 item.addClass('success').find('p.status').html('Done!!!');
-               
+
             })
             .bind('uploadComplete', function(event, file){
                 // upload has completed, try the next one in the queue
@@ -137,7 +137,7 @@ function maccontroller() {
                     }
                     i++
             })
-           
+
         });
     </script>
     <script type="text/javascript">
@@ -217,11 +217,14 @@ dragdr(document).ready(function(){
             $macPhotoid = $_REQUEST['macPhotoid'];
             $photoImg = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$macPhotoid' ");
             $delete = $wpdb->query("DELETE FROM " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$macPhotoid'");
-            $path = '../wp-content/plugins/'.$folder.'/uploads/';
-            unlink($path . $photoImg);
+
+           // $path = '../wp-content/plugins/'.$folder.'/uploads/';
+            $uploadDir = wp_upload_dir();
+            $path = $uploadDir['basedir'].'/mac-dock-gallery';
+            unlink($path .'/'.$photoImg);
             $extense = explode('.', $photoImg);
             unlink($path . $macPhotoid . '.' . $extense[1]);
-               
+
         }
         if (isset($_REQUEST['doaction_photos'])) {
 
@@ -230,10 +233,12 @@ dragdr(document).ready(function(){
                     $macPhoto_id = $_POST['checkList'][$k];
                     $photoImg = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$macPhoto_id' ");
                     $delete = $wpdb->query("DELETE FROM " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$macPhoto_id'");
-                    $path = '../wp-content/plugins/'.$folder.'/uploads/';
-                    unlink($path . $photoImg);
+                    //$path = '../wp-content/plugins/'.$folder.'/uploads/';
+                    $uploadDir = wp_upload_dir();
+                    $path = $uploadDir['basedir'].'/mac-dock-gallery';
+                    unlink($path .'/'.$photoImg);
                     $extense = explode('.', $photoImg);
-                    unlink($path . $macPhoto_id . '.' . $extense[1]);
+                    unlink($path .'/'. $macPhoto_id . '.' . $extense[1]);
                 }
             }
         }
@@ -273,7 +278,7 @@ dragdr(document).ready(function(){
 
         /*
          * string pageList (int curpage, int pages)
-         * Returns a list of pages in the format of "Â« < [pages] > Â»"
+         * Returns a list of pages in the format of "Ã‚Â« < [pages] > Ã‚Â»"
          * */
 
         function pageList($curpage, $pages, $albid) {
@@ -288,7 +293,7 @@ dragdr(document).ready(function(){
 
             /* Print the first and previous page links if necessary */
             if (($curpage != 1) && ($curpage)) {
-                $page_list .= "  <a href=\"" . $self . "&pages=1\" title=\"First Page\">«</a> ";
+                $page_list .= "  <a href=\"" . $self . "&pages=1\" title=\"First Page\">Â«</a> ";
             }
 
             if (($curpage - 1) > 0) {
@@ -311,7 +316,7 @@ dragdr(document).ready(function(){
             }
 
             if (($curpage != $pages) && ($pages != 0)) {
-                $page_list .= "<a href=\"" . $self . "&pages=" . $pages . "\" title=\"Last Page\">»</a> ";
+                $page_list .= "<a href=\"" . $self . "&pages=" . $pages . "\" title=\"Last Page\">Â»</a> ";
             }
             $page_list .= "</td>\n";
 
@@ -363,8 +368,11 @@ dragdr(document).ready(function(){
 <h4><div class="lfloat">Album Name : </div> <div style="color:#448abd;"> <?php echo $macAlbum->macAlbum_name; ?> </div></h4>
         <?php
         if($macAlbum->macAlbum_image != '')
-        { ?>
-         <img src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/uploads/<?php echo $macAlbum->macAlbum_image; ?>" width="100" height="100"/>
+        {
+           $uploadDir = wp_upload_dir();
+                    $path = $uploadDir['baseurl'].'/mac-dock-gallery';
+            ?>
+         <img src="<?php echo $path; ?>/<?php echo $macAlbum->macAlbum_image; ?>" width="100" height="100"/>
 
         <?php
         }
@@ -375,7 +383,7 @@ dragdr(document).ready(function(){
         <?php } ?>
 
         <div style="float:right;width:80%"><form name="macPhotos" id="macPhotos" method="POST">
-                  
+
                 <select name="action_photos" style="float: left">
                     <option value="" selected="selected"><?php _e('Bulk Actions'); ?></option>
                     <option value="Delete"><?php _e('Delete'); ?></option>
@@ -383,9 +391,9 @@ dragdr(document).ready(function(){
                  <ul class="alignright actions">
                      <li><a href="<?php echo $site_url ?>/wp-admin/admin.php?page=macPhotos&albid=<?php echo $macAlbum->macAlbum_id; ?>" class="gallery_btn">
                         Add Images</a></li>
-                     
+
                 </ul>
-              
+
  <input type="submit" value="<?php esc_attr_e('Apply'); ?>" name="doaction_photos" id="doaction_photos" class="button-secondary action" />
                 <!--<div id="info">Waiting for update</div>-->
 
@@ -407,7 +415,7 @@ dragdr(document).ready(function(){
                     <?php
                     $site_url = get_bloginfo('url');
                     /* Pagination */
-                 
+
                     $limit = 20;
                     $sql = mysql_query("SELECT * FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albid' ORDER BY macPhoto_sorting ASC");
                     $start = findStart($limit);
@@ -418,21 +426,21 @@ dragdr(document).ready(function(){
                     }
                     else
                     {
-                  
+
                     $w = "LIMIT " . $start . "," . $limit;
                     }
-                    
+
                     $count = mysql_num_rows($sql);
                     /* Find the number of pages based on $count and $limit */
                    $pages = findPages($count, $limit);
                     /* Now we use the LIMIT clause to grab a range of rows */
                    $result = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albid' ORDER BY macPhoto_sorting ASC $w");
                    $album = '';
-               
+
                     foreach ($result as $results)
                     {
                      $album .= "<tr class='$j' id='listItem_$results->macPhoto_id'>
-                             <td style='text-align: center'><img src='$site_url/wp-content/plugins/$folder/images/arrow.png' alt='move' width='16' height='16' class='handle' /></td>
+                             <td class='mac_sort_arrow'><img src='$site_url/wp-content/plugins/$folder/images/arrow.png' alt='move' width='16' height='16' class='handle' /></td>
                                <td class='checkPhotos_all' style='text-align: center'><input type=hidden id=macPhoto_id name=macPhoto_id value='$results->macPhoto_id' >
                                <input type='checkbox' class='checkSing' name='checkList[]' class='others' value='$results->macPhoto_id' ></td>
 
@@ -447,10 +455,10 @@ dragdr(document).ready(function(){
                      <img src='$site_url/wp-content/plugins/$folder/images/default_star.gif' width='40' height='20' /></a></td>";
                    } else
                    {
-                       
+
                     $album .="<td  style='width:10%;align=center'>
-                    <a id='$site_url/wp-content/plugins/$folder/uploads/$results->macPhoto_image' class='preview' alt='Edit' href='javascript:void(0)'>
-                    <img src='$site_url/wp-content/plugins/$folder/uploads/$results->macPhoto_image' width='40' height='20' /></a></td>";
+                    <a id='$site_url/wp-content/uploads/mac-dock-gallery/$results->macPhoto_image' class='preview' alt='Edit' href='javascript:void(0)'>
+                    <img src='$site_url/wp-content/uploads/mac-dock-gallery/$results->macPhoto_image' width='40' height='20' /></a></td>";
                    }
 
                    $album .="<td style='width:30%'><div id='display_txt_" . $results->macPhoto_id . "'>" . $results->macPhoto_desc . "</div>
@@ -478,36 +486,36 @@ dragdr(document).ready(function(){
                             $album .= "<td><div id='photoStatus_bind_$results->macPhoto_id' style='text-align:center'>
                             <img src='$site_url/wp-content/plugins/$folder/images/publish_x.png' width='16' height='16' style='cursor:pointer' onclick=macPhoto_status('ON',$results->macPhoto_id) /></div></td></tr>";
                         }
-                       
+
                     }
                     $pagelist = pageList($_GET['pages'], $pages, $_GET['albid']);
-                  
+
                     echo $album;
                     ?>
                 </tbody>
             </table>
         </form>
              <div align="right"><?php echo $pagelist; ?>
-                 <?php 
+                 <?php
                  if($count > $limit )
                  { ?>
                   <a href="<?php echo $site_url?>/wp-admin/admin.php?page=macPhotos&action=viewPhotos&albid=<?php echo $albid;?>&pages=viewAll">See All</a></div>
                <?php
                   }
                  ?>
-                
+
                <?php   ?>
              <?php }
            else
              {
               ?>
             <div style="padding-top:20px">No albums is selected. Please Go to back and select the respective album to view images</div>
-             <?php 
+             <?php
              }
        ?>
     <div align="right" onClick="history.back();" style="cursor:pointer;color:#21759B;font-weight: bold">Back</div>
     </div>
-  
+
 </div>
  <?php
                 } else {
@@ -550,7 +558,7 @@ dragdr(document).ready(function(){
                 if($_REQUEST['albid'] != '0' && $_REQUEST['albid'] != '-1')
                 {
                     ?>
-              
+
         <div id="swfupload-control" class="left_align">
             <p>Upload multiple image files(jpg, jpeg, png, gif)</p>
             choose files to upload <input type="button" id="button"  />
@@ -567,9 +575,9 @@ window.location = "<?php echo $site_url;?>/wp-admin/admin.php?page=macAlbum"
 
                <?php } ?>
 </div>
-  
+
     <div name="bind_macPhotos" id="bind_macPhotos" class="bind_macPhotos"></div></div>
-                        
+
      <input type="hidden" name="bind_value" id="bind_value" value="0"/>
 </div>
 <?php
