@@ -1,20 +1,26 @@
 <?php
+ /***********************************************************/
 /**
- * @name        Mac Doc Photogallery.
- * @version	2.2: macphtajax.php 2011-08-15
- * @package	apptha
- * @subpackage  mac-doc-photogallery
- * @author      saranya
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license	GNU General Public License version 2 or later; see LICENSE.txt
- * @abstract    Ajax Returning  photos page.
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.3
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
  * */
+
+/*
+ ***********************************************************/
 
 require_once( dirname(__FILE__) . '/macDirectory.php');
 $maceditId = $_REQUEST['macEdit'];
 $site_url = get_bloginfo('url');
  $uploadDir = wp_upload_dir();
-            $path = $uploadDir['baseurl'];
+ $path = $uploadDir['basedir'].'/mac-dock-gallery';
 ?>
 <?php
  if($_REQUEST['macdeleteId'] != '')
@@ -61,10 +67,11 @@ $site_url = get_bloginfo('url');
  }
   else if($_REQUEST['macedit_phtid'] != '')
  {
-      $macedit_name = $_REQUEST['macedit_name'];
-      $macedit_desc = $_REQUEST['macedit_desc'];
+      $macedit_name = addslashes($_REQUEST['macedit_name']);
+     
+      $macedit_desc = addslashes($_REQUEST['macedit_desc']);
       $macedit_id   = $_REQUEST['macedit_phtid'];
       $sql = $wpdb->get_results("UPDATE " . $wpdb->prefix . "macphotos SET `macPhoto_name` = '$macedit_name', `macPhoto_desc` = '$macedit_desc' WHERE `macPhoto_id` = '$macedit_id'");
-      
+      echo "success";
  }
 ?>

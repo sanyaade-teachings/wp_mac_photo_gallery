@@ -1,14 +1,21 @@
 <?php
+/*
+ ***********************************************************/
 /**
- * @name        Mac Doc Photogallery.
- * @version	2.2: install.php 2011-08-15
- * @package	apptha
- * @subpackage  mac-doc-photogallery
- * @author      saranya
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license	GNU General Public License version 2 or later; see LICENSE.txt
- * @abstract    The Page is for Installing the tables in the Database.
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.3
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
  * */
+
+/*
+ ***********************************************************/
 
 function macGallery_install()
 {
@@ -48,7 +55,6 @@ function macGallery_install()
           `macimg_page` int(10) NOT NULL,
           `summary_macrow` int(5) NOT NULL,
           `summary_page` int(5) NOT NULL,
-          `albumRow` bigint(10) NOT NULL,
           `mouseHei` bigint(10) NOT NULL,
           `mouseWid` bigint(10) NOT NULL,
           `resizeHei` bigint(3) NOT NULL,
@@ -111,12 +117,12 @@ $rst_updated       =  $wpdb->get_results($upd_macPage);
 }
 function create_mac_folder()
 {
-      $structure = dirname(dirname(dirname(__FILE__))).'\uploads\mac-dock-gallery';
+      $structure = dirname(dirname(dirname(__FILE__))).'/uploads/mac-dock-gallery';
 // to mkdir() must be specified.
     if (is_dir($structure))
     {
-        
-    } 
+
+    }
     else
     {
         mkdir($structure);

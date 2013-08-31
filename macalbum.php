@@ -1,14 +1,21 @@
 <?php
+/*
+ ***********************************************************/
 /**
- * @name        Mac Doc Photogallery.
- * @version	2.2: macalbum.php 2011-09-19
- * @package	apptha
- * @subpackage  mac-dock-gallery
- * @author      saranya
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license	GNU General Public License version 2 or later; see LICENSE.txt
- * @abstract    Add Album Page.
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.3
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
  * */
+
+/*
+ ***********************************************************/
 require_once( dirname(__FILE__) . '/macDirectory.php');
 
 class macManage {
@@ -123,19 +130,20 @@ class simpleimage {
 }
 
 function controller() {
-    global $wpdb, $site_url, $folder;
-    $site_url = get_bloginfo('url');
-    $folder   = dirname(plugin_basename(__FILE__));
-    $pageURL  = $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-         $split_title = $wpdb->get_var("SELECT option_value FROM ".$wpdb->prefix."options WHERE option_name='get_title_key'");
-         $get_title = unserialize($split_title);
-            $strDomainName = $site_url;
-            preg_match("/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i", $strDomainName, $matches);
-            $customerurl = $matches['domain'];
-            $customerurl = str_replace("www.", "", $customerurl);
-            $customerurl = str_replace(".", "D", $customerurl);
-            $customerurl = strtoupper($customerurl);
-            $get_url     = macgal_generate($customerurl);
+        global $wpdb, $site_url, $folder;
+        $site_url = get_bloginfo('url');
+        $folder   = dirname(plugin_basename(__FILE__));
+        $pageURL  = $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+        $split_title = $wpdb->get_var("SELECT option_value FROM ".$wpdb->prefix."options WHERE option_name='get_title_key'");
+        $get_title = unserialize($split_title);
+        $strDomainName = $site_url;
+        preg_match("/^(http:\/\/)?([^\/]+)/i", $strDomainName, $subfolder);
+        preg_match("/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i", $subfolder[2], $matches);
+        $customerurl = $matches['domain'];
+        $customerurl = str_replace("www.", "", $customerurl);
+        $customerurl = str_replace(".", "D", $customerurl);
+        $customerurl = strtoupper($customerurl);
+        $get_key     = macgal_generate($customerurl);
     $macSet   = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings");
     $mac_album_count = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macalbum");
     
@@ -169,6 +177,7 @@ function controller() {
                 $deletePht = $wpdb->query("DELETE FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$macAlbum_id'");
 
             }
+            $msg = 'Album/s Deleted Successfully';
         }
     }
 ?>
@@ -184,7 +193,7 @@ function controller() {
         var mac_folder = '<?php echo $folder; ?>';
         var pages  = '<?php echo $_REQUEST['pages']; ?>';
         var get_title = '<?php echo $get_title['title'];?>';
-        var title_value = '<?php echo $get_url ?>';
+        var title_value = '<?php echo $get_key ?>';
         var dragdr = jQuery.noConflict();
          dragdr(document).ready(function(dragdr) {
         macAlbum(pages)
@@ -263,7 +272,7 @@ function controller() {
         <div style="background-color:#ECECEC;padding: 10px;margin-top:10px;border: #ccc 1px solid">
         <strong> Note : </strong>Mac Photo Gallery can be easily inserted to the Post / Page by adding the following code :<br><br>
                  (i)  [macGallery] - This will show the entire gallery<br>
-                 (ii) [macGallery albid=1 row=3 cols=3] - This will show the particular album with the album id 1
+                 (ii) [macGallery albid=1 row=3 cols=3] - This will show the particular album images with the album id 1
           </div>
          <h3 style="float:left;width:200px;padding-top: 10px">Add New Album</h3>
          <?php
@@ -271,7 +280,7 @@ if (isset($_REQUEST['macAlbum_submit']))
         {
             $uploadDir = wp_upload_dir();
             $path = $uploadDir['basedir'].'/mac-dock-gallery';
-          if($get_title['title'] == $get_url || $mac_album_count <= 1)
+          if($get_title['title'] == $get_key || $mac_album_count <= 1)
           {
             $macAlbum_name        = filter_input(INPUT_POST, 'macAlbum_name');
             $macAlbum_description = filter_input(INPUT_POST, 'macAlbum_description');
@@ -333,7 +342,7 @@ if(isset($_POST['submit_license']))
        update_option('get_title_key', $options);
     }
 
-         if($get_title['title'] != $get_url)
+         if($get_title['title'] != $get_key)
         {
         ?>
     <p><a href="#mydiv" rel="facebox"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/licence.png'?>" align="right"></a>
@@ -341,13 +350,23 @@ if(isset($_POST['submit_license']))
 </p>
 
 <div id="mydiv" style="display:none">
-<form method="POST" action="">
+<form method="POST" action=""  onSubmit="return validateKey()">
     <h2 align="center">License Key</h2>
    <div align="right"><input type="text" name="get_license" id="get_license" size="58" />
    <input type="submit" name="submit_license" id="submit_license" value="Save"/></div>
 </form>
 </div>
+<script>
+    function validateKey()
+           {
+        	   var Licencevalue = document.getElementById("get_license").value;
+        	   if(Licencevalue == ""||Licencevalue !="<?php echo $get_key ?>"){
+            	   alert('please enter valid licence key');
+            	   return false;
+        	   }
 
+           }
+</script>
 <div id="oops" style="display:none">
 <p><strong>Oops! you will not be able to create more than one album with the free version.</strong></p>
 <p>However you can play with the default album</p>
@@ -360,6 +379,12 @@ if(isset($_POST['submit_license']))
 </div>
 <?php } //else { ?>
  <div class="clear"></div>
+ <?php if ($msg) {
+ ?>
+            <div  class="updated below-h2">
+                <p><?php echo $msg; ?></p>
+            </div>
+<?php } ?>
  <div name="form_album" name="left_content" class="left_column">
             <form name="macAlbum" method="POST" id="macAlbum" enctype="multipart/form-data"  ><div class="form-wrap">
 
@@ -389,9 +414,9 @@ if(isset($_POST['submit_license']))
     </div>
 <?php //} ?>
     <div name="right_content" class="right_column">
-                        <form name="all_action"  action="" method="POST"><div class="alignleft actions">                       
-                           <?php   if($get_title['title'] == $get_url) {?>
-                        <select name="action_album">
+                       <form name="all_action"  action="" method="POST" onSubmit="return deleteAlbums();" ><div class="alignleft actions">
+                           <?php if($get_title['title'] == $get_key) {?>
+                        <select name="action_album" id="action_album">
                             <option value="" selected="selected"><?php _e('Bulk Actions'); ?></option>
                             <option value="delete"><?php _e('Delete'); ?></option>
                         </select>
@@ -399,10 +424,31 @@ if(isset($_POST['submit_license']))
                          <?php }?>  <?php wp_nonce_field('bulk-tags'); ?>
             </div>
 
-            <div id="bind_macAlbum" name="right_content" ></div></form>
+            <div id="bind_macAlbum" name="right_content" ></div>
+            <script type="text/javascript">
+				function deleteAlbums(){
+					if(document.getElementById('action_album').selectedIndex == 1)
+					{
+						var album_delete= confirm('Are you sure to delete album/s ?');
+						if (album_delete){
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+					else if(document.getElementById('action_album').selectedIndex == 0)
+					{
+					return false;
+					}
+
+				}
+				</script>
+				</form>
     </div>
 
 </div>
+
 <?php
    }
 ?>

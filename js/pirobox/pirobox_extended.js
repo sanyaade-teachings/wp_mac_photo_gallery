@@ -75,8 +75,8 @@
                 '<div style="position:relative;"><div style="width:190px;padding:10px;float:left;"><div style="border-bottom:1px solid #ccc;line-height:13px;"><span style="padding:10px 10px 0 0;font-size:12px;color:#3B5998;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:bold;" class="macAlbum" ></span><br />'+
                 '<span style="font-size:10px;color:#666;font-family:tahoma;font-weight:normal;">on</span> <span class="macDate" style="padding:0px 0px 4px 4px;font-size:11px;color:#3B5998;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:normal;"></span></div>'+
                 '<div style="padding:5px 0 0 0;"><span padding:4px 2px 0 0;  class="downloadimage"></span><span padding:4px 2px 0 0;  class="macfb_url"></span></div></div>'+
-                '<div id="facebook" style="padding: 15px 0px 0px 20px;float:left;"></div><div class"clear"></div>'+
-                '<div style="height: 120px;overflow: hidden;padding: 0px 5px 10px;position: absolute;top: 10px;right:0px;vertical-align:top;width:270px;">'+
+                '<div id="facebook" style="padding: 15px 0px 0px 20px;float:left;width: 460px;"></div><div class"clear"></div>'+
+                '<div style="height: 120px;overflow: hidden;padding: 0px 5px 10px;top: 10px;right:0px;vertical-align:top;width:270px;">'+
                 '<div style="color:#3B5998;font-size:11px;font-family:lucida grande,tahoma,verdana,arial,sans-serif;font-weight:bold;">Description:</div>'+
                 '<div style="color:#333;height:300px;text-align:justify;font-size:11px;font-family:lucida grande,tahoma,verdana,arial,sans-serif" class="macDesc"></div>'+
                 '<div class="clear"></div></div></table></td>'+
@@ -449,15 +449,4 @@ image_download.html('<a href="'+img_site+'" style="display:block;font-size:11px;
 		piro_close.add(piro_loader).add(piro_bg).bind('click',function(y){y.preventDefault();close_all();});
 	}
 })(jQuery);
- function toggleDiv(id)
-{
-var eff = jQuery.noConflict();
-if (id=="1"){
-
-eff('#mac_close').show();
-}
-else
-if (id=="0"){
-eff('#mac_close').hide();
-}
-}
+ 

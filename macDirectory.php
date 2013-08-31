@@ -1,14 +1,21 @@
 <?php
+/*
+ ***********************************************************/
 /**
- * @name        Mac Doc Photogallery.
- * @version	2.2: macfbreturn.php 2011-08-15
- * @package	apptha
- * @subpackage  mac-doc-photogallery
- * @author      saranya
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license	GNU General Public License version 2 or later; see LICENSE.txt
- * @abstract    Returning page from facebook comments.
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.3
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
  * */
+
+/*
+ ***********************************************************/
 
 /*The Common load file for the plugin */
 if ( !defined('WP_LOAD_PATH') )

@@ -1,20 +1,26 @@
 <?php
+/*
+ ***********************************************************/
 /**
- * @name        Mac Doc Photogallery.
- * @version	2.2: macalbajax.php 2011-08-15
- * @package	apptha
- * @subpackage  mac-doc-photogallery
- * @author      saranya
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license	GNU General Public License version 2 or later; see LICENSE.txt
- * @abstract    Ajax Returing Page.
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.3
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
  * */
 
+/*
+ ***********************************************************/
 ?>
 <script type="text/javascript" src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/macGallery.js"></script>
 <?php require_once( dirname(__FILE__) . '/macDirectory.php');
 $site_url = get_bloginfo('url');
- $folder   = dirname(plugin_basename(__FILE__));
+$folder   = dirname(plugin_basename(__FILE__));
 // Album Status Change
 if($_REQUEST['albid'] != '')
 {
@@ -91,8 +97,8 @@ if($albumCover == 'ON')
 // update photo name
 else if($_REQUEST['macPhoto_name'] != '')
 {
-     $macPhoto_id =  $_REQUEST['macPhotos_id'];
-     $macPhoto_name = $_REQUEST['macPhoto_name'];
+     $macPhoto_id =$_REQUEST['macPhotos_id'];
+     $macPhoto_name =  addslashes($_REQUEST['macPhoto_name']);
      $sql = $wpdb->get_results("UPDATE " . $wpdb->prefix . "macphotos SET `macPhoto_name` = '$macPhoto_name' WHERE `macPhoto_id` = '$macPhoto_id'");
      echo $macPhoto_name;
 }
@@ -129,7 +135,7 @@ else if($_REQUEST['macAlbumname_id'] != '')
 //  Album description update
  else
 {
-     $macAlbum_desc = $_REQUEST['macAlbum_desc'] ;
+     $macAlbum_desc =  addslashes($_REQUEST['macAlbum_desc']) ;
      $macAlbum_id   = $_REQUEST['macAlbum_id'];
      $sql = $wpdb->query("UPDATE " . $wpdb->prefix . "macalbum SET `macAlbum_description` = '$macAlbum_desc' WHERE `macAlbum_id` = '$macAlbum_id'");
      echo $macAlbum_desc;

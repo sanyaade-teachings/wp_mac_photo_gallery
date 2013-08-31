@@ -1,21 +1,18 @@
 <?php
-/*
- ***********************************************************
+/**
  * Plugin Name:  Mac Photo Gallery
- * Description: ***Alert: If you are upgrading the latest version of mac photo gallery means, Kindly take backup of your previous version data & then do upgrade. Mac Photo Gallery component for Wordpress. In this you can Stylish gallery effect with mac effect. Mac Photo Gallery is a simple and easy gallery for wordpress.
- * Version: 2.2
- * Edited By: Saranya
- * Author URI: http://www.apptha.com/
- * Date :Sep 19 2011
-
- **********************************************************
-
- @license GNU/GPL http://www.gnu.org/copyleft/gpl.html,
-
- **********************************************************/
+ * Description:  Mac Photo Gallery for Wordpress. It gives you a stylish gallery effect with mac effect. Mac Photo Gallery is a simple and easy gallery for wordpress.        ***Alert: If you are upgrading the latest version of mac photo gallery means, Kindly take backup of your previous version data & then do upgrade.
+ * Version: 2.3
+ * Author:  <div class="active second plugin-version-author-uri"><a href="http://www.apptha.com" title="Visit author homepage">Apptha</a> | <a href="http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery/" title="Visit plugin site">Visit plugin site</a></div>
+ * @since       Wordpress 3.2.1
+ * @package	  apptha
+ * @subpackage	mac-dock-gallery
+ * @copyright	Copyright (C) 2011 Powered by Apptha
+ * @license	GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract    The first loading page of the Mac Photo Gallery these contain admin setting too.
+**/
 
 /* The first loading page of the Mac Photo Gallery these contain admin setting too */
-
 require_once("classes.php"); // Front view of the Mac Photo Gallery
 
     global $t;
@@ -27,11 +24,20 @@ require_once("classes.php"); // Front view of the Mac Photo Gallery
        $d=1;
 function Sharemacgallery($content)
  {
-    $content = preg_replace_callback('/\[macGallery([^]]*)\y]/i', 'CONTUS_macRender', $content); //Mac Photo Gallery Page
+    $content = preg_replace_callback('/\[macGallery ([^]]*)\y]/i', 'CONTUS_macRender', $content); //Mac Photo Gallery Page
     return $content;
  }
 
 function CONTUS_macRender($content,$wid='')
+ {
+    global $wpdb;
+    if($wid=='')
+    $wid='pirobox_gall';
+    $pageClass = new contusMacgallery();
+    $returnGallery = $pageClass->macEffectgallery($content,$wid);
+    return  $returnGallery;
+ }
+ function CONTUS_macWidget($content,$wid='')
  {
     global $wpdb;
     if($wid=='')
@@ -111,16 +117,20 @@ function get_domain($url)
       return false;
     }
 function macSettings() {
-    global $wpdb;
-     $folder   = dirname(plugin_basename(__FILE__));
-     $site_url = get_bloginfo('url');
-
-         $split_title = $wpdb->get_var("SELECT option_value FROM ".$wpdb->prefix."options WHERE option_name='get_title_key'");
-         $get_title = unserialize($split_title);
+            global $wpdb;
+            $folder   = dirname(plugin_basename(__FILE__));
+            $site_url = get_bloginfo('url');
+            $split_title = $wpdb->get_var("SELECT option_value FROM ".$wpdb->prefix."options WHERE option_name='get_title_key'");
+            $get_title = unserialize($split_title);
             $strDomainName = $site_url;
-            $customerurl = get_domain($strDomainName);
+            preg_match("/^(http:\/\/)?([^\/]+)/i", $strDomainName, $subfolder);
+            preg_match("/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i", $subfolder[2], $matches);
+            $customerurl = $matches['domain'];
+            $customerurl = str_replace("www.", "", $customerurl);
+            $customerurl = str_replace(".", "D", $customerurl);
             $customerurl = strtoupper($customerurl);
             $get_key     = macgal_generate($customerurl);
+
         if($get_title['title'] != $get_key)
         {
         ?>
@@ -140,10 +150,10 @@ var url = '<?php echo $site_url; ?>';
  <a href="http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery" target="_blank"><img src="<?php echo $site_url . '/wp-content/plugins/'.$folder.'/images/buynow.png'?>" align="right" style="padding-right:5px;"></a>
 </p>
 <div id="mydiv" style="display:none">
-<form method="POST" action="">
+<form method="POST" action="" onSubmit="return validateKey()">
     <h2 align="center">License Key</h2>
    <div align="right"><input type="text" name="get_license" id="get_license" size="58" />
-   <input type="submit" name="submit_license" id="submit_license" value="Save"/></div>
+   <input type="submit" name="submit_license" id="submit_license" value="Save" /></div>
 </form>
 </div>
 <?php } ?>
@@ -154,22 +164,30 @@ var url = '<?php echo $site_url; ?>';
                 // Made it a local variable by using "var"
                 var macrow = document.getElementById("macrow").value;
                 var macimg_page = document.getElementById("macimg_page").value;
-                var albumRow = document.getElementById("albumRow").value;
+               
                 var mouseHei = document.getElementById("mouseHei").value;
                 var mouseWid = document.getElementById("mouseWid").value;
                 var resizeHei = document.getElementById("resizeHei").value;
                 var resizeWid = document.getElementById("resizeWid").value;
                 var macProximity = document.getElementById("macProximity").value;
 
-                if(macrow == ""  || macrow == "0" || macimg_page =="" || macimg_page =="0" || albumRow == "" || albumRow == "0" ||
+                if(macrow == ""  || macrow == "0" || macimg_page =="" || macimg_page =="0" || 
                     resizeHei == "" || resizeHei == "0" || resizeWid =="" || resizeWid == "0" || mouseWid == ""  || mouseWid == "0"
                    ||mouseHei == "" || mouseHei == "0" ||  macProximity == "0"){
                     document.getElementById("error_msg").innerHTML = 'Please Enter Values For All The Fields ';
                     return false;
                 }
-             
+
        }
-           
+           function validateKey()
+           {
+        	   var Licencevalue = document.getElementById("get_license").value;
+        	   if(Licencevalue == ""||Licencevalue !="<?php echo $get_key ?>"){
+            	   alert('please enter valid licence key');
+            	   return false;
+        	   }
+
+           }
     </script>
     <link rel="stylesheet" href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css/style.css'; ?>">
     <div class="wrap">
@@ -181,7 +199,7 @@ var url = '<?php echo $site_url; ?>';
           <div style="background-color: #ECECEC;padding: 10px;margin-top:10px;border: #ccc 1px solid">
         <strong> Note : </strong>Mac Photo Gallery can be easily inserted to the Post / Page by adding the following code :<br><br>
                  (i)  [macGallery] - This will show the entire gallery<br>
-                 (ii) [macGallery albid=1 row=3 cols=3] - This will show the particular album with the album id 1
+                 (ii) [macGallery albid=1 row=3 cols=3] - This will show the particular album images with the album id 1
           </div>
         <div id="error_msg" style="color:red"></div>
 <?php
@@ -191,8 +209,6 @@ var url = '<?php echo $site_url; ?>';
         $macimg_page    = $_REQUEST['macimg_page'];
         $summary_macrow = $_REQUEST['summary_macrow'];
         $summary_page   = $_REQUEST['summary_page'];
-
-        $albumRow       = $_REQUEST['albumRow'];
         $mouseHei       = $_REQUEST['mouseHei'];
         $mouseWid       = $_REQUEST['mouseWid'];
         $macProximity          = $_REQUEST['macProximity'];
@@ -207,7 +223,7 @@ var url = '<?php echo $site_url; ?>';
         $macAlbum_limit   = $_REQUEST['macAlbum_limit'];
         if($macrow == '' || $macrow == '0' || $macimg_page == '' || $macimg_page == '0' ||
            $summary_macrow == '' || $summary_macrow == '0' ||$summary_page == '' || $summary_page == '0' ||
-           $albumRow == '' || $albumRow == '0' ||$mouseHei == '' || $mouseHei == '0' ||
+           $mouseHei == '' || $mouseHei == '0' ||
            $mouseWid == '' || $mouseWid == '0' ||$macProximity == '' || $macProximity == '0' ||
           /* $mac_facebook_api == '' || $mac_facebook_api == '0' ||*/$mac_facebook_comment == '' || $mac_facebook_comment == '0' ||
            $resizeHei == '' || $resizeHei == '0' ||$resizeWid == '' || $resizeWid == '0'
@@ -219,11 +235,11 @@ var url = '<?php echo $site_url; ?>';
         {
          $updSet = $wpdb->query("UPDATE " . $wpdb->prefix . "macsettings SET  `macrow` = '$macrow',
          `macimg_page` = '$macimg_page',`summary_macrow` = '$summary_macrow', `summary_page`='$summary_page',
-         `albumRow` = '$albumRow', `mouseHei` = '$mouseHei' , `mouseWid` = '$mouseWid',`resizeHei`='$resizeHei',`resizeWid` = '$resizeWid',
+         `mouseHei` = '$mouseHei' , `mouseWid` = '$mouseWid',`resizeHei`='$resizeHei',`resizeWid` = '$resizeWid',
          `macProximity` = '$macProximity', `macDir` = '$macDir',`macImg_dis` = '$macImg_dis',`macAlbum_limit`= '$macAlbum_limit',
          `mac_imgdispstyle` = '$mac_imgdispstyle',
          `mac_facebook_api` = '$mac_facebook_api', `mac_facebook_comment` = '$mac_facebook_comment' WHERE `macSet_id` = 1");
-         echo '<div class="mac-error_msg"">Setting updated successfully</div>';
+         echo '<div class="mac-error_msg"">Settings updated successfully</div>';
         }
          }
        $viewSetting = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings");
@@ -252,10 +268,7 @@ var url = '<?php echo $site_url; ?>';
                         <td><span>Home Page Rows</span></td>
                         <td><input type="text" name="summary_macrow" id="summary_macrow" value="<?php echo $viewSetting->summary_macrow; ?>"></td>
                     </tr>
-                    <tr>
-                        <td><span>Album List / Row (Px)</span></td>
-                        <td><input type="text" name="albumRow" id="albumRow" value="<?php echo $viewSetting->albumRow; ?>"></td>
-                    </tr>
+                 
                      <tr>
                         <td><span>Image display:</span></td>
                         <td>
@@ -353,8 +366,8 @@ var url = '<?php echo $site_url; ?>';
  function loadsettings() {
  global $wpdb;
  $insertSettings = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macsettings
-(`macSet_id`, `macrow`, `macimg_page`, `summary_macrow`, `summary_page`, `albumRow`, `mouseHei`, `mouseWid`, `resizeHei`, `resizeWid`, `macProximity`, `macDir`, `macImg_dis`, `macAlbum_limit`, `mac_albumdisplay`, `mac_imgdispstyle`, `mac_facebook_api`, `mac_facebook_comment`) VALUES
-(1, 4, 3, 3, 3, 4, 20, 77, 120, 120, 80, 1, 'order', 8, 'no', 1, '', 10);");
+(`macSet_id`, `macrow`, `macimg_page`, `summary_macrow`, `summary_page`, `mouseHei`, `mouseWid`, `resizeHei`, `resizeWid`, `macProximity`, `macDir`, `macImg_dis`, `macAlbum_limit`, `mac_albumdisplay`, `mac_imgdispstyle`, `mac_facebook_api`, `mac_facebook_comment`) VALUES
+(1, 4, 3, 3, 3, 20, 77, 120, 120, 80, 1, 'order', 8, 'no', 1, '', 10);");
  $insertDefault = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macalbum (`macAlbum_id`, `macAlbum_name`, `macAlbum_description`, `macAlbum_image`, `macAlbum_status`, `macAlbum_date`) VALUES
  (1, 'Default', 'Default album', '', 'ON', '2011-07-27 17:11:53')");
                         }
@@ -468,4 +481,271 @@ $chars_array[]=$chars_str[$i];
                         add_filter('the_content', 'Sharemacgallery');
 // OPTIONS MENU
                         add_action('admin_menu', 'macPage');
+                        
+                        
+/* Album Listing Widgets */
+
+$site_url = get_bloginfo('url');
+function widget_Contusmacalbum_init()
+{
+    if (!function_exists('register_sidebar_widget') )
+    return;
+    function widget_Contusmacalbum($args)
+    {
+        extract($args);
+        global $wpdb, $wp_version, $popular_posts_current_ID;
+        // These are our own options
+        $options = get_option('widget_Contusmacalbum');
+        $title = $options['title'];  // Title in sidebar for widget
+        $show = $options['show'];  // # of Posts we are showing
+        $excerpt = $options['excerpt'];  // Showing the excerpt or not
+        $exclude = $options['exclude'];  // Categories to exclude
+        $site_url = get_bloginfo('url');
+        $dir = dirname(plugin_basename(__FILE__));
+        $dirExp = explode('/', $dir);
+        $dirPage = $dirExp[0];
+        $uploadDir = wp_upload_dir();
+        $path = $uploadDir['baseurl'].'/mac-dock-gallery';
+        ?>
+        <link rel="stylesheet" type="text/css" href="<?php echo $site_url; ?>/wp-content/plugins/<?php echo dirname(plugin_basename(__FILE__))?>/css/style.css" />
+        <link rel="stylesheet" href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css/images.css'; ?>">
+        <script type="text/javascript">
+            var baseurl;
+            baseurl = '<?php echo $site_url; ?>';
+            folder  = '<?php echo $dirPage ;?>';
+        </script>
+                                                    <!-- For Contus macalbum -->
+<?php
+echo $before_widget;
+$macPageid = $wpdb->get_var("SELECT ID FROM " . $wpdb->prefix . "posts WHERE post_content='[macGallery]'");
+
+$div    = '<div id="contusMac" class="sidebar-wrap clearfix">
+           <div><h3 class="widget-title">'.$title.'</h3></div>';
+$show   = $options['show']; //Number of shows
+$sql    = "SELECT * FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_status = 'ON' ORDER BY RAND() LIMIT 0,$show";
+$albDis = $wpdb->get_results($sql);
+$div .='<ul class="ulwidget">';
+// were there any posts found?
+if (!empty($albDis))
+    {
+           //output to screen
+      $div .='<li>';
+      foreach ($albDis as $albDisplay)
+      {		
+      	  $uploadDir = wp_upload_dir();
+          $file_image =  $uploadDir['basedir'] . '/mac-dock-gallery/' .$albDisplay->macAlbum_image;
+          $photoCount = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albDisplay->macAlbum_id' and macPhoto_status='ON'");
+          $default_first = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albDisplay->macAlbum_id' and macPhoto_status='ON' ORDER BY macPhoto_id DESC LIMIT 0,1");
+          $div .='<div  class="albumimg">';
+                 if ($albDisplay->macAlbum_image == '' && $photoCount == '0')
+                    {
+                      $div .='<div class="widget_alb_img"><a class="thumbnail" href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg" width="140" height="140"></a></div>';
+                    }
+                    else  if((file_exists($file_image))&&($albDisplay->macAlbum_image != ''))
+                    {
+                      $div .='<div class="widget_alb_img"><a class="thumbnail" href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $path . '/' . $albDisplay->macAlbum_image . '"   width="140" height="140"></a></div>';
+                    }
+                    else  if(!file_exists($file_image))
+                    {
+                    $div .='<div class="widget_alb_img"><a class="thumbnail" href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/no-photo.png" width="140" height="140"></a></div>';	
+                    }
+                    else if($albDisplay->macAlbum_image == '' && $photoCount != '0')
+                    {
+                    $div .='<div class="widget_alb_img"><a class="thumbnail" href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $path . '/'.$default_first.'" width="140" height="140"></a></div>';
+                    }
+                      $div .='<div class="mac_title">' . substr($albDisplay->macAlbum_name,0,23) . '</div>';
+                                        $macDate = explode(' ', $albDisplay->macAlbum_date);
+                                        $exDate =  explode('-',$macDate[0]);
+                     $div .='<div class="mac_date">' .$exDate[2].'-'.$exDate[1].'-'.$exDate[0]. '</div>';
+                     $div .='<a href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '" class="album_href">
+                             <span class="countimg">
+                             <img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/images/photo.jpg" />' . $photoCount . ' </span></a>';
+                     $div .='</div>';
+       }
+
+                     $div .= '</li>';
+   }
+else
+    $div .="<li>No Contus macalbum</li>";
+    $div .='</ul></div>';
+    echo $div;
+// echo widget closing tag
+echo $after_widget;
+   }
+// Settings form
+      ?>
+<?php
+function widget_Contusmacalbum_control()
+{
+// Get options
+$options = get_option('widget_Contusmacalbum');
+// options exist? if not set defaults
+if ( !is_array($options) )
+{
+$options = array('title'=>'Photo Album', 'show'=>'3', 'excerpt'=>'1','exclude'=>'');
+}
+// form posted?
+if ( $_POST['Contusmacalbum-submit'] )
+{
+    // Remember to sanitize and format use input appropriately.
+    $options['title'] = strip_tags(stripslashes($_POST['Contusmacalbum-title']));
+    $options['show'] = strip_tags(stripslashes($_POST['Contusmacalbum-show']));
+    $options['excerpt'] = strip_tags(stripslashes($_POST['Contusmacalbum-excerpt']));
+    $options['exclude'] = strip_tags(stripslashes($_POST['Contusmacalbum-exclude']));
+    update_option('widget_Contusmacalbum', $options);
+}
+
+// Get options for form fields to show
+$title = htmlspecialchars($options['title'], ENT_QUOTES);
+$show = htmlspecialchars($options['show'], ENT_QUOTES);
+$excerpt = htmlspecialchars($options['excerpt'], ENT_QUOTES);
+$exclude = htmlspecialchars($options['exclude'], ENT_QUOTES);
+
+// The form fields
+echo '<p>
+<label for="Contusmacalbum-title">' . __('Title:') . '
+<input id="Contusmacalbum-title" name="Contusmacalbum-title" type="text" value="'.$title.'" />
+</label></p>';
+echo '<p>
+<label for="Contusmacalbum-show">' . __('Show:') . '
+<input id="Contusmacalbum-show" name="Contusmacalbum-show" type="text" value="'.$show.'" />
+</label></p>';
+echo '<input type="hidden" id="Contusmacalbum-submit" name="Contusmacalbum-submit" value="1" />';
+}
+
+// Register widget for use
+register_sidebar_widget(array('Mac Album Widgets', 'widgets'), 'widget_Contusmacalbum');
+
+// Register settings for use, 300x100 pixel form
+register_widget_control(array(' Mac Album Widgets ', 'widgets'), 'widget_Contusmacalbum_control', 300, 200);
+}
+// Run code and init
+add_action('widgets_init', 'widget_Contusmacalbum_init');
+
+/* Album Listing Page */
+require_once("macGallery.php");
+function widget_Contusmacphotos_init()
+{
+    if (!function_exists('register_sidebar_widget') )
+    return;
+    function widget_Contusmacphotos($args)
+    {
+        extract($args);
+        global $wpdb, $wp_version, $popular_posts_current_ID;
+        $options   = get_option('widget_Contusmacphotos');
+        $macAlbid  = $options['title'];  // Title in sidebar for widget
+        $mac_row   = $options['mac_row'];  // # of Posts we are showing
+        $mac_cols  = $options['mac_cols'];  // # of Posts we are showing
+        $mac_width = $options['mac_width'];  // # of Posts we are showing
+        $excerpt   = $options['excerpt'];  // Showing the excerpt or not
+        $exclude   = $options['exclude'];  // Categories to exclude
+        $site_url  = get_bloginfo('url');
+
+
+        ?>
+        <link rel="stylesheet" type="text/css" href="<?php echo $site_url; ?>/wp-content/plugins/<?php echo dirname(plugin_basename(__FILE__))?>/css/style.css" />
+        <script type="text/javascript">
+            var baseurl;
+            baseurl = '<?php echo $site_url; ?>';
+            folder  = '<?php echo $dirPage ;?>';
+        </script>
+                                                 <!-- For Contus Mac Album photo list -->
+            <?php
+            echo $before_widget;
+            $mac_row        = $options['mac_row']; //Number of shows
+            $sql         = "SELECT * FROM " . $wpdb->prefix . "photos WHERE `macAlbum_id`='$macAlbid' LIMIT 0,$mac_row";
+            $macPhotos   = $wpdb->get_results($sql);
+            $albName_wid = $wpdb->get_var("SELECT macAlbum_name FROM " . $wpdb->prefix . "macalbum WHERE `macAlbum_id`='$macAlbid'");
+            ?>
+            <div><h3 class="widget-title" style="padding-bottom:5px"><?php echo $albName_wid ?></h3></div>
+            <div id="contusmacwid" class="sidebar-wrap clearfix">
+            <ul class="ulwidget">
+               <?php
+                    $content = array("walbid"=>$macAlbid, "rows"=>$mac_row ,"column"=>$mac_cols,"width"=>$mac_width);
+                     CONTUS_macWidget($content,'pirobox_gall1');
+                ?>
+            </ul></div>
+            <?php
+            // echo widget closing tag
+            echo $after_widget;
+               }
+            function widget_Contusmacphotos_control()
+            {
+                 global $wpdb, $wp_version, $popular_posts_current_ID;
+                 $widmac = $wpdb->get_results("select * from " . $wpdb->prefix . "macalbum where macAlbum_status='ON'");
+
+                    // Get options
+                    $options = get_option('widget_Contusmacphotos');
+                    // options exist? if not set defaults
+                    if ( !is_array($options) )
+                    {
+                    $options = array('title'=>'1', 'mac_row'=>'3','mac_cols'=>'3','mac_width'=>'50', 'excerpt'=>'1','exclude'=>'');
+                    }
+                    // form posted?
+                    if ( $_POST['Contusmacphotos-submit'] )
+                    {
+                        // Remember to sanitize and format use input appropriately.
+                        $options['title'] = strip_tags(stripslashes($_REQUEST['Contusmacalbum-id']));
+                        $options['mac_row'] = strip_tags(stripslashes($_POST['Contusmacphotos-macrow']));
+                        $options['mac_cols'] = strip_tags(stripslashes($_POST['Contusmacphotos-maccols']));
+                        $options['mac_width'] = strip_tags(stripslashes($_POST['Contusmacphotos-macwidth']));
+                        $options['excerpt'] = strip_tags(stripslashes($_POST['Contusmacphotos-excerpt']));
+                        $options['exclude'] = strip_tags(stripslashes($_POST['Contusmacphotos-exclude']));
+
+                        if($options['mac_row'] == '0' || $options['mac_cols'] == '0' || $options['mac_width'] == '0')
+                        {
+                            echo "<div class='mac-red-error'>Please enter values</div>";
+                        }
+                        else
+                        {
+                          update_option('widget_Contusmacphotos', $options);
+                        }
+                        
+                    }
+                    // Get options for form fields to show
+                    $title = htmlspecialchars($options['title'], ENT_QUOTES);
+                    $mac_row = htmlspecialchars($options['mac_row'], ENT_QUOTES);
+                    $mac_cols = htmlspecialchars($options['mac_cols'], ENT_QUOTES);
+                    $mac_width = htmlspecialchars($options['mac_width'], ENT_QUOTES);
+                    $excerpt = htmlspecialchars($options['excerpt'], ENT_QUOTES);
+                    $exclude = htmlspecialchars($options['exclude'], ENT_QUOTES);
+
+                    echo ' <label for="Contusmacalbum-id">' . __('Album Id:').'
+                   <select style="width: 200px;" id="Contusmacalbum-id" name="Contusmacalbum-id">';
+                    foreach($widmac as $widmacs)
+                    {
+                        if($title == $widmacs->macAlbum_id )
+                        {
+                           $sele = 'selected=selected';
+                        }
+                             else
+                             {
+                             $sele = '';
+                             }
+                     echo '<option value="'.$widmacs->macAlbum_id.'" '.$sele.'>'.$widmacs->macAlbum_name.'</option>';
+                   }
+                    echo '</select>';
+                    echo '<p style="text-align:right;">
+                    <label for="Contusmacphotos-macrow">' . __('Rows:') . '
+                    <input id="Contusmacphotos-macrow" name="Contusmacphotos-macrow" type="text" value="'.$mac_row.'" />
+                    </label></p>';
+                      echo '<p style="text-align:right;">
+                    <label for="Contusmacphotos-macrow">' . __('Cols:') . '
+                    <input id="Contusmacphotos-maccols" name="Contusmacphotos-maccols" type="text" value="'.$mac_cols.'" />
+                    </label></p>';
+                        echo '<p style="text-align:right;">
+                    <label for="Contusmacphotos-macrow">' . __('Width:') . '
+                    <input id="Contusmacphotos-macwidth" name="Contusmacphotos-macwidth" type="text" value="'.$mac_width.'" />
+                    </label></p>';
+                    echo '<input type="hidden" id="Contusmacphotos-submit" name="Contusmacphotos-submit" value="1" />';
+            }
+
+            // Register widget for use
+            register_sidebar_widget(array(' Mac Photos Widgets ', 'widgets'), 'widget_Contusmacphotos');
+            // Register settings for use, 300x100 pixel form
+            register_widget_control(array('Mac Photos Widgets', 'widgets'), 'widget_Contusmacphotos_control', 300, 200);
+            }
+            // Run code and init
+            add_action('widgets_init', 'widget_Contusmacphotos_init');
+
 ?>

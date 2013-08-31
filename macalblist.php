@@ -1,14 +1,21 @@
 <?php
+/*
+ ***********************************************************/
 /**
- * @name        Mac Doc Photogallery.
- * @version	2.2: macalblist.php 2011-09-19
- * @package	apptha
- * @subpackage  mac-doc-photogallery
- * @author      saranya
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license	GNU General Public License version 2 or later; see LICENSE.txt
- * @abstract    Album Listing Page.
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.3
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
  * */
+
+/*
+ ***********************************************************/
 require_once( dirname(__FILE__) . '/macDirectory.php');
 //Pagination
                                 function listPagesNoTitle($args) { //Pagination
@@ -61,7 +68,7 @@ require_once( dirname(__FILE__) . '/macDirectory.php');
 
                                     /* Print the first and previous page links if necessary */
                                     if (($curpage != 1) && ($curpage)) {
-                                        $page_list .= "  <a href=\"" . $self . "&pages=1\" title=\"First Page\">Â«</a> ";
+                                        $page_list .= "  <a href=\"" . $self . "&pages=1\" title=\"First Page\"><<</a> ";
                                     }
 
                                     if (($curpage - 1) > 0) {
@@ -84,7 +91,7 @@ require_once( dirname(__FILE__) . '/macDirectory.php');
                                     }
 
                                     if (($curpage != $pages) && ($pages != 0)) {
-                                        $page_list .= "<a href=\"" . $self . "&pages=" . $pages . "\" title=\"Last Page\">Â»</a> ";
+                                        $page_list .= "<a href=\"" . $self . "&pages=" . $pages . "\" title=\"Last Page\">>></a> ";
                                     }
                                     $page_list .= "</td>\n";
 
@@ -161,20 +168,29 @@ $album ='';
             $path = $uploadDir['baseurl'].'/mac-dock-gallery';
 foreach($res as $results)
 {
+	$file_image =  $uploadDir['basedir'] . '/mac-dock-gallery/' .$results->macAlbum_image;
+	$site_url = get_bloginfo('url');
    $album .= "<tr>
   <td class='checkall'>";
-  if($results->macAlbum_id!=1){
+  if($results->macAlbum_id!=1 ){
   $album .= "<input type='checkbox' class='checkSing' name='checkList[]' class='others' value='$results->macAlbum_id' ></td>";
   }
-  if($results->macAlbum_image == '')
+
+
+	 if(file_exists($file_image) && $results->macAlbum_image != '')
+         {
+          $album .="<td><a href='javascript:void(0)' id='$path/$results->macAlbum_image' class='preview' >
+                  <img src='$path/$results->macAlbum_image' width='40' height='20' /></a></td>";
+         }
+         else if(!file_exists($file_image)){
+         	$album .="<td><a href='javascript:void(0)' id='$site_url/wp-content/plugins/$folder/uploads/star.jpg' class='preview'>
+             <img src='$site_url/wp-content/plugins/$folder/uploads/star.jpg' width='40' height='20' /></a></td>";
+         }
+ else
          {
            $album .="<td><a href='javascript:void(0)' id='$site_url/wp-content/plugins/$folder/images/default_star.gif' class='preview'>
              <img src='$site_url/wp-content/plugins/$folder/images/default_star.gif' width='40' height='20' /></a></td>";
 
-         } else
-         {
-          $album .="<td><a href='javascript:void(0)' id='$path/$results->macAlbum_image' class='preview' >
-                  <img src='$path/$results->macAlbum_image' width='40' height='20' /></a></td>";
          }
           $album .="<td class='macName'>
                     <div id='albName_".$results->macAlbum_id."'>".$results->macAlbum_name."</div>

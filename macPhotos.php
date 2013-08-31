@@ -1,14 +1,20 @@
 <?php
+ /***********************************************************/
 /**
- * @name        Mac Doc Photogallery.
- * @version	2.2: macPhotos.php 2011-08-15
- * @package	apptha
- * @subpackage  mac-doc-photogallery
- * @author      saranya
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license	GNU General Public License version 2 or later; see LICENSE.txt
- * @abstract    Photos Listing while uploading.
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.3
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
  * */
+
+/*
+ ***********************************************************/
 
 require_once( dirname(__FILE__) . '/macDirectory.php');
 global $wpdb;
@@ -31,12 +37,13 @@ $p = 1;
                                     }
 
        $album .= "<div class='left_align' style='color: #21759B'>Following are the list of images that has been uploaded</div>";
-       $album .='<ul class="actions"><li><a onclick="upd_disphoto('.$queue.','.$albid.');" class="gallery_btn" style="cursor:pointer">Update</a></li></ul>';
+       $album .='<ul class="actions"><li><a href="javascript:void(0)" onclick=" upd_disphoto(\''.$queue.'\',\''.$albid.'\');" class="gallery_btn" style="cursor:pointer">Update</a></li></ul>';
        for($i=1;$i<=$queue;$i++)
        {
-       $album .= "<div class='left_align' id='remve_macPhotos_$results->macPhoto_id'>";
+       $delete_phtid = $phtsrc[$i]['macPhoto_id'];
+       $album .= "<div class='left_align' id='photo_delete_$delete_phtid'>";
        $album .='<div style="float:left;margin:0 10px 0 0;display:block;">
-                 <img src="'.$path.'/'.$phtsrc[$i]['macPhoto_image'].'" style="height:108px;"/></div>';
+                 <img src="'.$path.'/'.$phtsrc[$i]['macPhoto_image'].'" style="height:108px;"/></div><span onclick="macdeletePhoto('.$phtsrc[$i]['macPhoto_id'].')"><a style="cursor:pointer;text-decoration:underline;padding-left:6px;" >Delete</a></span>';
        $album .='<div class="mac_gallery_photos" style="float:left" id="macEdit_'.$i.'">';
 
        $album .= '<form name="macEdit_'.$phtsrc[$i]['macPhoto_id'].'" method="POST"  class="macEdit">';

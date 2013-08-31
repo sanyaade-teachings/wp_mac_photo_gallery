@@ -1,3 +1,21 @@
+/*
+ ***********************************************************/
+/**
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.3
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
+ * */
+
+/*
+ ***********************************************************/
+
 //For Showing the list of Album in adjacent
 function macAlbum(pages)
 {
@@ -293,19 +311,24 @@ function upd_disphoto(queue,albid)
 dragdr = jQuery.noConflict();
 dragdr.ajax({
     method:"GET",
-       url: site_url+'/wp-content/plugins/macGallery/macphtajax.php',
+       url: site_url+'/wp-content/plugins/mac-dock-gallery/macphtajax.php',
        data : "macedit_phtid="+macedit_phtid+"&macedit_name="+macedit_name+"&macedit_desc="+macedit_desc,
-       asynchronous:false
-});
-    }
-  window.location = site_url+'/wp-admin/admin.php?page=macPhotos&action=viewPhotos&albid='+albid;
+       asynchronous:false,
+       error: function(html){
+            },
+      success: function(html){
+    	  
+          window.location = site_url+'/wp-admin/admin.php?page=macPhotos&action=viewPhotos&albid='+albid;
+           }
+       });
+  }
+alert('Updated sucessfully');
 }
 
 //Mac Individual Photo Delete
  function macdeletePhoto(macdeleteId)
  {
-
-var agree=confirm("Are you sure you want to delete");
+var agree=confirm("Are you sure you want to delete ?");
 if (agree)
 {
   if (window.XMLHttpRequest)
@@ -320,7 +343,7 @@ else
   {
     if (xmlhttp.readyState==4)
     {
-        window.location = self.location;
+        document.getElementById('photo_delete_'+macdeleteId).style.visibility = 'hidden';
     }
   }
 xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macdeleteId='+macdeleteId,true);
@@ -352,6 +375,7 @@ xmlhttp.send();
  }
 
 function photosNameform(macPhotos_id) {
+ 
   if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
    xmlhttp=new XMLHttpRequest();
@@ -373,6 +397,7 @@ xmlhttp.send();
  //Update the Photo name
 function updPhotoname(macPhotos_id)
 {
+
 var macPhoto_name = document.getElementById('macPhoto_name_'+macPhotos_id).value;
 
  if (window.XMLHttpRequest)
@@ -387,6 +412,7 @@ else
   {
     if (xmlhttp.readyState==4)
     {
+       
       document.getElementById('macPhotos_'+macPhotos_id).innerHTML = xmlhttp.responseText
     }
   }
@@ -403,13 +429,14 @@ function phototoggle(macPhoto_id) {
   	}
 	else {
 		ele.style.display = "block";
-		text.innerHTML = "hide";
+		
 	}
 }
 
 function macdesc_updt(macPhoto_id)
 {
 var macPhoto_desc = document.getElementById('macPhoto_desc_'+macPhoto_id).value;
+var ele = document.getElementById("toggleText"+macPhoto_id);
     if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
    xmlhttp=new XMLHttpRequest();
@@ -423,7 +450,7 @@ else
     if (xmlhttp.readyState==4)
     {
       document.getElementById('display_txt_'+macPhoto_id).innerHTML = xmlhttp.responseText
-      
+      ele.style.display = "none";
     }
   }
 xmlhttp.open("GET",site_url+'/wp-content/plugins/'+mac_folder+'/macphtajax.php?macPhoto_desc='+macPhoto_desc+'&macPhoto_id='+macPhoto_id,true);
@@ -487,9 +514,8 @@ httpxml.onreadystatechange=function()
   
     var fbComments = httpxml.responseText;
     document.getElementById("facebook").innerHTML = fbComments;
-    getfacebook();
-    
-    return false;
+     getfacebook();
+     return false;
     }
   }
 httpxml.open("GET",site_url+"/wp-content/plugins/"+mac_folder+"/macfbcomment.php?pid="+pid+'&phtName='+title+'&site_url='+siteurl+'&appId='+appId,true);

@@ -1,17 +1,24 @@
-.jcarousel-skin-ie7 .jcarousel-container {
+/*
+ ***********************************************************/
+/**
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.3
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
+ * */
 
-    background: #ededeb;
-
-}
+/*
+ ***********************************************************/
 
 .jcarousel-skin-ie7 .jcarousel-direction-rtl {
 	direction: rtl;
 }
-
-/*.jcarousel-skin-ie7 .jcarousel-container-horizontal {
-    width: 245px;
-    padding: 20px 40px;
-}*/
 
 .jcarousel-skin-ie7 .jcarousel-container-vertical {
     width: 75px;
@@ -23,7 +30,7 @@
     overflow: hidden;
 }
    .jcarousel-skin-ie7 .jcarousel-clip-horizontal {
-     height: 100px;
+     min-height: 100px;
      margin-left:20px;
      margin-right: 40px;
     }
@@ -31,22 +38,20 @@
  .jcarousel-skin-ie7 .jcarousel-container-horizontal {
      padding: 5px;
    }
+.jcarousel-item-NaN
+{
+    display: none;
 
-/*.jcarousel-skin-ie7 .jcarousel-clip-horizontal {
-    width:  245px;
-    height: 77px;
-}*/
+}
+.jcarousel-item-NaN
+{
+    display: none;
+}
+.jcarousel-item-undefined
+{
+     display: none;
+}
 
-/*.jcarousel-skin-ie7 .jcarousel-clip-vertical {
-    width:  77px;
-    height: 245px;
-}*/
-
-/*.jcarousel-skin-ie7 .jcarousel-item {
-    width: 75px;
-    height: 75px;
-
-}*/
 .jcarousel-skin-ie7 .jcarousel-item a{
     list-style: none;
     text-decoration: none;
@@ -151,12 +156,19 @@ padding-right:4px;
 padding-left:4px;
 float:left;
 display: block;
-position: relative;margin-top: -32px;
+position: relative;
 background: #000;
 filter:alpha(opacity=30);-moz-opacity:0.7;-khtml-opacity: 0.7;opacity: 0.7;
 width: 91px;text-align: left;
 }
 
+.jcarousel-skin-ie7 .jcarousel-item
+{
+   width:100px;
+   background-color:black;
+   min-height: 100px;
+   text-decoration: none;
+  }
 
 .carousel_lefttxt a:hover
 {

@@ -1,19 +1,20 @@
 /*
- ***********************************************************
+ ***********************************************************/
+/**
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.3
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
+ * */
 
- * Name:  Mac Photo Gallery
- * Description: Mac Photo Gallery component for Wordpress
- * Version: 2.2
- * Edited By: Saranya
- * Author URI: http://www.contussupport.com/
- * Date :May 19 2011
-
- **********************************************************
-
- @Copyright Copyright (C) 2010-2011 Contus Support
- @license GNU/GPL http://www.gnu.org/copyleft/gpl.html,
-
- **********************************************************/
+/*
+ ***********************************************************/
 
 /* style for Common Mac Photo Gallery pages  */
 
@@ -33,6 +34,8 @@
 li.clearfix {
     display: list-item;
 }
+.mac-no-border {border: none !important; padding: 0px !important}
+
 .macLeft{ float:left;}
 .bind_macPhotos {width:60%;height:auto;float:left;}
 
@@ -55,6 +58,11 @@ li.clearfix {
     text-align: justify;vertical-align: top;
     padding: 5px 0px 10px 2px; font-size: 11px;
     color:#666;border-bottom:1px solid #DFDFDF;
+}
+.mac_album_des
+{
+    font-weight: bold;
+    padding:0 5px;
 }
 .mac_gallery .checkall {width:15%;text-align: left;}
 .mac_gallery .image {width:10%;}
@@ -202,7 +210,6 @@ tr:hover .delView a
     color: #0066cc;
 }
 #albwrapper {
-margin: 0 auto;
 width: 100%;
 padding: 0 13px 0 15px;
 -moz-border-radius: 5px;
@@ -211,7 +218,7 @@ padding: 0 13px 0 15px;
 border-radius: 5px;
 font-size: 12px;
 line-height: 18px !important;
-margin-bottom: 10px;
+margin: 10px 0px;
 }
 .macSettings{ padding-top: 35px;}
 .macSettings table tr td{ padding-bottom: 20px; width: 50%}
@@ -263,3 +270,28 @@ line-height: 12px;
                             text-align: left; padding: 5px 0 0 5px;  border-radius:5px 5px 0 0; font-weight: bold; height: 25px; border: 1px solid #ccc;}
 
 .macSettings table tr td span{width: 80%; float: left;padding: 0 0 0 5px;}
+.mac-error_msg
+{
+background-color: lightYellow;
+border-color: #E6DB55;
+border-bottom-left-radius: 3px 3px;
+border-bottom-right-radius: 3px 3px;
+border-style: solid;
+border-width: 1px;
+border-top-left-radius: 3px 3px;
+border-top-right-radius: 3px 3px;
+margin: 5px 0px;
+padding: 5px 0.6em;
+width:100%;
+float:left;
+font-weight: bold;
+}
+.mac-red-error
+{
+    color: red;
+}
+                .page_list
+                {
+                margin:0 auto;
+                text-align:center;
+                }

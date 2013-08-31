@@ -2,15 +2,15 @@
 Contributors: Apptha
 Tags: Mac photo gallery plugin, Photo gallery, Gallery, Apptha Mac photo gallery, mac dock effect, widgets,  Wordpress Mac photo gallery, wp Mac photo gallery , Mac Gallery plugin, Gallery Plugin
 Requires at least: 2.8
-Tested up to: 3.0.5
-Stable tag: 2.2
+Tested up to: 3.2.1
+Stable tag: 2.3
 Get the most exciting Photo Gallery in the internet, designed and modified to suit your Wordpress websites.  Installing this Mac Photo Gallery Plugin is real easy and if you have any difficulty in installation, contact our support team and quickly resolve your issue.  You can either download this Gallery Plugin directly from our website or through Wordpress plugins page itself.  This Mac Photo Gallery Version  has many advanced features that you cannot find elsewhere, you can photo gallery with Mac Dock effect.
 
 == Description ==
 
-Gallery Demo - http://www.apptha.com/demo/wordpress/mac-gallery/
+Player Demo - http://www.apptha.com/demo/wordpress/mac-gallery/
 
-Gallery Home Page - http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery
+Player Home Page - http://www.apptha.com/category/extension/Wordpress/Mac-Photo-Gallery
 
 ***Alert: If you are upgrading the latest version of mac photo gallery means, Kindly take backup of your previous version data & then do upgrade.
 
@@ -80,8 +80,8 @@ Gallery Home Page - http://www.apptha.com/category/extension/Wordpress/Mac-Photo
 = How can i activate Mac gallery plugin? =
 Download the zip file , install it.Then activate the plugin.
 
-= Can I get the Mac Photo Gallery plugin player customized to my needs? =
+= Can I get the Mac Photo Gallery plugin customized to my needs? =
 Yes, but there will be additional charges based on the request for customization has to be made by the requester.
 
 = What is the advantage of using this Wordpress Mac Gallery Plugin? =
-To know more features and advantages of our player and this video plugin, visit this link - http://www.apptha.com/category/extension/Wordpress/Mac Photo Gallery.html
+To know more features and advantages of our mac gallery plugin, visit this link - http://www.apptha.com/category/extension/Wordpress/Mac Photo Gallery.html

@@ -1,14 +1,20 @@
 <?php
+ /***********************************************************/
 /**
- * @name        Mac Doc Photogallery.
- * @version	2.2: upload-file.php 2011-08-15
- * @package	apptha
- * @subpackage  mac-doc-photogallery
- * @author      saranya
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license	GNU General Public License version 2 or later; see LICENSE.txt
- * @abstract    Upload the photos to the album.
+ * @name          : Mac Doc Photogallery.
+ * @version	      : 2.3
+ * @package       : apptha
+ * @subpackage    : mac-doc-photogallery
+ * @author        : Apptha - http://www.apptha.com
+ * @copyright     : Copyright (C) 2011 Powered by Apptha
+ * @license	      : GNU General Public License version 2 or later; see LICENSE.txt
+ * @abstract      : The core file of calling Mac Photo Gallery.
+ * @Creation Date : June 20 2011
+ * @Modified Date : September 30 2011
  * */
+
+/*
+ ***********************************************************/
 
 /* Upload the photos to the album */
 
@@ -99,8 +105,9 @@ if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file) && $albumId !='
 {
      $macimage = $_FILES['uploadfile']['name'];
      $macname = explode('.',$macimage);
+     $storing_macname = addslashes($macname[0]);
      $uploadDb =  $wpdb->query("INSERT INTO ". $wpdb->prefix."macphotos (`macAlbum_id`,`macPhoto_name`, `macPhoto_desc`, `macPhoto_image`, `macPhoto_status`, `macPhoto_sorting`,`macPhoto_date`)
-       VALUES ('$albumId','$macname[0]', '', '$macimage', 'ON', '',NOW())");
+       VALUES ('$albumId','$storing_macname', '', '$macimage', 'ON', '',NOW())");
        $lastid = $wpdb->insert_id;
        $album_image = $wpdb->get_var("select macPhoto_image from " . $wpdb->prefix . "macphotos WHERE macPhoto_id='$lastid'");
        $filenameext = explode('.',$album_image);
