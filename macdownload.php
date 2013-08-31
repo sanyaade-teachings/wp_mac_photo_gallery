@@ -3,7 +3,7 @@
  ***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.8
+ * @version	      : 2.9
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -22,7 +22,10 @@
 require_once( dirname(__FILE__) . '/macDirectory.php');
 
 $folder = dirname(plugin_basename(__FILE__));
+$filepart = explode(".",$_GET['albid']);
 $file = dirname(dirname(dirname(__FILE__)))."/uploads/mac-dock-gallery/".$_GET['albid'];
+
+if(file_exists($file) && (count($filepart) === 2) && (is_int( (int)$filepart[0]) ) && ((int)$filepart[0] > 0)  ){
 
     header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream');
@@ -35,4 +38,8 @@ $file = dirname(dirname(dirname(__FILE__)))."/uploads/mac-dock-gallery/".$_GET['
     ob_clean();
     flush();
     readfile($file);
+}
+else{
+    die("No direct access");
+}
 ?>

@@ -1,1 +1,0 @@
-1. When upgrading version 2.7 to 2.8  vulnerability issue fixed .
