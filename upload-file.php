@@ -2,7 +2,7 @@
  /***********************************************************/
 /**
  * @name          : Mac Doc Photogallery.
- * @version	      : 2.6
+ * @version	      : 2.7
  * @package       : apptha
  * @subpackage    : mac-doc-photogallery
  * @author        : Apptha - http://www.apptha.com
@@ -93,12 +93,21 @@ if($albumId !='')
 $uploaddir = "$path/";
 $file = $uploaddir . basename($_FILES['uploadfile']['name']);
 $size=$_FILES['uploadfile']['size'];
+$typeinfo = explode(".",$_FILES['uploadfile']['name']);
+$type =  strtolower($typeinfo[count($typeinfo)-1]);
+$allowExt  = array("jpg","jpeg","png","gif");
+if(!in_array($type,$allowExt)){
+    echo "not an allowed extension";
+    unlink($_FILES['uploadfile']['tmp_name']);
+    exit;
+}
 if($size>10485760)
 {
 	echo "error file size > 1 MB";
 	unlink($_FILES['uploadfile']['tmp_name']);
 	exit;
 }
+
   $image = new SimpleImage();
    $image->load($_FILES['uploadfile']['tmp_name']);
 
