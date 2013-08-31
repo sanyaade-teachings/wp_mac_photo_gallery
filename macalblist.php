@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	1.0: macalblist.php 2011-08-15
+ * @version	2.0: macalblist.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -137,7 +137,7 @@ $i=0;
 $viewSetting = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings");
 $count_result = mysql_query("SELECT * FROM " . $wpdb->prefix . "macalbum");
 $site_url = get_bloginfo('url');
-$limit =$viewSetting->mac_limit;
+$limit =20;
 $start = findStart($limit);
                                     if ($_REQUEST['pages'] == 'viewAll') {
                                         $w = '';

@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	1.0: classes.php 2011-08-15
+ * @version	2.0: classes.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -33,8 +33,6 @@ function macEffectgallery($arguments= array(), $wid)
 
                                           <!-- For the Popup Pirobox -->
 <link href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css_pirobox/style_1/style.css'; ?>" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/pirobox/js/jquery.min.js';?>"></script>
-<script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/pirobox/js/jquery-ui-1.8.2.custom.min.js'?>"></script>
 <script type="text/javascript" src="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/js/pirobox/pirobox_extended.js'?>"></script>
                                            <!-- End of the Popup Pirobox -->
 
@@ -96,6 +94,7 @@ $aid = '';
                                          $n = $arguments['cols'];
                                          $no_of_row = $arguments['row'];
                                          $albid = $arguments['albid'];
+                                         $itemwidth = $macSetting->mouseWid;
                                          $phtDis = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "macphotos
                                                                        WHERE macAlbum_id='$albid' and macPhoto_status='ON' $where");
                                     }
@@ -104,6 +103,7 @@ $aid = '';
                                          $n = $macSetting->macrow;
                                          $no_of_row = $macSetting->macimg_page;
                                          $albid = $arguments['albid'];
+                                         $itemwidth = $macSetting->mouseWid;
                                          $phtDis = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "macphotos
                                                                        WHERE macAlbum_id='$albid' and macPhoto_status='ON' $where");
                                     }
@@ -112,10 +112,11 @@ $aid = '';
                                     {
                                         $n =  $macSetting->summary_page;
                                         $no_of_row =$macSetting->summary_macrow;
+                                        $itemwidth = $macSetting->mouseWid;
                                         $limit =$macSetting->summary_macrow * $macSetting->summary_page;
                                         $phtDis = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$macAlbid' and macPhoto_status='ON' $where limit 0,$limit");
                                     }
-                                    if($arguments['walbid'] != '')
+                                    if($arguments['walbid'] != '' )
                                     {
                                         $walbid = $arguments['walbid'];
                                         $n = $arguments['column'];
@@ -306,7 +307,7 @@ $aid = '';
             }';
         }
        // The black bg color for the mac effect images from the gallery
-        if($_REQUEST['albid'] != '' && $arguments['walbid'] == '')
+        if($_REQUEST['albid'] != '' && $arguments['walbid'] == '' && $arguments['albid'] == '')
         {
         $div .= '#content #imgwrapper{
                 height:'.(($no_of_row*$itemwidth)).'px;
@@ -401,17 +402,21 @@ $aid = '';
                                         $imgsrc[$y]['macPhoto_date']  = $phtDisplay->macPhoto_date;
                                         $y++;
                                     }
-                                       if($arguments['walbid'] == '')
+                                       if($arguments['walbid'] == '' && $arguments['albid'] == '')
                                         {
                                            $div .= '<div id="mac_all"><div id="mac_id">';
                                         }
+                                       else if($arguments['walbid'] != '' )
+                                       {
+                                           $div .= '<div class="lfloat"><div>';
+                                       }
                                        else
                                        {
-                                           $div .= '<div><div>';
+                                            $div .= '<div><div>';
                                        }
                                     $mac_album = $wpdb->get_row("SELECT macAlbum_name,macAlbum_description FROM " . $wpdb->prefix . "macalbum WHERE macAlbum_id ='$macAlbid'");
                                     $height = $no_of_row * $itemwidth ;
-                                      if($arguments['walbid'] == '')
+                                      if($arguments['walbid'] == '' && $arguments['albid'] == '')
                                     {
                                      $div .= '<div style="margin:0px;padding:0px;color:#0D3573;font-weight:bold;font-family:arial;"> '.$mac_album->macAlbum_name.'</div>';
                                     }
@@ -510,7 +515,7 @@ $aid = '';
                                          $e--;
                                     }
                                     $div .=' </div>';
-                                       if($_REQUEST['albid'] != '' && $arguments['walbid'] == '') // mac effect pagination
+                                       if($_REQUEST['albid'] != '' && $arguments['walbid'] == '' && $arguments['albid'] == '') // mac effect pagination
                                     {
                                      $pagelist = pageList($_GET['pages'], $pages, $_GET['albid']);
                                     $div .= '<span class="page_list">' . $pagelist . '</span>';
@@ -520,7 +525,7 @@ $aid = '';
                                     $div .= '</div>';
 
 
-                                      if($arguments['walbid'] == '')
+                                      if($arguments['walbid'] == '' && $arguments['albid'] == '')
                                     {
                                     $div .= '<div id="macshow"><span>Description:</span>'.$mac_album->macAlbum_description.'</div>';
 // Horizontal Carosoule
@@ -755,13 +760,18 @@ $aid = '';
                                     $div = '<div id="albwrapper" >';
                                     foreach ($albDis as $albDisplay)
                                     {
-
-                                        $photoCount = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albDisplay->macAlbum_id' and macPhoto_status='ON'");
+                                        $photoCount    = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albDisplay->macAlbum_id' and macPhoto_status='ON'");
+                                        $default_first = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albDisplay->macAlbum_id' and macPhoto_status='ON' ORDER BY macPhoto_id DESC LIMIT 0,1");
                                         $div .='<div  class="albumimg lfloat">';
 
-                                        if ($albDisplay->macAlbum_image == '') {
+                                        if ($albDisplay->macAlbum_image == '' && $photoCount == '0') {
                                             $div .='<div><a class="thumbnail" href="' .$site_url. '/?page_id='.$macGallid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg"></a></div>';
-                                        } else
+                                        }
+                                        else if($albDisplay->macAlbum_image == '' && $photoCount != '0')
+                                        {
+                                            $div .='<div><a class="thumbnail" href="' .$site_url. '/?page_id='.$macGallid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/'.$default_first.'"></a></div>';
+                                        }
+                                        else
                                         {
                                             $div .='<div><a class="thumbnail" href="' .$site_url. '/?page_id='.$macGallid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/' . $albDisplay->macAlbum_image . '" ></a></div>';
                                         }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	1.0: install.php 2011-08-15
+ * @version	2.0: install.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -56,7 +56,6 @@ function macGallery_install()
           `macProximity` double NOT NULL,
           `macDir` int(10) NOT NULL,
           `macImg_dis` varchar(10) NOT NULL,
-          `mac_limit` int(5) NOT NULL,
           `macAlbum_limit` int(11) NOT NULL,
           `mac_albumdisplay` varchar(5) NOT NULL,
           `mac_imgdispstyle` int(11) NOT NULL,
@@ -95,7 +94,8 @@ function macGallery_install()
          $res = $wpdb->get_results($sql);
             }
         $site_url = get_option('siteurl');  //Getting the site domain path
-     
+        
+           
  $page_found  = $wpdb->get_results("SELECT * FROM ".$wpdb->prefix."posts where post_content='[macGallery]'");
  if (empty($page_found)) {
 $mac_gallery_page    =  "INSERT INTO ".$wpdb->prefix."posts(`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`)

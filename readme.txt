@@ -1,9 +1,9 @@
 === MAC PHOTO GALLERY ===
 Contributors: Apptha
-Tags: Mac photo gallery plugin, Photo gallery, Gallery, Apptha Mac photo gallery, Wordpress Mac photo gallery, wp Mac photo gallery , Mac Gallery plugin, Gallery Plugin
+Tags: Mac photo gallery plugin, Photo gallery, Gallery, Apptha Mac photo gallery, mac dock effect, widgets,  Wordpress Mac photo gallery, wp Mac photo gallery , Mac Gallery plugin, Gallery Plugin
 Requires at least: 2.8
 Tested up to: 3.0.5
-Stable tag: 1.0
+Stable tag: 2.0
 Get the most exciting Photo Gallery in the internet, designed and modified to suit your Wordpress websites.  Installing this Mac Photo Gallery Plugin is real easy and if you have any difficulty in installation, contact our support team and quickly resolve your issue.  You can either download this Gallery Plugin directly from our website or through Wordpress plugins page itself.  This Mac Photo Gallery Version  has many advanced features that you cannot find elsewhere, you can photo gallery with Mac Dock effect.
 
 == Description ==

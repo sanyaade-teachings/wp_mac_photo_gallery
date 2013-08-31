@@ -3,7 +3,7 @@
  ***********************************************************
  * Plugin Name:  Mac Photo Gallery
  * Description: Mac Photo Gallery component for Wordpress. In this you can Stylish gallery effect with mac effect. Mac Photo Gallery is a simple and easy gallery for wordpress.
- * Version: 1.0
+ * Version: 2.0
  * Edited By: Saranya
  * Author URI: http://www.apptha.com/
  * Date :May 19 2011
@@ -27,7 +27,7 @@ require_once("classes.php"); // Front view of the Mac Photo Gallery
        $d=1;
 function Sharemacgallery($content)
  {
-     $content = preg_replace_callback('/\[macGallery([^]]*)\y]/i', 'CONTUS_macRender', $content,''); //Mac Photo Gallery Page
+    $content = preg_replace_callback('/\[macGallery([^]]*)\y]/i', 'CONTUS_macRender', $content,''); //Mac Photo Gallery Page
     $content = preg_replace_callback('/\[macGallery display]/', 'macDisplay', $content); //Mac Photo Gallery from Widgets
     $content = preg_replace_callback('/\[fbmaccomments]/', 'fbmacpage', $content); // Mac Photo Gallery facebook return page
     return $content;
@@ -62,7 +62,7 @@ function macPage()
  {
     add_media_page(__('Macgallery', 'Macgallery'), __('Mac Photo Gallery', 'Mac Photo Gallery'), 'edit_posts', 'macAlbum', 'show_macMenu');
     add_media_page(__('Macphotos', 'Macphotos'), __('', ''), 'edit_posts', 'macPhotos', 'show_macMenu');
-    add_options_page('Mac Photo Gallery', 'Mac Photo Gallery', '8', 'macGallery.php', 'macSettings');
+    add_media_page(__('Mac Photo Gallery', 'Mac Photo Gallery'),__('', ''), 'edit_posts', 'macSettings', 'show_macMenu');
  }
 
 function show_macMenu()
@@ -76,6 +76,11 @@ function show_macMenu()
         case 'macPhotos' :
             include_once (dirname(__FILE__) . '/macphotoGallery.php'); // admin functions
             $macPhotos = new macPhotos();
+            break;
+           case 'macSettings' :
+
+            include_once (dirname(__FILE__) . '/macGallery.php'); // admin functions
+               macSettings();
             break;
     }
 }
@@ -99,7 +104,8 @@ function macSettings() {
     global $wpdb;
      $folder   = dirname(plugin_basename(__FILE__));
      $site_url = get_bloginfo('url');
-        $split_title = $wpdb->get_var("SELECT option_value FROM ".$wpdb->prefix."options WHERE option_name='get_title_key'");
+    
+         $split_title = $wpdb->get_var("SELECT option_value FROM ".$wpdb->prefix."options WHERE option_name='get_title_key'");
          $get_title = unserialize($split_title);
 
             $strDomainName = $site_url;
@@ -150,7 +156,6 @@ var url = '<?php echo $site_url; ?>';
         $macProximity          = $_REQUEST['macProximity'];
         $macDir                = $_REQUEST['macDir'];
         $macImg_dis            = $_REQUEST['macImg_dis'];
-        $mac_Limit             = $_REQUEST['mac_Limit'];
         $mac_facebook_api      = $_REQUEST['mac_facebook_api'];
         $mac_facebook_comment  = $_REQUEST['mac_facebook_comment'];
 
@@ -164,7 +169,7 @@ var url = '<?php echo $site_url; ?>';
         $updSet = $wpdb->query("UPDATE " . $wpdb->prefix . "macsettings SET  `macrow` = '$macrow',
          `macimg_page` = '$macimg_page',`summary_macrow` = '$summary_macrow', `summary_page`='$summary_page',
          `albumRow` = '$albumRow', `mouseHei` = '$mouseHei' , `mouseWid` = '$mouseWid',`resizeHei`='$resizeHei',`resizeWid` = '$resizeWid',
-         `macProximity` = '$macProximity', `macDir` = '$macDir',`macImg_dis` = '$macImg_dis',`macAlbum_limit`= '$macAlbum_limit',`mac_limit`= '$mac_Limit',
+         `macProximity` = '$macProximity', `macDir` = '$macDir',`macImg_dis` = '$macImg_dis',`macAlbum_limit`= '$macAlbum_limit',
         `mac_imgdispstyle` = '$mac_imgdispstyle',
          `mac_facebook_api` = '$mac_facebook_api', `mac_facebook_comment` = '$mac_facebook_comment' WHERE `macSet_id` = 1");
         echo 'Updated Successfully';
@@ -205,30 +210,37 @@ var url = '<?php echo $site_url; ?>';
     </script>
     <link rel="stylesheet" href="<?php echo $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/css/style.css'; ?>">
     <div class="wrap">
-        <div class="icon32" id="icon-options-general"><br></div>
-        <h2>Mac Photo Gallery Settings</h2><br />
-        <div>Welcome to the Mac Photo Gallery Settings plugin options menu!
-            <a href="<?php echo $site_url; ?>/wp-admin/upload.php?page=macAlbum"  style="text-decoration: none"> Create Album </a> &nbsp&nbsp
-            <a href="<?php echo $site_url; ?>/wp-admin/upload.php?page=macPhotos&albid=0"  style="text-decoration: none" > Add Photos </a>
-        </div>
+        <div id="icon-upload" class="icon32"><br /></div>
+        <h2 class="nav-tab-wrapper">
+        <a href="?page=macAlbum" class="nav-tab">Albums</a>
+        <a href="?page=macPhotos&albid=0" class="nav-tab">Photos</a>
+        <a href="?page=macSettings" class="nav-tab nav-tab-active">Settings</a></h2>
+          <div style="background-color: #ffffff;padding: 10px;margin-top:10px;border: #ccc 1px solid">
+        <strong> Note : </strong> Adding macGallery Photos of a particular album in your post/page, or displaying all
+    the albums can be easily done by adding a simple code there. <br/><br />
+       (i)In case you want to insert a particular photo album into your post or page,
+       you can do it easily by following the example:<br />
+        <strong>[macGallery albid=1 row=3 cols=3]</strong>.
+        (ii) Else you want the full gallery in Post/ Page put this code <strong>[macGallery]</strong>
+          </div>
         <div id="error_msg" style="color:red"></div>
         <form name="macSet" method="POST">
             <div class="macSettings">
                 <table>
                     <tr>
-                        <td>Columns / Page</td>
+                        <td>Columns</td>
                         <td><input type="text" name="macrow" id="macrow" value="<?php echo $viewSetting->macrow; ?>"></td>
                     </tr>
                     <tr>
-                        <td>Rows / page</td>
+                        <td>Rows</td>
                         <td><input type="text" name="macimg_page" id="macimg_page" value="<?php echo $viewSetting->macimg_page; ?>"></td>
                     </tr>
                     <tr>
-                        <td>Multiple Post View Page / Columns</td>
+                        <td>Home Page Columns</td>
                         <td><input type="text" name="summary_page" id="summary_page" value="<?php echo $viewSetting->summary_page; ?>"></td>
                     </tr>
                      <tr>
-                        <td>Multiple Post View Page / Rows</td>
+                        <td>Home Page Rows</td>
                         <td><input type="text" name="summary_macrow" id="summary_macrow" value="<?php echo $viewSetting->summary_macrow; ?>"></td>
                     </tr>
                     <tr>
@@ -294,7 +306,7 @@ var url = '<?php echo $site_url; ?>';
                     <tr>
                         <td> Facebook API Id</td>
                         <td><input type="text" name="mac_facebook_api" id="mac_facebook_api" value="<?php echo $viewSetting->mac_facebook_api; ?>"><br />
-                            <div style="font-size:8pt">Enter Facebook URI , For example: http://www.facebook.com/profile.php?id=<strong>100001747038774</strong><br /></div>
+                            <div style="font-size:8pt">Enter Facebook API ID , For example: https://developers.facebook.com/apps#!/apps/<strong>126989914043022</strong><br /></div>
 
                         </td>
                      </tr>
@@ -320,19 +332,7 @@ var url = '<?php echo $site_url; ?>';
                            <input type="radio" name="mac_imgdispstyle" <?php if ($viewSetting->mac_imgdispstyle == '3') { echo 'checked';}?> value="3">Rounded  image
                         </td>
                     </tr>
-               <tr>
-                    <td>Limit of Image Display[Only For Admin]</td>
-                    <td>
-                            <select name="mac_Limit">
-                            <option <?php if ($viewSetting->mac_limit == '5')  { echo 'selected="selected"'; } ?>value="5">5</option>
-                            <option <?php if ($viewSetting->mac_limit == '10') { echo 'selected="selected"'; } ?>value="10">10</option>
-                            <option <?php if ($viewSetting->mac_limit == '15') { echo 'selected="selected"'; } ?>value="15">15</option>
-                            <option <?php if ($viewSetting->mac_limit == '20') { echo 'selected="selected"'; } ?>value="20">20</option>
-                            <option <?php if ($viewSetting->mac_limit == '25') { echo 'selected="selected"'; } ?>value="25">25</option>
-                            <option <?php if ($viewSetting->mac_limit == '30') { echo 'selected="selected"'; } ?>value="30">30</option>
-                        </select>
-                   </td>
-                </tr>
+              
                 </table>
                 <div id="error_msg" style="color:red"></div>
                 <div> <p class='submit' style="float:left;"><input class='button-primary' name='macSet_upt' id='macSet_upt' type='submit' value='Update Options'></p></div>
@@ -344,8 +344,8 @@ var url = '<?php echo $site_url; ?>';
                         //End of Album Setting page
  function loadsettings() {
  global $wpdb;
- $insertSettings = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macsettings (`macSet_id`, `macrow`, `macimg_page`, `summary_macrow`, `summary_page`, `albumRow`, `mouseHei`, `mouseWid`, `resizeHei`, `resizeWid`, `macProximity`, `macDir`, `macImg_dis`, `mac_limit`, `macAlbum_limit`, `mac_albumdisplay`, `mac_imgdispstyle`, `mac_facebook_api`, `mac_facebook_comment`) VALUES
-(1, 4, 3, 3, 3, 4, 20, 90, 120, 120, 90, 1, 'order', 15, 8, 'no', 1, '', 10);");
+ $insertSettings = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macsettings (`macSet_id`, `macrow`, `macimg_page`, `summary_macrow`, `summary_page`, `albumRow`, `mouseHei`, `mouseWid`, `resizeHei`, `resizeWid`, `macProximity`, `macDir`, `macImg_dis`, `macAlbum_limit`, `mac_albumdisplay`, `mac_imgdispstyle`, `mac_facebook_api`, `mac_facebook_comment`) VALUES
+(1, 4, 3, 3, 3, 4, 20, 90, 120, 120, 90, 1, 'order', 8, 'no', 1, '', 10);");
  $insertDefault = $wpdb->query("INSERT INTO " . $wpdb->prefix . "macalbum (`macAlbum_id`, `macAlbum_name`, `macAlbum_description`, `macAlbum_image`, `macAlbum_status`, `macAlbum_date`) VALUES
  (1, 'Default', 'Default album', 'star.jpg', 'ON', '2011-07-27 17:11:53')");
                         }
@@ -410,11 +410,7 @@ $chars_array[]=$chars_str[$i];
 
 	return $offset;
 }
-
-
-
-
-                        /* Function to invoke install player plugin */
+  /* Function to invoke install player plugin */
 
                         function macGallery_installFile()
                         {
@@ -432,10 +428,10 @@ $chars_array[]=$chars_str[$i];
                             $table_macAlbum = $wpdb->prefix . 'macphotos';
                             $table_macPhotos = $wpdb->prefix . 'macalbum';
 
-                              $wpdb->query("DROP TABLE IF EXISTS `" . $table_settings . "`");
+                              /*$wpdb->query("DROP TABLE IF EXISTS `" . $table_settings . "`");
                               $wpdb->query("DROP TABLE IF EXISTS `" . $table_macAlbum . "`");
                               $wpdb->query("DROP TABLE IF EXISTS `" . $table_macPhotos . "`");
-                              $wpdb->query("DELETE FROM " . $wpdb->prefix . "posts WHERE post_content='[macGallery]'");
+                              $wpdb->query("DELETE FROM " . $wpdb->prefix . "posts WHERE post_content='[macGallery]'");*/
                         }
 
                         /* Function to activate player plugin */

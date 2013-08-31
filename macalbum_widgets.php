@@ -4,7 +4,7 @@
  * Plugin Name: Mac Widgets
  * Component Name:  Mac Photo Gallery
  * Description: Mac Photo gallery widget, This is a album displaying widget in this you can give number of albums to be display in widget.
- * Version: 1.0
+ * Version: 2.0
  * Edited By: Saranya
  * Author URI: http://www.apptha.com/
  * Date :May 19 2011
@@ -60,15 +60,20 @@ $div .='<ul class="ulwidget">';
 if (!empty($albDis))
     {
            //output to screen
-      $div .='<li>   ';
+      $div .='<li>';
       foreach ($albDis as $albDisplay)
       {
-        $photoCount = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albDisplay->macAlbum_id' and macPhoto_status='ON'");
-        $div .='<div  class="albumimg">';
-                 if ($albDisplay->macAlbum_image == '')
+          $photoCount = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albDisplay->macAlbum_id' and macPhoto_status='ON'");
+          $default_first = $wpdb->get_var("SELECT macPhoto_image FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albDisplay->macAlbum_id' and macPhoto_status='ON' ORDER BY macPhoto_id DESC LIMIT 0,1");
+          $div .='<div  class="albumimg">';
+                 if ($albDisplay->macAlbum_image == '' && $photoCount == '0')
                     {
                       $div .='<div class="widget_alb_img"><a class="thumbnail" href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/star.jpg" width="140" height="140"></a></div>';
-                    } 
+                    }
+                    else if($albDisplay->macAlbum_image == '' && $photoCount != '0')
+                    {
+                    $div .='<div class="widget_alb_img"><a class="thumbnail" href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/'.$default_first.'" width="140" height="140"></a></div>';
+                    }
                     else
                     {
                       $div .='<div class="widget_alb_img"><a class="thumbnail" href="' . $site_url .'?page_id='.$macPageid.'&albid=' . $albDisplay->macAlbum_id . '"><img src="' . $site_url . '/wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/uploads/' . $albDisplay->macAlbum_image . '"   width="140" height="140"></a></div>';

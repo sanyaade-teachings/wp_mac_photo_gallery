@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	1.0: macalbum.php 2011-08-15
+ * @version	2.0: macalbum.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -127,10 +127,8 @@ function controller() {
     $site_url = get_bloginfo('url');
     $folder   = dirname(plugin_basename(__FILE__));
     $pageURL  = $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-
-     $split_title = $wpdb->get_var("SELECT option_value FROM ".$wpdb->prefix."options WHERE option_name='get_title_key'");
+         $split_title = $wpdb->get_var("SELECT option_value FROM ".$wpdb->prefix."options WHERE option_name='get_title_key'");
          $get_title = unserialize($split_title);
-
             $strDomainName = $site_url;
             preg_match("/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i", $strDomainName, $matches);
             $customerurl = $matches['domain'];
@@ -138,9 +136,7 @@ function controller() {
             $customerurl = str_replace(".", "D", $customerurl);
             $customerurl = strtoupper($customerurl);
             $get_url     = macgal_generate($customerurl);
-
     $macSet   = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "macsettings");
-
     if (isset($_REQUEST['macAlbum_submit']))
         {
 
@@ -313,22 +309,22 @@ if(isset($_POST['submit_license']))
        update_option('get_title_key', $options);
     }
 ?>
-    <div class="wrap nosubsub"><?php screen_icon(); ?>
-        <h2> Mac Albums</h2>
-
-        <div style="border:1px #ccc solid;background-color: #ffffff;padding: 10px;">
+    <div class="wrap nosubsub"><div id="icon-upload" class="icon32"><br /></div>
+        <h2 class="nav-tab-wrapper">
+        <a href="?page=macAlbum" class="nav-tab nav-tab-active">Albums</a>
+        <a href="?page=macPhotos&albid=0" class="nav-tab">Photos</a>
+        <a href="?page=macSettings" class="nav-tab">Settings</a></h2>
+        <div style="background-color: #ffffff;padding: 10px;margin-top:10px;border: #ccc 1px solid">
         <strong> Note : </strong> Adding macGallery Photos of a particular album in your post/page, or displaying all
     the albums can be easily done by adding a simple code there. <br/><br />
-       In case you want to insert a particular photo album into your post or page,
-    you can do it easily by following the example:<br />
-        <strong>[macGallery albid=1 row=3 cols=3]</strong>.</div>
-
-
+       (i)In case you want to insert a particular photo album into your post or page,
+       you can do it easily by following the example:<br />
+        <strong>[macGallery albid=1 row=3 cols=3]</strong>.
+        (ii) Else you want the full gallery in Post/ Page put this code <strong>[macGallery]</strong>
+          </div>
          <h3 style="float:left;width:200px">Add New Album</h3>
 
          <?php
-
-
          if($get_title['title'] != $get_url)
         {
         ?>
@@ -381,15 +377,10 @@ if(isset($_POST['submit_license']))
                 <?php wp_nonce_field('bulk-tags'); ?>
             </div>
 
-            <ul class="alignright actions">
-                <li><a href="<?php echo $site_url; ?>/wp-admin/upload.php?page=macPhotos&albid=0"  class="gallery_btn">Add Images</a></li>
-                <li><a href="<?php echo $site_url; ?>/wp-admin/options-general.php?page=macGallery.php" class="gallery_btn" >Settings</a></li>
-            </ul>
             <div id="bind_macAlbum" name="right_content" ></div></form>
     </div>
 
 </div>
 <?php
-            }
+   }
 ?>
- 

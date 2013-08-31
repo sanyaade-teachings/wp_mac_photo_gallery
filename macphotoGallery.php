@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        Mac Doc Photogallery.
- * @version	1.0: macphotoGallery.php 2011-08-15
+ * @version	2.0: macphotoGallery.php 2011-08-15
  * @package	apptha
  * @subpackage  mac-doc-photogallery
  * @author      saranya
@@ -22,11 +22,7 @@ function maccontroller() {
     global $wpdb, $site_url, $folder;
     $site_url = get_bloginfo('url');
     $folder = dirname(plugin_basename(__FILE__));
-//         $split_title = $wpdb->get_var("SELECT option_value FROM ".$wpdb->prefix."options WHERE option_name='get_title_key'");
-//         $get_title = unserialize($split_title);
-//         $this_url = explode('.',$site_url);
-//         $get_url  = $this_url[1];
-//         $get_api = title_value($get_url);
+
 ?>
    <link rel='stylesheet' href='<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder ?>/css/style.css' type='text/css' />
    <script type="text/javascript" src="<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder; ?>/js/jquery-1.3.2.js"></script>
@@ -60,30 +56,17 @@ function maccontroller() {
     dragdr(document).ready(function(){
     if(document.getElementById('test-list'))
                 {
-        dragdr("#test-list").sortable({
+        dragdr("#mac-test-list").sortable({
                 handle : '.handle',
                 update : function () {
-                    var order =dragdr('#test-list').sortable('serialize');
+                    var order =dragdr('#mac-test-list').sortable('serialize');
                     //alert(order);
                     dragdr("#info").load(site_url+"/wp-content/plugins/"+mac_folder+"/process-sortable.php?"+order);
                      location.reload();
                     }
                 });
     }
-  var addPht = '<?php echo $_REQUEST['albid']; ?>';
-//   var get_title = '<?php //echo $get_title['title']; ?>';
-//  var get_match_title = '<?php //echo $get_api; ?>';
-  if(addPht == '0')
-      {
-            alert('Please select the album to upload photos');
-      }
 
-//  else if(get_title != get_match_title)
-//      {
-//          alert('Please get License key');
-//      }
-      else
-          {
            dragdr('#swfupload-control').swfupload({
                 upload_url: site_url+"/wp-content/plugins/"+mac_folder+"/upload-file.php?albumId=<?php echo $_REQUEST['albid'] ?>",
                 file_post_name: 'uploadfile',
@@ -155,7 +138,7 @@ function maccontroller() {
                     }
                     i++
             })
-            }
+           
         });
     </script>
     <script type="text/javascript">
@@ -362,8 +345,19 @@ dragdr(document).ready(function(){
     ?>
             <link rel='stylesheet' href='<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder ?>/css/style.css' type='text/css' />
             <link rel='stylesheet' href='<?php echo $site_url; ?>/wp-content/plugins/<?php echo $folder ?>/css/styles.css' type='text/css' />
-<div class="wrap nosubsub" style="width:98%;float:left;margin-right:15px;align:center"><?php screen_icon(); ?>
-<h2> Mac View Gallery</h2>
+<div class="wrap nosubsub" style="width:98%;float:left;margin-right:15px;align:center"><div id="icon-themes" class="icon32"><br /></div>
+        <h2 class="nav-tab-wrapper">
+        <a href="?page=macAlbum" class="nav-tab">Albums</a>
+        <a href="?page=macPhotos&action=macPhotos" class="nav-tab  nav-tab-active">Photos</a>
+        <a href="?page=macSettings" class="nav-tab">Settings</a></h2>
+   <div style="background-color: #ffffff;padding: 10px;margin:10px 0px 10px 0px;border: #ccc 1px solid">
+        <strong> Note : </strong> Adding macGallery Photos of a particular album in your post/page, or displaying all
+    the albums can be easily done by adding a simple code there. <br/><br />
+       (i)In case you want to insert a particular photo album into your post or page,
+       you can do it easily by following the example:<br />
+        <strong>[macGallery albid=1 row=3 cols=3]</strong>.
+        (ii) Else you want the full gallery in Post/ Page put this code <strong>[macGallery]</strong>
+          </div>
 <div class="clear"></div>
     <?php
     if($_REQUEST['albid'] != '' && $_REQUEST['albid']!='0')
@@ -393,7 +387,7 @@ dragdr(document).ready(function(){
                  <ul class="alignright actions">
                      <li><a href="<?php echo $site_url ?>/wp-admin/upload.php?page=macPhotos&albid=<?php echo $macAlbum->macAlbum_id; ?>" class="gallery_btn">
                         Add Images</a></li>
-                     <li><a href="<?php echo $site_url; ?>/wp-admin/options-general.php?page=macGallery.php" class="gallery_btn">Settings</a></li>
+                    
                 </ul>
               
  <input type="submit" value="<?php esc_attr_e('Apply'); ?>" name="doaction_photos" id="doaction_photos" class="button-secondary action" />
@@ -413,12 +407,12 @@ dragdr(document).ready(function(){
                             <th class="macon" style='width:10%;text-align: center'>Status</th>
                         </tr>
                     </thead>
-                    <tbody id="test-list" class="list:post">
+                    <tbody id="mac-test-list" class="list:post">
                     <?php
                     $site_url = get_bloginfo('url');
                     /* Pagination */
                  
-                    $limit = $wpdb->get_var("SELECT mac_limit FROM " . $wpdb->prefix . "macsettings WHERE macSet_id=1");
+                    $limit = 20;
                     $sql = mysql_query("SELECT * FROM " . $wpdb->prefix . "macphotos WHERE macAlbum_id='$albid' ORDER BY macPhoto_sorting ASC");
                     $start = findStart($limit);
 
@@ -523,13 +517,25 @@ dragdr(document).ready(function(){
 <?php
                 } else {
 ?>
-                    <div class="wrap nosubsub clearfix"><?php screen_icon(); ?> <h2 style="float:left"> Mac Photos</h2>
-                      <a href="<?php echo $site_url;?>/wp-admin/upload.php?page=macPhotos&action=viewPhotos&albid=<?php echo $_REQUEST['albid'];?>" style="float:left;padding:25px 60px 0 0;" class="return_back">
-                            View Added Images</a>
-                        <h2 align="right"><a href="<?php echo $site_url; ?>/wp-admin/options-general.php?page=macGallery.php" style="text-decoration: none;color: #464646;">Settings</a></h2>
-                  
-                        
-                        <div style="width:30%;float:left;margin-right:15px;">
+                    <div class="wrap nosubsub clearfix"><div id="icon-themes" class="icon32"><br /></div>
+        <h2 class="nav-tab-wrapper">
+        <a href="?page=macAlbum" class="nav-tab">Albums</a>
+        <a href="?page=macPhotos&action=macPhotos" class="nav-tab  nav-tab-active">Photos</a>
+        <a href="?page=macSettings" class="nav-tab">Settings</a></h2>
+         <div style="background-color: #ffffff;padding: 10px;margin:10px 0px 10px 0px;border: #ccc 1px solid">
+        <strong> Note : </strong> Adding macGallery Photos of a particular album in your post/page, or displaying all
+    the albums can be easily done by adding a simple code there. <br/><br />
+       (i)In case you want to insert a particular photo album into your post or page,
+       you can do it easily by following the example:<br />
+        <strong>[macGallery albid=1 row=3 cols=3]</strong>.
+        (ii) Else you want the full gallery in Post/ Page put this code <strong>[macGallery]</strong>
+          </div>
+
+        <ul class="alignleft actions">
+                     <li><a href="<?php echo $site_url;?>/wp-admin/upload.php?page=macPhotos&action=viewPhotos&albid=<?php echo $_REQUEST['albid'];?>" class="gallery_btn">
+                       View Images</a></li>
+                </ul>
+                        <div class="clear"><div style="width:30%;float:left;margin-right:15px;">
                             <h3>Add Photos</h3>
                            
                     
@@ -567,12 +573,13 @@ dragdr(document).ready(function(){
         </div>
                 <?php } ?>
 
-                            <div class="clear"></div>
+                           
                              <div align="left"><a href="<?php echo $site_url;?>/wp-admin/upload.php?page=macAlbum"  class="return_back">Back</a></div>
                        </div>
   
-    <div name="bind_macPhotos" id="bind_macPhotos" class="bind_macPhotos">   </div>
-    <input type="hidden" name="bind_value" id="bind_value" value="0"/>
+    <div name="bind_macPhotos" id="bind_macPhotos" class="bind_macPhotos"></div></div>
+                        
+     <input type="hidden" name="bind_value" id="bind_value" value="0"/>
 </div>
 <?php
                 }
